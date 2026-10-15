@@ -1,18 +1,20 @@
 # xRemote
 
-Personal fork of **1Remote**. Current version: **xRemote 1.3.0 Rev.7**.
+Personal fork of **1Remote**. Current version: **xRemote 1.3.0 Rev.8**.
 
 The full upstream baseline and xRemote revision are defined separately in `Ui/AppVersion.cs`.
 Change the upstream version only when integrating that upstream release. Increment `ForkRevision`
 only for a published xRemote release, including after upstream upgrades; never reset it.
-Repeated builds and ordinary edits do not increment it. Tags use `v1.3.0-r7` and release packages
-use `xRemote-v1.3.0-r7-x64.zip`. Windows numeric file versions use `1.3.0.7`;
-the interface and product version show `1.3.0 Rev.7`.
+Repeated builds and ordinary edits do not increment it. Tags use `v1.3.0-r8` and release packages
+use `xRemote-v1.3.0-r8-x64.zip`. Windows numeric file versions use `1.3.0.8`;
+the interface and product version show `1.3.0 Rev.8`.
 
 Updates are checked only against [yuzhounh/xRemote releases](https://github.com/yuzhounh/xRemote/releases).
-The enabled-by-default setting checks stable tags of the form `v1.3.0-r7`, comparing both the
+The enabled-by-default setting checks stable tags of the form `v1.3.0-r8`, comparing both the
 upstream baseline and xRemote revision. It does not check or install upstream 1Remote releases.
 Update notifications open the matching xRemote release page; installation remains manual.
+If GitHub limits anonymous API requests, the checker falls back to the same repository's latest
+stable release redirect, without using or storing GitHub credentials.
 
 ### Build xRemote on Windows
 
@@ -23,7 +25,7 @@ git submodule update --init --recursive
 .\scripts\Prepare-Dependencies.ps1
 dotnet publish Ui/Ui.csproj -c Release -r win-x64 --self-contained true -o artifacts/publish
 .\scripts\Package-WindowsRelease.ps1 -PublishDirectory artifacts/publish
-.\scripts\Build-WindowsInstaller.ps1 -PackageDirectory artifacts/package-1.3.0-r7
+.\scripts\Build-WindowsInstaller.ps1 -PackageDirectory artifacts/package-1.3.0-r8
 ```
 
 The published app host is `1Remote.exe`; release packaging renames it to `xRemote.exe`.
