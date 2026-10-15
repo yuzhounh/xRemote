@@ -1,24 +1,45 @@
-# xRemote
+<p align="center">
+  <img src="assets/branding/xremote.svg" width="112" alt="xRemote logo">
+</p>
 
-Personal fork of **1Remote**. Current version: **xRemote 1.3.0 Rev.8**.
+<h1 align="center">xRemote</h1>
 
-The full upstream baseline and xRemote revision are defined separately in `Ui/AppVersion.cs`.
-Change the upstream version only when integrating that upstream release. Increment `ForkRevision`
-only for a published xRemote release, including after upstream upgrades; never reset it.
-Repeated builds and ordinary edits do not increment it. Tags use `v1.3.0-r8` and release packages
-use `xRemote-v1.3.0-r8-x64.zip`. Windows numeric file versions use `1.3.0.8`;
-the interface and product version show `1.3.0 Rev.8`.
+<p align="center"><strong>集中管理远程连接，用简洁的标签页与快捷启动器连接每一台设备。</strong></p>
 
-Updates are checked only against [yuzhounh/xRemote releases](https://github.com/yuzhounh/xRemote/releases).
-The enabled-by-default setting checks stable tags of the form `v1.3.0-r8`, comparing both the
-upstream baseline and xRemote revision. It does not check or install upstream 1Remote releases.
-Update notifications open the matching xRemote release page; installation remains manual.
-If GitHub limits anonymous API requests, the checker falls back to the same repository's latest
-stable release redirect, without using or storing GitHub credentials.
+<p align="center">
+  <a href="https://github.com/yuzhounh/xRemote/releases/latest"><img src="https://img.shields.io/github/v/release/yuzhounh/xRemote?style=flat&amp;color=0969da&amp;label=Release" alt="Latest stable release"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-f59e0b?style=flat" alt="License: GPL-3.0"></a>
+  <img src="https://img.shields.io/badge/Platform-Windows-0078d4?style=flat" alt="Platform: Windows">
+  <img src="https://img.shields.io/badge/C%23-.NET-512bd4?style=flat&amp;logo=dotnet&amp;logoColor=white" alt="C#: .NET">
+</p>
 
-### Build xRemote on Windows
+<p align="center">
+  <a href="https://github.com/yuzhounh/xRemote/releases/latest">下载发布版</a> · <a href="#快速开始">快速开始</a> · <a href="LICENSE">开源协议</a>
+</p>
 
-Install the .NET 9 SDK, initialize the repository's submodules, and apply the maintained dependency patch:
+xRemote 是基于 [1Remote](https://github.com/1Remote/1Remote) 定制的 Windows 远程会话管理器，集中管理远程桌面、终端与文件传输连接，提供标签页、快捷搜索与多种主题。当前发布版本为 **xRemote 1.3.0 Rev.8**。
+
+## 功能特点
+
+- **多协议连接**：支持 RDP、SSH、VNC、Telnet、FTP、SFTP、RemoteApp，以及自定义外部程序。
+- **标签页会话**：在同一窗口管理多个远程会话，通过标签切换设备；RDP 支持多显示器与 HiDPI。
+- **快捷启动器**：按 `Alt + M` 搜索并启动连接，支持键盘操作。
+- **连接管理**：使用分类、标签、图标、颜色与备注整理设备，配置连接脚本，并导入 mRemoteNG 连接。
+- **外观与交互**：提供浅色、深色等主题和多语言界面，支持自定义协议运行器。
+- **自有更新源**：默认检查本仓库的正式发布版本，通知后打开对应发布页，由用户手动安装更新。
+- **两种安装方式**：提供 Windows x64 自包含便携包与安装程序，按使用习惯选择。
+
+## 快速开始
+
+1. 打开 [最新发布页](https://github.com/yuzhounh/xRemote/releases/latest)，下载 Windows x64 安装版（`.exe`）或便携版（`.zip`）。
+2. 安装后启动 xRemote，或解压便携包后运行 `xRemote.exe`。
+3. 新建连接，选择协议并填写设备地址、账号等信息；保存后即可连接，也可通过 `Alt + M` 搜索启动。
+
+安装版默认使用 Windows AppData 保存配置；便携版将配置保存在程序目录。升级前退出旧版并保留已有配置、数据库和凭据文件。安装版卸载时保留用户配置。
+
+## 从源码构建
+
+安装 .NET 9 SDK，在 Windows 下初始化子模块并应用项目维护的依赖补丁：
 
 ```powershell
 git submodule update --init --recursive
@@ -28,96 +49,15 @@ dotnet publish Ui/Ui.csproj -c Release -r win-x64 --self-contained true -o artif
 .\scripts\Build-WindowsInstaller.ps1 -PackageDirectory artifacts/package-1.3.0-r8
 ```
 
-The published app host is `1Remote.exe`; release packaging renames it to `xRemote.exe`.
-Internal DLL and user-data filenames remain unchanged. Distribution packages contain only program
-files and a portable-mode marker, never local profiles, databases, connection settings or credentials.
-The optional Inno Setup 6 installer uses the same program files, creates shortcuts and uninstall
-registration, and stores profiles in the existing Windows AppData locations. It preserves existing
-portable storage when deliberately installed over a portable profile; uninstall does not delete profiles.
-Both the portable ZIP and installer EXE are published in each Windows release.
+生成安装程序还需要 Inno Setup 6。编译生成的应用入口为 `1Remote.exe`，打包脚本将其重命名为 `xRemote.exe`；发行包只包含程序文件和便携模式标记，不包含本地连接配置、数据库或凭据。
 
-Existing `1Remote` profile filenames, assembly identity and credential storage keys are retained
-for compatibility. Upstream developer build hooks are disabled by default. The original upstream
-description follows; its update links refer to 1Remote releases.
+## 版本规则
 
-## Upstream 1Remote
+- `Ui/AppVersion.cs` 分别定义官方基线和 xRemote 修订号；当前界面版本为 `1.3.0 Rev.8`，Windows 数字版本为 `1.3.0.8`。
+- 官方基线只在整合对应上游版本时更新；`ForkRevision` 只在正式发布 xRemote 时递增，整合上游新版后也不归零，普通编辑和重复编译不递增。
+- Git 标签使用 `v1.3.0-r8`，便携包使用 `xRemote-v1.3.0-r8-x64.zip`。
+- 为兼容已有数据，内部程序集、配置文件名及凭据存储标识继续沿用 1Remote。
 
-English | [中文](https://github.com/1Remote/1Remote/wiki/Intro%E2%80%90ZhCn)
+## 开源协议与致谢
 
-[![version](https://img.shields.io/github/v/release/1Remote/1Remote?color=Green&include_prereleases)](https://github.com/1Remote/1Remote/releases)
-[![issues](https://img.shields.io/github/issues/1Remote/1Remote)](https://github.com/1Remote/1Remote/issues)
-[![license](https://img.shields.io/github/license/1Remote/1Remote?color=blue)](https://github.com/1Remote/1Remote/blob/dev/LICENSE)
-![](https://github.com/1Remote/1Remote/actions/workflows/build-on-dev-push.yml/badge.svg)
-
-1Remote is a modern personal remote session manager and launcher. It is a single place to manage all your remote sessions supporting number of different protocols.
-
-## Features
-
-- Supports RDP, SSH, VNC, Telnet, (S)FTP, [RemoteApp](https://1remote.github.io/usage/protocol/especial/remoteapp/), [NoMachine and other app](https://1remote.github.io/usage/protocol/especial/app/)
-- Quick and convenient remote session launcher (Alt + M)
-- Multi-screen and HiDPI RDP connection (Test on **Win10 + 4k monitor *2** RDP TO **Win2016**)
-- Detailed connection configuration: tags, icons, colors, connection scripts etc.
-- Multiple languages, themes and tabbed interface
-- [Import connections from mRemoteNG](https://1remote.github.io/usage/overview/#importing-from-mremoteng)
-- Customizable runners, in SFTP \ FTP \ VNC \ etc. protocols, you can replace the internal runner with your favourite tools.[wiki](https://1remote.github.io/usage/protocol/runner/)
-- Portable - just unpack and run
-
-## 🚩Installation
-
-Latest Version: 1.3
-
-### 🗺[Quick start](https://1remote.github.io/usage/quick-start/)
-
-### 🔻[Download](https://1remote.github.io/download/)
-
-## 👓Overview
-
-<img src="https://1remote.github.io/img/home_override/hero1.png" width="800" />
-
-<p align="center">
-    <img src="https://1remote.github.io/img/home_override/protocols.png" width="400" />
-</p>
-<p align="center">
-    <img src="https://1remote.github.io/img/home_override/hero2.gif" width="400"/>
-</p>
-
-<p align="center">
-    ↑ Launcher(Alt + M) open RDP connection & resizing
-</p>
-
-<p align="center">
-    <img src="https://raw.githubusercontent.com/1Remote/PRemoteM/Doc/DocPic/multi-screen.jpg" width="500"/>
-</p>
-
-<p align="center">
-    ↑ RDP with Multi-monitors
-</p>
-
-<p align="center">
-    <img src="https://raw.githubusercontent.com/1Remote/PRemoteM/Doc/DocPic/RemoteApp/demo.jpg" width="800"/>
-</p>
-
-<p align="center">
-    ↑ RemoteApp via RDP
-</p>
-
-<p align="center">
-    <img src="https://raw.githubusercontent.com/1Remote/PRemoteM/Doc/DocPic/Runner/vnc_runners.jpg" width="800"/>
-</p>
-
-<p align="center">
-    ↑ Customizable runners
-</p>
-
-## Make 1Remote Stronger
-
-If you like **1Remote**, help us make it stronger by doing any of the following:
-
-1. Simply star this repository
-2. [Help translation](https://1remote.github.io/usage/misc/help-translation/)
-3. [Buy a coffee](https://ko-fi.com/VShawn)
-4. [Join DEV](DEVELOP.md)
-
-## Special thanks
-
-<a href="http://www.jetbrains.com/resharper/"><img src="http://www.tom-englert.de/Images/icon_ReSharper.png" alt="ReSharper" width="64" height="64" /></a>
+本项目基于 [1Remote](https://github.com/1Remote/1Remote) 开发，采用 [GNU GPL v3](LICENSE) 许可。感谢原作者与贡献者提供的远程会话管理基础。
