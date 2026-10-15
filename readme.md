@@ -14,10 +14,19 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/yuzhounh/xRemote/releases/latest">下载发布版</a> · <a href="#快速开始">快速开始</a> · <a href="LICENSE">开源协议</a>
+  <a href="https://github.com/yuzhounh/xRemote/releases/latest">下载发布版</a> · <a href="#快速开始">快速开始</a> · <a href="CHANGELOG.md">版本历史</a> · <a href="LICENSE">开源协议</a>
 </p>
 
 xRemote 是基于 [1Remote](https://github.com/1Remote/1Remote) 定制的 Windows 远程会话管理器，集中管理远程桌面、终端与文件传输连接，提供标签页、快捷搜索与多种主题。当前发布版本为 **xRemote 1.3.0 Rev.8**。
+
+## 相对 1Remote 的主要改进
+
+- **会话操作**：重做 Chrome 风格圆角标签栏，增加当前标签与最近成功连接菜单，主窗口和会话窗口使用原生 Windows 标题栏按钮。
+- **连接管理**：增加 TCP 端口状态、Ctrl+F 搜索条、可保存列宽，以及应用内 DPAPI 加密的 RDP 密码保存与复用。
+- **界面整理**：统一品牌标志、浅灰/深色主题、圆角菜单和中文设置，重新设计启动器并整理协议设置布局。
+- **发行维护**：采用独立 Rev. 修订号、自有 GitHub 更新源，以及自包含便携版和安装版。
+
+完整的 [版本变更与开发历史](CHANGELOG.md) 记录了 Rev.1–Rev.8 的功能迭代及累计改动。Rev.1–Rev.6 是早期本地迭代，首次公开的 Rev.7 源码已包含此前成果；独立源码标签及 GitHub 下载从 Rev.7 开始提供。
 
 ## 功能特点
 
