@@ -567,8 +567,8 @@
                                 </Setter>
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="{DynamicResource AccentLightBrush}"></Setter>
-                                        <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+                                        <Setter Property="Background" Value="{DynamicResource MainTabHoverBrush}"></Setter>
+                                        <Setter Property="Foreground" Value="{DynamicResource MainTabSelectedTextBrush}" />
                                     </Trigger>
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
@@ -576,8 +576,8 @@
                                             <Condition Binding="{Binding TagListViewModel}" Value="{x:Null}"/>
                                         </MultiDataTrigger.Conditions>
                                         <MultiDataTrigger.Setters>
-                                            <Setter Property="Background" Value="{DynamicResource AccentMidBrush}"></Setter>
-                                            <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+                                            <Setter Property="Background" Value="{DynamicResource MainTabSelectedBrush}"></Setter>
+                                            <Setter Property="Foreground" Value="{DynamicResource MainTabSelectedTextBrush}" />
                                         </MultiDataTrigger.Setters>
                                     </MultiDataTrigger>
                                     <MultiDataTrigger>
@@ -586,8 +586,8 @@
                                             <Condition Binding="{Binding TagListViewModel}" Value="{x:Null}"/>
                                         </MultiDataTrigger.Conditions>
                                         <MultiDataTrigger.Setters>
-                                            <Setter Property="Background" Value="{DynamicResource AccentMidBrush}"></Setter>
-                                            <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+                                            <Setter Property="Background" Value="{DynamicResource MainTabSelectedBrush}"></Setter>
+                                            <Setter Property="Foreground" Value="{DynamicResource MainTabSelectedTextBrush}" />
                                         </MultiDataTrigger.Setters>
                                     </MultiDataTrigger>
                                 </Style.Triggers>
@@ -610,16 +610,16 @@
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
-                                <Setter Property="Background" Value="{DynamicResource AccentMidBrush}" />
-                                <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+                                <Setter Property="Background" Value="{DynamicResource MainTabSelectedBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource MainTabSelectedTextBrush}" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding TagListViewModel}" Value="{x:Null}">
                                         <Setter Property="Background" Value="{DynamicResource PrimaryMidBrush}" />
                                         <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
                                     </DataTrigger>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="{DynamicResource AccentLightBrush}"></Setter>
-                                        <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+                                        <Setter Property="Background" Value="{DynamicResource MainTabHoverBrush}"></Setter>
+                                        <Setter Property="Foreground" Value="{DynamicResource MainTabSelectedTextBrush}" />
                                     </Trigger>
                                     <DataTrigger Binding="{Binding AppData.TagList.Count}" Value="0">
                                         <Setter Property="Visibility" Value="Collapsed"></Setter>
@@ -705,7 +705,7 @@
                                                         <Setter Property="Background" Value="{DynamicResource PrimaryMidBrush}"></Setter>
                                                         <Style.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Background" Value="{DynamicResource AccentLightBrush}"></Setter>
+                                                                <Setter Property="Background" Value="{DynamicResource MainTabHoverBrush}"></Setter>
                                                             </Trigger>
                                                             <DataTrigger Value="True">
                                                                 <DataTrigger.Binding>
@@ -714,7 +714,7 @@
                                                                         <Binding Path="Name" Mode="OneWay"></Binding>
                                                                     </MultiBinding>
                                                                 </DataTrigger.Binding>
-                                                                <Setter Property="Background" Value="{DynamicResource AccentMidBrush}"></Setter>
+                                                                <Setter Property="Background" Value="{DynamicResource MainTabSelectedBrush}"></Setter>
                                                                 <Setter Property="Cursor" Value="Arrow" />
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding IsPinned}" Value="False">
@@ -731,7 +731,7 @@
                                                             <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"></Setter>
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=IsMouseOver}" Value="True">
-                                                                    <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}"></Setter>
+                                                                    <Setter Property="Foreground" Value="{DynamicResource MainTabSelectedTextBrush}"></Setter>
                                                                 </DataTrigger>
                                                                 <DataTrigger Value="True">
                                                                     <DataTrigger.Binding>
@@ -740,7 +740,7 @@
                                                                             <Binding Path="Name" Mode="OneWay"></Binding>
                                                                         </MultiBinding>
                                                                     </DataTrigger.Binding>
-                                                                    <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}"></Setter>
+                                                                    <Setter Property="Foreground" Value="{DynamicResource MainTabSelectedTextBrush}"></Setter>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>

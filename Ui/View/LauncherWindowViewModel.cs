@@ -16,11 +16,11 @@ namespace _1RM.View
 {
     public class LauncherWindowViewModel : NotifyPropertyChangedBaseScreen
     {
-        public const double LAUNCHER_LIST_AREA_WIDTH = 400;
-        public const double LAUNCHER_GRID_KEYWORD_HEIGHT = 46;
-        public const double LAUNCHER_SERVER_LIST_ITEM_HEIGHT = 40;
-        public const double LAUNCHER_ACTION_LIST_ITEM_HEIGHT = 34;
-        public const double LAUNCHER_OUTLINE_CORNER_RADIUS = 8;
+        public const double LAUNCHER_LIST_AREA_WIDTH = 480;
+        public const double LAUNCHER_GRID_KEYWORD_HEIGHT = 54;
+        public const double LAUNCHER_SERVER_LIST_ITEM_HEIGHT = 56;
+        public const double LAUNCHER_ACTION_LIST_ITEM_HEIGHT = 40;
+        public const double LAUNCHER_OUTLINE_CORNER_RADIUS = 12;
         public static readonly CornerRadius LauncherOutlineCornerRadiusObj = new CornerRadius(LAUNCHER_OUTLINE_CORNER_RADIUS, LAUNCHER_OUTLINE_CORNER_RADIUS, LAUNCHER_OUTLINE_CORNER_RADIUS, LAUNCHER_OUTLINE_CORNER_RADIUS);
 
 

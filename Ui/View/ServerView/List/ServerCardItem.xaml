@@ -251,7 +251,7 @@
                 </CheckBox>
 
                 <ContentControl Grid.Row="0"
-                                HorizontalAlignment="Right" VerticalAlignment="Top" 
+                                HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,28,0,0"
                                 Content="{Binding HoverNoteDisplayControl}"></ContentControl>
 
                 <Grid Name="GridNameBar" Grid.Row="1" Background="{Binding ElementName=CardRealBorder,Path=BorderBrush}" >
@@ -297,6 +297,16 @@
               VerticalAlignment="Bottom" 
               Height="20" >
         </Grid>
+        <Border x:Name="CardConnectionStatus" Height="18" CornerRadius="9" Padding="3,1"
+                Margin="8" HorizontalAlignment="Right" VerticalAlignment="Top" Panel.ZIndex="5"
+                Background="{DynamicResource PrimaryMidBrush}"
+                Visibility="{Binding ConnectionStatusVisibility}" ToolTip="{Binding ConnectionStatusHint}">
+            <StackPanel Orientation="Horizontal">
+                <Ellipse Width="7" Height="7" Margin="0,0,4,0" VerticalAlignment="Center"
+                         Fill="{Binding CardConnectionStatusColor, Converter={StaticResource ConverterColorHexString2Brush}}" />
+                <TextBlock Text="{Binding CardConnectionStatusText}" FontSize="11" VerticalAlignment="Center"
+                           Foreground="{DynamicResource PrimaryTextBrush}" />
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>
-    

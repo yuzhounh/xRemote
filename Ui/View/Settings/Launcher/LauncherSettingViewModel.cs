@@ -26,6 +26,8 @@ namespace _1RM.View.Settings.Launcher
         {
             _configurationService = configurationService;
             _launcherService = launcherService;
+            KeywordMatchService.RefreshProviderDescriptions(configurationService.AvailableMatcherProviders,
+                configurationService.General.CurrentLanguageCode);
         }
 
         public List<MatchProviderInfo> AvailableMatcherProviders => _configurationService.AvailableMatcherProviders;

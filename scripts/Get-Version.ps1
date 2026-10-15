@@ -14,6 +14,7 @@ $minor = [int] ($fileContent | Select-String 'public const uint Minor = (\d+)').
 $patch = [int] ($fileContent | Select-String 'public const uint Patch = (\d+)').Matches[0].Groups[1].Value
 $build = [int] ($fileContent | Select-String 'public const uint Build = (\d+)').Matches[0].Groups[1].Value
 $preRelease = ($fileContent | Select-String 'public const string PreRelease = "(.*)";').Matches[0].Groups[1].Value
+$forkRevision = [int] ($fileContent | Select-String 'public const uint ForkRevision = (\d+)').Matches[0].Groups[1].Value
 
 # Construct the version string
 if ($preRelease -eq "" -and $build -eq 0) {
@@ -29,7 +30,10 @@ Set-Location $originalDirectory
 
 # Write-Output $versionString
 # Write-Output "::set-output name=Version::$versionString"
-"BuildVersion=$versionString" >> $env:GITHUB_ENV
+"UpstreamVersion=$versionString" >> $env:GITHUB_ENV
+"ForkRevision=$forkRevision" >> $env:GITHUB_ENV
+"BuildVersion=$versionString-r$forkRevision" >> $env:GITHUB_ENV
+"ProductName=xRemote" >> $env:GITHUB_ENV
 "PreRelease=$preRelease" >> $env:GITHUB_ENV
 
 # echo "Version=$versionString" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append

@@ -28,6 +28,7 @@
                 <ComboBox Grid.Column="1"
                           ItemsSource="{Binding ThemeList}"
                           SelectedItem="{Binding ThemeName}">
+                    <ComboBox.ItemTemplate><DataTemplate><controls:LocalizedOptionText Value="{Binding}" ResourcePrefix="ThemePreset." /></DataTemplate></ComboBox.ItemTemplate>
                 </ComboBox>
 
                 <Button Grid.Column="2" HorizontalAlignment="Left" Margin="5 0 0 0" Style="{StaticResource ButtonPrimaryStyle}" Content="{DynamicResource Reset}" Command="{Binding CmdResetTheme}"></Button>
@@ -88,7 +89,7 @@
 
 
 
-            <TextBlock Text="Font" Style="{StaticResource BlockTitleColumn}" />
+            <TextBlock Text="{DynamicResource Settings.Font}" Style="{StaticResource BlockTitleColumn}" />
 
             <Grid Style="{StaticResource GridOneRow}">
                 <Grid.Resources>
@@ -105,7 +106,7 @@
                     <ColumnDefinition MinWidth="280" MaxWidth="500" SharedSizeGroup="GeneralColumn2"></ColumnDefinition>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="Font family" FontFamily="Microsoft YaHei"></TextBlock>
+                <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="{DynamicResource Settings.FontFamily}" FontFamily="Microsoft YaHei"></TextBlock>
 
                 <ComboBox Grid.Column="1" MinWidth="200" HorizontalAlignment="Left"
                           IsEditable="True" IsTextSearchEnabled="True"
@@ -132,14 +133,14 @@
                     <ColumnDefinition MinWidth="280" MaxWidth="500" SharedSizeGroup="GeneralColumn2"></ColumnDefinition>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="Font size" FontFamily="Microsoft YaHei"></TextBlock>
+                <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="{DynamicResource Settings.FontSize}" FontFamily="Microsoft YaHei"></TextBlock>
 
                 <ComboBox Grid.Column="1" MinWidth="200" HorizontalAlignment="Left" 
                           IsEditable="False"
                           SelectedItem="{Binding FontSize}" 
                           ItemsSource="{Binding FontSizeOptions}"
-                          DisplayMemberPath="Name"
                           FontFamily="Microsoft YaHei">
+                    <ComboBox.ItemTemplate><DataTemplate><controls:LocalizedOptionText Value="{Binding Name}" ResourcePrefix="Settings.FontSize." /></DataTemplate></ComboBox.ItemTemplate>
                 </ComboBox>
             </Grid>
         </StackPanel>

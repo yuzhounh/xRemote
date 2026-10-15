@@ -1,6 +1,7 @@
-﻿<UserControl x:Class="_1RM.View.Settings.ProtocolConfig.ProtocolRunnerSettingsPageView"
+<UserControl x:Class="_1RM.View.Settings.ProtocolConfig.ProtocolRunnerSettingsPageView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:uiText="clr-namespace:_1RM.Controls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:attachProperty="clr-namespace:Shawn.Utils.WpfResources.Theme.AttachProperty;assembly=Shawn.Utils.WpfResources"
@@ -21,53 +22,36 @@
                 <Setter Property="Foreground" Value="{DynamicResource BackgroundTextBrush}"></Setter>
             </Style>
 
-            <Style x:Key="ListBoxForProtocols" TargetType="{x:Type ListBox}">
+            <Style x:Key="ListBoxForProtocols" TargetType="ListBox">
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="Background" Value="{DynamicResource PrimaryMidBrush}" />
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
-                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+                <Setter Property="FontSize" Value="{DynamicResource GlobalFontSizeBody}" />
                 <Setter Property="ItemContainerStyle">
                     <Setter.Value>
                         <Style TargetType="ListBoxItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Height" Value="40" />
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ListBoxItem">
-                                        <Grid Margin="10 3" Cursor="Hand">
-                                            <Border x:Name="GridContainer" CornerRadius="5" 
-                                                    BorderBrush="{DynamicResource DefaultBorderBrush}" BorderThickness="1">
-                                            </Border>
-                                            <ContentPresenter x:Name="ContentPresenter"/>
-                                        </Grid>
+                                        <Border x:Name="Row" Background="Transparent" BorderBrush="Transparent" BorderThickness="0,0,0,1" Cursor="Hand">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
                                         <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" TargetName="GridContainer" Value="{DynamicResource PrimaryTextBrush}"></Setter>
-                                                <Setter Property="Opacity" Value="0.2" TargetName="GridContainer" />
-                                                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Row" Property="Background" Value="{DynamicResource LauncherHoverBrush}" /></Trigger>
                                             <Trigger Property="IsSelected" Value="True">
-                                                <Setter Property="Opacity" Value="1" TargetName="GridContainer" />
-                                                <Setter Property="TextElement.Foreground" Value="{DynamicResource AccentTextBrush}" TargetName="ContentPresenter" />
-                                                <Setter Property="Background" Value="{DynamicResource AccentMidBrush}" TargetName="GridContainer" />
-                                                <Setter Property="BorderThickness" Value="0" TargetName="GridContainer" />
-                                                <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}"/>
-                                                <Setter Property="Background" Value="{DynamicResource AccentMidBrush}"/>
-                                                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                                                <Setter TargetName="Row" Property="Background" Value="{DynamicResource BackgroundBrush}" />
+                                                <Setter TargetName="Row" Property="BorderBrush" Value="{DynamicResource AccentMidBrush}" />
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
                         </Style>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="ItemTemplate">
-                    <Setter.Value>
-                        <DataTemplate>
-                            <Grid Margin="10">
-                                <TextBlock Text="{Binding}"></TextBlock>
-                            </Grid>
-                        </DataTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -83,7 +67,7 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ListBoxItem">
-                                        <Grid Margin="0 0 5 0">
+                                        <Grid Margin="0">
                                             <Border x:Name="GridContainer"></Border>
                                             <ContentPresenter x:Name="ContentPresenter"/>
                                         </Grid>
@@ -110,14 +94,15 @@
                             Background="{DynamicResource BackgroundBrush}"
                             CornerRadius="10" BorderThickness="0">
                     </Border>
-                    <Grid Grid.Row="0" Background="{DynamicResource PrimaryMidBrush}">
-                        <TextBlock HorizontalAlignment="Center"  VerticalAlignment="Center"
+                    <Grid Grid.Row="0" Background="{DynamicResource ProtocolCardHeaderBrush}">
+            <Border VerticalAlignment="Bottom" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource ProtocolCardDividerBrush}" IsHitTestVisible="False" />
+                        <uiText:LocalizedOptionText ResourcePrefix="RunnerName." HorizontalAlignment="Center" VerticalAlignment="Center"
                                    Foreground="{DynamicResource PrimaryTextBrush}" 
                                    FontSize="{DynamicResource HeadFontSize}" 
-                                   Text="{Binding Name}" Margin="5"></TextBlock>
+                                   Value="{Binding Name}" Margin="5" />
                     </Grid>
                     <Grid Grid.Row="1" MinHeight="50">
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">Nothing special</TextBlock>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{DynamicResource Settings.NoExtraOptions}" />
                     </Grid>
                 </Grid>
             </DataTemplate>
@@ -158,7 +143,7 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <Grid MinWidth="130" Background="{DynamicResource BackgroundBrush}">
+        <Grid MinWidth="130" Background="{DynamicResource PrimaryMidBrush}">
             <Border BorderThickness="0" Background="{DynamicResource BackgroundBrush}">
                 <Border.Effect>
                     <DropShadowEffect Direction="0" Opacity="0.5" ShadowDepth="3"></DropShadowEffect>
@@ -187,11 +172,7 @@
 
                 <ListBox Grid.Row="2" ScrollViewer.CanContentScroll="False"
                          Style="{StaticResource ListBoxRunners}" Grid.IsSharedSizeScope="True"
-                         ItemsSource="{Binding Runners}">
-                    <ListBox.Background>
-                        <SolidColorBrush Color="{DynamicResource BackgroundTextColor}" Opacity="0.25"></SolidColorBrush>
-                    </ListBox.Background>
-                </ListBox>
+                         ItemsSource="{Binding Runners}" Background="{DynamicResource ProtocolSettingsSurfaceBrush}" />
 
                 <Border Grid.Row="0" Grid.RowSpan="2" BorderThickness="0" Background="{DynamicResource BackgroundBrush}">
                     <Border.Effect>
@@ -210,13 +191,13 @@
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBlock Text="{Binding SelectedProtocol}" Margin="3" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
                         <TextBlock Text="{DynamicResource Default}" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
-                        <TextBlock Text="Runner" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
+                        <TextBlock Text="{DynamicResource Settings.Runner}" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
                     </StackPanel>
 
                     <ComboBox Grid.Column="1" 
                               ItemsSource="{Binding Runners, UpdateSourceTrigger=PropertyChanged}"
-                              DisplayMemberPath="Name"
                               SelectedItem="{Binding SelectedRunner, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.ItemTemplate><DataTemplate><uiText:LocalizedOptionText Value="{Binding Name}" ResourcePrefix="RunnerName." /></DataTemplate></ComboBox.ItemTemplate>
                     </ComboBox>
 
 

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="_1RM.Controls.ServerLineItem"
+<UserControl x:Class="_1RM.Controls.ServerLineItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -146,11 +146,12 @@
             </Grid.Margin>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="Selector"></ColumnDefinition>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="Protocol"></ColumnDefinition>
+                <ColumnDefinition Width="{Binding DataContext.StatusWidth, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="ConnectionStatus" />
                 <ColumnDefinition Width="Auto" SharedSizeGroup="Span"></ColumnDefinition>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="Name"></ColumnDefinition>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="BriefNote"></ColumnDefinition>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="Address"></ColumnDefinition>
+                <ColumnDefinition Width="{Binding DataContext.NameWidth, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="Name" />
+                <ColumnDefinition Width="{Binding DataContext.NoteWidth, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="BriefNote" />
+                <ColumnDefinition Width="{Binding DataContext.AddressWidth, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="Address" />
+                <ColumnDefinition Width="{Binding DataContext.ProtocolWidth, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="Protocol" />
             </Grid.ColumnDefinitions>
 
 
@@ -179,18 +180,17 @@
             </CheckBox>
 
             <!--protocol name-->
-            <TextBlock Grid.Column="1" Margin="5 0 10 0" 
+            <TextBlock Grid.Column="6" Margin="5 0 10 0"
                        Style="{StaticResource TextBlockBase}"
                        Text="{Binding Server.ProtocolDisplayName}"
-                       FontSize="{DynamicResource GlobalFontSizeSubtitle}" FontWeight="Bold"
-                       Opacity="0.6"
+                       FontSize="{DynamicResource GlobalFontSizeSubtitle}" FontWeight="Normal"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center">
             </TextBlock>
 
 
             <!-- setting menu button -->
-            <Button Grid.Column="1" 
+            <Button Grid.Column="6"
                     x:Name="BtnSettingMenu"
                     Margin="0 0 10 0"
                     Width="20" Height="20" HorizontalAlignment="Right"
@@ -203,14 +203,14 @@
             </Button>
 
             <!--icon-->
-            <Image Grid.Column="2" 
+            <Image Grid.Column="2"
                    Width="30" HorizontalAlignment="Center" Margin="5 0"
                    Source="{Binding Server.IconImg}" 
                    RenderOptions.BitmapScalingMode="LowQuality"
                    ></Image>
 
             <!--display name-->
-            <TextBlock Grid.Column="3" ToolTip="{Binding DisplayName}" Background="Transparent" 
+            <TextBlock Grid.Column="3" ToolTip="{Binding DisplayName}" Background="Transparent"
                        Style="{StaticResource TextBlockBase}"
                        FontSize="{DynamicResource GlobalFontSizeSubtitle}" 
                        Margin="5 0 10 0" 
@@ -219,7 +219,7 @@
                        Text="{Binding Server.DisplayName}"></TextBlock>
 
             <!--tags-->
-            <ItemsControl Grid.Column="3" 
+            <ItemsControl Grid.Column="3"
                           Margin="5 0 10 0" 
                           MaxWidth="200" 
                           VerticalAlignment="Center" HorizontalAlignment="Right" 
@@ -234,13 +234,22 @@
             </ItemsControl>
 
             <!--brief note -->
-            <ContentControl Grid.Column="4" 
+            <ContentControl Grid.Column="4"
                             Margin="0 0 10 0"
                             VerticalAlignment="Center"
+                            Visibility="{Binding DataContext.BriefNoteVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}"
                             Content="{Binding HoverNoteDisplayControl}"></ContentControl>
 
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5,0"
+                        VerticalAlignment="Center" ToolTip="{Binding ConnectionStatusHint}"
+                        Visibility="{Binding ConnectionStatusVisibility}">
+                <Ellipse Width="7" Height="7" Margin="0,0,6,0"
+                         Fill="{Binding ConnectionStatusColor, Converter={StaticResource ConverterColorHexString2Brush}}" />
+                <TextBlock Text="{Binding ConnectionStatusText}" Style="{StaticResource TextBlockBase}" />
+            </StackPanel>
+
             <!--address-->
-            <TextBlock Margin="5 0" MaxWidth="500"
+            <TextBlock Margin="5 0 10 0"
                        Style="{StaticResource TextBlockBase}"
                        Grid.Column="5"
                        Background="Transparent"

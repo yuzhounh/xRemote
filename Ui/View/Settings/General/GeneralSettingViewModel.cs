@@ -33,18 +33,21 @@ namespace _1RM.View.Settings.General
                 {
                     // reset lang service
                     _languageService.SetLanguage(value);
+                    KeywordMatchService.RefreshProviderDescriptions(_configurationService.AvailableMatcherProviders, value);
                     _configurationService.Save();
                 }
             }
         }
 
-        public bool DoNotCheckNewVersion
+        public bool CheckNewVersion
         {
-            get => _configurationService.General.DoNotCheckNewVersion;
+            get => !_configurationService.General.DoNotCheckNewVersion;
             set
             {
-                if (SetAndNotifyIfChanged(ref _configurationService.General.DoNotCheckNewVersion, value))
+                if (_configurationService.General.DoNotCheckNewVersion != !value)
                 {
+                    _configurationService.General.DoNotCheckNewVersion = !value;
+                    RaisePropertyChanged();
                     _configurationService.Save();
                     IoC.Get<AboutPageViewModel>().StartVersionCheckTimer();
                 }
@@ -72,6 +75,19 @@ namespace _1RM.View.Settings.General
                 {
                     _configurationService.Save();
                 }
+            }
+        }
+
+        public bool HideTrayConnections
+        {
+            get => !_configurationService.General.ShowRecentlySessionInTray;
+            set
+            {
+                if (_configurationService.General.ShowRecentlySessionInTray == !value) return;
+                _configurationService.General.ShowRecentlySessionInTray = !value;
+                RaisePropertyChanged();
+                _configurationService.Save();
+                IoC.Get<TaskTrayService>().ReloadTaskTrayContextMenu();
             }
         }
 

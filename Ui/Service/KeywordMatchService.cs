@@ -90,7 +90,6 @@ namespace _1RM.Service
             _matcher = VariableKeywordMatcherIn1.Builder.Build(new string[]
             {
                 DirectMatchProvider.GetName(),
-                DiscreteMatchProvider.GetName(),
             }, false);
         }
 
@@ -203,6 +202,28 @@ namespace _1RM.Service
                 setEnabled(ChineseZhCnPinYinInitialsMatchProvider.GetName(), true, true);
             }
             return matchProviderInfos;
+        }
+
+        public static void RefreshProviderDescriptions(IEnumerable<MatchProviderInfo> providers, string languageCode)
+        {
+            foreach (var provider in providers)
+            {
+                var name = provider.Name;
+                string? kind = name == DirectMatchProvider.GetName() ? "Direct" :
+                    name == InitialsMatchProvider.GetName() ? "Initials" :
+                    name == DiscreteMatchProvider.GetName() ? "Discrete" :
+                    name == ChineseZhCnPinYinInitialsMatchProvider.GetName() ? "PinyinInitials" :
+                    name == ChineseZhCnPinYinMatchProvider.GetName() ? "Pinyin" : null;
+                var title = VariableKeywordMatcherIn1.Builder.GetProviderDescription(name);
+                var detail = VariableKeywordMatcherIn1.Builder.GetProviderDescriptionEn(name);
+                if (kind != null && string.Equals(languageCode, "zh-cn", StringComparison.OrdinalIgnoreCase))
+                {
+                    title = System.Windows.Application.Current?.TryFindResource($"Settings.Matcher.{kind}.Title") as string ?? title;
+                    detail = System.Windows.Application.Current?.TryFindResource($"Settings.Matcher.{kind}.Detail") as string ?? detail;
+                }
+                provider.Title1 = title;
+                provider.Title2 = detail;
+            }
         }
     }
 }

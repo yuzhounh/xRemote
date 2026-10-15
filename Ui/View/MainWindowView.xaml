@@ -1,4 +1,4 @@
-﻿<styles:WindowChromeBase x:Class="_1RM.View.MainWindowView"
+<styles:WindowChromeBase x:Class="_1RM.View.MainWindowView"
                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,18 +10,85 @@
                          xmlns:service="clr-namespace:_1RM.Service"
                          xmlns:Rm="clr-namespace:_1RM"
                          xmlns:locality="clr-namespace:_1RM.Service.Locality"
+                         xmlns:branding="clr-namespace:_1RM.Controls"
                          mc:Ignorable="d"
+                         WindowStyle="SingleBorderWindow"
+                         WindowChrome.WindowChrome="{x:Null}"
                          BorderThickness="0"
                          BorderBrush="Transparent"
                          Background="{DynamicResource BackgroundBrush}"
                          KeyDown="MainWindow_OnKeyDown"
                          d:DataContext="{d:DesignInstance view:MainWindowViewModel}"
                          Style="{StaticResource WindowChromeBaseBaseStyle}"
-                         Title="{x:Static Rm:Assert.APP_NAME}" 
+                         Title="{x:Static Rm:AppVersion.ProductDisplayName}"
                          Height="560" Width="900" 
                          MinWidth="300" MinHeight="300">
+    <styles:WindowChromeBase.Template>
+        <ControlTemplate TargetType="styles:WindowChromeBase">
+            <ContentPresenter />
+        </ControlTemplate>
+    </styles:WindowChromeBase.Template>
     <styles:WindowChromeBase.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/1Remote;component/Resources/Theme/NativeCaption.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="MenuSelectionMarkStyle" TargetType="Path">
+                <Setter Property="Width" Value="10" />
+                <Setter Property="Height" Value="10" />
+                <Setter Property="Data" Value="{StaticResource GeometryHook}" />
+                <Setter Property="Fill" Value="{DynamicResource PrimaryTextBrush}" />
+                <Setter Property="Stretch" Value="Uniform" />
+                <Setter Property="UseLayoutRounding" Value="True" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Visibility" Value="Collapsed" />
+            </Style>
+            <Style x:Key="UniformOptionMenuItemStyle" TargetType="MenuItem" BasedOn="{StaticResource MenuItemPrimaryStyle}">
+                <Setter Property="MinWidth" Value="100" />
+                <Setter Property="MinHeight" Value="28" />
+                <Setter Property="Padding" Value="8,6" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+                <Setter Property="FontSize" Value="{DynamicResource GlobalFontSizeBody}" />
+                <Setter Property="FontStyle" Value="Normal" />
+                <Setter Property="FontWeight" Value="Normal" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="MenuDividerStyle" TargetType="Separator">
+                <Setter Property="Height" Value="17" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Separator">
+                            <Border Height="1" VerticalAlignment="Center" Background="{DynamicResource MenuDividerBrush}" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="ConnectionSearchTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource TextBoxAccentStyle}">
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
+                <Setter Property="CaretBrush" Value="{DynamicResource PrimaryTextBrush}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Padding" Value="3,0" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TextBox">
+                            <Grid Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" />
+                                <TextBlock x:Name="SearchHint" Text="{TemplateBinding Tag}" FontFamily="{TemplateBinding FontFamily}"
+                                           FontSize="{TemplateBinding FontSize}" FontWeight="Normal" Margin="{TemplateBinding Padding}"
+                                           Foreground="{TemplateBinding Foreground}" Opacity="0.72" Visibility="Collapsed"
+                                           VerticalAlignment="Center" IsHitTestVisible="False" />
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="Text" Value=""><Setter TargetName="SearchHint" Property="Visibility" Value="Visible" /></Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
             <RoutedUICommand x:Key="CommandFocusFilter" Text="Focus on filter" />
         </ResourceDictionary>
     </styles:WindowChromeBase.Resources>
@@ -50,97 +117,30 @@
                 </Style>
             </Grid.Style>
             <Grid.RowDefinitions>
-                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition x:Name="NativeCaptionRow" Height="48" />
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
 
             <Grid Background="Transparent" Name="WinTitleBar">
                 <StackPanel Orientation="Horizontal">
                     <Grid Background="Transparent" Width="24" Height="24" Margin="5">
-                        <Image Source="/Resources/Image/Logo/logo32.png"></Image>
+                        <branding:AppLogo x:Name="TitleLogo" />
                     </Grid>
-                    <TextBlock VerticalAlignment="Center" 
+                    <TextBlock VerticalAlignment="Center" FontSize="16" Margin="8,0,0,0"
                                Style="{StaticResource TextBlockBase}"
                                Foreground="{DynamicResource PrimaryTextBrush}" Text="{Binding Title, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
                 </StackPanel>
             </Grid>
 
             <!-- System Button Area -->
-            <StackPanel Grid.Row="0"
+            <StackPanel x:Name="CaptionMenuArea" Grid.Row="0" Margin="0,0,138,0"
                         Orientation="Horizontal" HorizontalAlignment="Right">
-                <Grid Height="35" VerticalAlignment="Top" Margin="0 0 4 0">
-                    <TextBox Width="150" Height="25" FontSize="12"
-                             attachProperty:FocusExtension.IsFocused="{Binding MainFilterIsFocused}"
-                             attachProperty:TextBoxAttachProperty.CaretIndex="{Binding MainFilterCaretIndex, UpdateSourceTrigger=PropertyChanged}"
-                             Text="{Binding MainFilterString, UpdateSourceTrigger=PropertyChanged}"
-                             Tag="{DynamicResource 'Search (Ctrl+F)'}"
-                             KeyUp="MainFilter_OnKeyUp" 
-                             VerticalAlignment="Center" HorizontalAlignment="Right" HorizontalContentAlignment="Left">
-                        <TextBox.Style>
-                            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxAccentStyle}">
-                                <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"></Setter>
-                                <Setter Property="Background" Value="Transparent"></Setter>
-                                <Setter Property="Opacity" Value="0.5"></Setter>
-                                <Setter Property="CaretBrush" Value="{DynamicResource PrimaryTextBrush}"></Setter>
-                                <Setter Property="IsEnabled" Value="False"></Setter>
-                                <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                <Style.Triggers>
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding EditorViewModel}" Value="{x:Null}"></Condition>
-                                            <Condition Binding="{Binding ShowSetting}" Value="False"></Condition>
-                                        </MultiDataTrigger.Conditions>
-                                        <MultiDataTrigger.EnterActions>
-                                            <BeginStoryboard>
-                                                <Storyboard>
-                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" AccelerationRatio="0.9" To="1" Duration="0:0:0.5"/>
-                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
-                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}"/>
-                                                    </ObjectAnimationUsingKeyFrames>
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </MultiDataTrigger.EnterActions>
-                                        <MultiDataTrigger.ExitActions>
-                                            <BeginStoryboard>
-                                                <Storyboard>
-                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" AccelerationRatio="0.9" To="0" Duration="0:0:0.5"/>
-                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
-                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.5" Value="{x:Static Visibility.Collapsed}"/>
-                                                    </ObjectAnimationUsingKeyFrames>
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </MultiDataTrigger.ExitActions>
-                                        <MultiDataTrigger.Setters>
-                                            <Setter Property="IsEnabled" Value="True"></Setter>
-                                        </MultiDataTrigger.Setters>
-                                    </MultiDataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Style>
-                    </TextBox>
-                </Grid>
-
-                <Grid Width="45" Height="35" Margin="0" VerticalAlignment="Top">
-                    <CheckBox Name="CbPopForMenu" Width="45" Height="35" VerticalAlignment="Top" Margin="0">
-                        <CheckBox.Template>
-                            <ControlTemplate>
-                                <Border Name="BG" Background="{DynamicResource PrimaryMidBrush}">
-                                    <Grid VerticalAlignment="Center">
-                                        <Path Data="F1 M 88.000000 -60.500000 L 0.000000 -60.500000 L 0.000000 -66.000000 L 88.000000 -66.000000 L 88.000000 -60.500000 Z M 88.000000 -16.500000 L 0.000000 -16.500000 L 0.000000                                         -22.000000 L 88.000000 -22.000000 L 88.000000 -16.500000 Z M 88.000000 -38.500000 L 0.000000 -38.500000 L 0.000000 -44.000000 L 88.000000 -44.000000 L 88.000000 -38.500000 Z "
-                                              Width="10" Height="10"
-                                              Fill="{DynamicResource PrimaryTextBrush}" Opacity="0.8" StrokeThickness="0.5" Stretch="Fill" />
-                                    </Grid>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="CheckBox.IsMouseOver" Value="True">
-                                        <Setter TargetName="BG" Property="Background" Value="{DynamicResource PrimaryLightBrush}"></Setter>
-                                    </Trigger>
-                                    <Trigger Property="CheckBox.IsChecked" Value="True">
-                                        <Setter TargetName="BG" Property="Background" Value="{DynamicResource PrimaryDarkBrush}"></Setter>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </CheckBox.Template>
+                <Grid Width="{DynamicResource NativeCaptionButtonWidth}" Height="{DynamicResource NativeCaptionButtonHeight}"
+                      Margin="0" VerticalAlignment="Center">
+                    <CheckBox Name="CbPopForMenu" Style="{StaticResource NativeCaptionMenuStyle}">
+                        <Path Width="12" Height="12" Data="M1,2.5 H11 M1,6 H11 M1,9.5 H11"
+                              Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=CheckBox}}"
+                              StrokeThickness="1" Stretch="None" SnapsToDevicePixels="True" />
                     </CheckBox>
 
                     <Grid Width="15" Height="15">
@@ -168,22 +168,19 @@
                        IsOpen="{Binding ElementName=CbPopForMenu, Path=IsChecked}"
                        StaysOpen="False"
                        PlacementTarget="{Binding ElementName=CbPopForMenu}">
-                    <Border CornerRadius="5" Background="{DynamicResource PrimaryDarkBrush}">
+                    <Border CornerRadius="8" Padding="4" BorderThickness="1" BorderBrush="{DynamicResource MenuBorderBrush}" Background="{DynamicResource MenuSurfaceBrush}">
                         <StackPanel Orientation="Vertical" MinWidth="138">
-                            <MenuItem Header="{DynamicResource Options}" Command="{Binding CmdGoSysOptionsPage}">
-                                <MenuItem.Icon>
-                                    <Path Width="10" Height="10" UseLayoutRounding="True" Data="{StaticResource GeometrySetting}" Fill="{DynamicResource PrimaryTextBrush}" Stretch="Uniform"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
+                            <MenuItem Header="搜索" InputGestureText="Ctrl+F" Click="SearchConnections_OnClick" />
+                            <Separator Style="{StaticResource MenuDividerStyle}" />
 
-                            <MenuItem Header="{DynamicResource ListViewMode}">
+                            <MenuItem x:Name="ViewOptionsMenu" Header="{DynamicResource ListViewMode}">
                                 <MenuItem.Resources>
                                 </MenuItem.Resources>
-                                <MenuItem Header="{DynamicResource ListViewMode_Card}" Command="{Binding CmdToggleCardView}">
+                                <MenuItem Style="{StaticResource UniformOptionMenuItemStyle}" Header="{DynamicResource ListViewMode_Card}" Command="{Binding CmdToggleCardView}">
                                     <MenuItem.Icon>
-                                        <Path Width="10" Height="10" UseLayoutRounding="True" Data="{StaticResource GeometryHook}" Fill="{DynamicResource PrimaryTextBrush}" Stretch="Uniform">
+                                        <Path>
                                             <Path.Style>
-                                                <Style TargetType="Path">
+                                                <Style TargetType="Path" BasedOn="{StaticResource MenuSelectionMarkStyle}">
                                                     <Setter Property="Visibility" Value="Collapsed"></Setter>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding CurrentView}" Value="Card">
@@ -195,11 +192,11 @@
                                         </Path>
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="{DynamicResource ListViewMode_List}" Command="{Binding CmdToggleListView}">
+                                <MenuItem Style="{StaticResource UniformOptionMenuItemStyle}" Header="{DynamicResource ListViewMode_List}" Command="{Binding CmdToggleListView}">
                                     <MenuItem.Icon>
-                                        <Path Width="10" Height="10" UseLayoutRounding="True" Data="{StaticResource GeometryHook}" Fill="{DynamicResource PrimaryTextBrush}" Stretch="Uniform">
+                                        <Path>
                                             <Path.Style>
-                                                <Style TargetType="Path">
+                                                <Style TargetType="Path" BasedOn="{StaticResource MenuSelectionMarkStyle}">
                                                     <Setter Property="Visibility" Value="Collapsed"></Setter>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding CurrentView}" Value="List">
@@ -211,11 +208,11 @@
                                         </Path>
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="{DynamicResource ListViewMode_Tree}" Command="{Binding CmdToggleTreeView}">
+                                <MenuItem Style="{StaticResource UniformOptionMenuItemStyle}" Header="{DynamicResource ListViewMode_Tree}" Command="{Binding CmdToggleTreeView}">
                                     <MenuItem.Icon>
-                                        <Path Width="10" Height="10" UseLayoutRounding="True" Data="{StaticResource GeometryHook}" Fill="{DynamicResource PrimaryTextBrush}" Stretch="Uniform">
+                                        <Path>
                                             <Path.Style>
-                                                <Style TargetType="Path">
+                                                <Style TargetType="Path" BasedOn="{StaticResource MenuSelectionMarkStyle}">
                                                     <Setter Property="Visibility" Value="Collapsed"></Setter>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding CurrentView}" Value="Tree">
@@ -228,7 +225,7 @@
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </MenuItem>
-                            <MenuItem Header="{DynamicResource Sorting}">
+                            <MenuItem x:Name="SortOptionsMenu" Header="{DynamicResource Sorting}">
                                 <MenuItem.Resources>
                                     <Style TargetType="Path" x:Key="HeaderPathStyle">
                                         <Setter Property="Visibility" Value="Hidden" />
@@ -239,14 +236,17 @@
                                         <Setter Property="SnapsToDevicePixels" Value="True" />
                                     </Style>
                                 </MenuItem.Resources>
-                                <MenuItem Command="{Binding CmdReOrder}" CommandParameter="{x:Static locality:EnumServerOrderBy.IdAsc}">
+                                <MenuItem Style="{StaticResource UniformOptionMenuItemStyle}" Command="{Binding CmdChooseSortField}" CommandParameter="{x:Static locality:EnumServerOrderBy.IdAsc}">
                                     <MenuItem.Icon>
-                                        <Path UseLayoutRounding="True" Data="{StaticResource GeometryHook}" Fill="{DynamicResource PrimaryTextBrush}" Stretch="Uniform">
+                                        <Path>
                                             <Path.Style>
-                                                <Style TargetType="Path">
+                                                <Style TargetType="Path" BasedOn="{StaticResource MenuSelectionMarkStyle}">
                                                     <Setter Property="Visibility" Value="Collapsed"></Setter>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding ServerOrderBy}" Value="{x:Static locality:EnumServerOrderBy.IdAsc}">
+                                                            <Setter Property="Visibility" Value="Visible"></Setter>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ServerOrderBy}" Value="{x:Static locality:EnumServerOrderBy.IdDesc}">
                                                             <Setter Property="Visibility" Value="Visible"></Setter>
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -256,18 +256,18 @@
                                     </MenuItem.Icon>
                                     <MenuItem.Header>
                                         <Grid>
-                                            <TextBlock Margin="5" HorizontalAlignment="Left" Text="Id"></TextBlock>
+                                            <TextBlock HorizontalAlignment="Left" Text="{DynamicResource Settings.RecordId}"></TextBlock>
                                         </Grid>
                                     </MenuItem.Header>
                                 </MenuItem>
 
 
 
-                                <MenuItem Command="{Binding CmdReOrder}" CommandParameter="{x:Static locality:EnumServerOrderBy.ProtocolAsc}">
+                                <MenuItem Style="{StaticResource UniformOptionMenuItemStyle}" Command="{Binding CmdChooseSortField}" CommandParameter="{x:Static locality:EnumServerOrderBy.ProtocolAsc}">
                                     <MenuItem.Icon>
-                                        <Path UseLayoutRounding="True" Data="{StaticResource GeometryHook}" Fill="{DynamicResource PrimaryTextBrush}" Stretch="Uniform">
+                                        <Path>
                                             <Path.Style>
-                                                <Style TargetType="Path">
+                                                <Style TargetType="Path" BasedOn="{StaticResource MenuSelectionMarkStyle}">
                                                     <Setter Property="Visibility" Value="Collapsed"></Setter>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding ServerOrderBy}" Value="{x:Static locality:EnumServerOrderBy.ProtocolAsc}">
@@ -283,39 +283,17 @@
                                     </MenuItem.Icon>
                                     <MenuItem.Header>
                                         <Grid>
-                                            <Path Data="M 7,3 L 13,3 L 10,0 L 7,3" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MenuItem}, Path=Foreground}">
-                                                <Path.Style>
-                                                    <Style TargetType="Path" BasedOn="{StaticResource HeaderPathStyle}">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ServerOrderBy}" Value="{x:Static locality:EnumServerOrderBy.ProtocolAsc}">
-                                                                <Setter Property="Visibility" Value="Visible"></Setter>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Path.Style>
-                                            </Path>
-                                            <Path Data="M 7,0 L 10,3 L 13,0 L 7,0" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MenuItem}, Path=Foreground}">
-                                                <Path.Style>
-                                                    <Style TargetType="Path" BasedOn="{StaticResource HeaderPathStyle}">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ServerOrderBy}" Value="{x:Static locality:EnumServerOrderBy.ProtocolDesc}">
-                                                                <Setter Property="Visibility" Value="Visible"></Setter>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Path.Style>
-                                            </Path>
-                                            <TextBlock Margin="5" HorizontalAlignment="Left" Text="{DynamicResource Protocol}"></TextBlock>
+                                            <TextBlock HorizontalAlignment="Left" Text="{DynamicResource Protocol}"></TextBlock>
                                         </Grid>
                                     </MenuItem.Header>
                                 </MenuItem>
 
 
-                                <MenuItem Command="{Binding CmdReOrder}" CommandParameter="{x:Static locality:EnumServerOrderBy.NameAsc}">
+                                <MenuItem Style="{StaticResource UniformOptionMenuItemStyle}" Command="{Binding CmdChooseSortField}" CommandParameter="{x:Static locality:EnumServerOrderBy.NameAsc}">
                                     <MenuItem.Icon>
-                                        <Path UseLayoutRounding="True" Data="{StaticResource GeometryHook}" Fill="{DynamicResource PrimaryTextBrush}" Stretch="Uniform">
+                                        <Path>
                                             <Path.Style>
-                                                <Style TargetType="Path">
+                                                <Style TargetType="Path" BasedOn="{StaticResource MenuSelectionMarkStyle}">
                                                     <Setter Property="Visibility" Value="Collapsed"></Setter>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding ServerOrderBy}" Value="{x:Static locality:EnumServerOrderBy.NameAsc}">
@@ -331,39 +309,17 @@
                                     </MenuItem.Icon>
                                     <MenuItem.Header>
                                         <Grid>
-                                            <Path Data="M 7,3 L 13,3 L 10,0 L 7,3" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MenuItem}, Path=Foreground}">
-                                                <Path.Style>
-                                                    <Style TargetType="Path" BasedOn="{StaticResource HeaderPathStyle}">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ServerOrderBy}" Value="{x:Static locality:EnumServerOrderBy.NameAsc}">
-                                                                <Setter Property="Visibility" Value="Visible"></Setter>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Path.Style>
-                                            </Path>
-                                            <Path Data="M 7,0 L 10,3 L 13,0 L 7,0" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MenuItem}, Path=Foreground}">
-                                                <Path.Style>
-                                                    <Style TargetType="Path" BasedOn="{StaticResource HeaderPathStyle}">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ServerOrderBy}" Value="{x:Static locality:EnumServerOrderBy.NameDesc}">
-                                                                <Setter Property="Visibility" Value="Visible"></Setter>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Path.Style>
-                                            </Path>
-                                            <TextBlock Margin="5" HorizontalAlignment="Left" Text="{DynamicResource Name}"></TextBlock>
+                                            <TextBlock HorizontalAlignment="Left" Text="{DynamicResource Name}"></TextBlock>
                                         </Grid>
                                     </MenuItem.Header>
                                 </MenuItem>
 
 
-                                <MenuItem Command="{Binding CmdReOrder}" CommandParameter="{x:Static locality:EnumServerOrderBy.AddressAsc}">
+                                <MenuItem Style="{StaticResource UniformOptionMenuItemStyle}" Command="{Binding CmdChooseSortField}" CommandParameter="{x:Static locality:EnumServerOrderBy.AddressAsc}">
                                     <MenuItem.Icon>
-                                        <Path UseLayoutRounding="True" Data="{StaticResource GeometryHook}" Fill="{DynamicResource PrimaryTextBrush}" Stretch="Uniform">
+                                        <Path>
                                             <Path.Style>
-                                                <Style TargetType="Path">
+                                                <Style TargetType="Path" BasedOn="{StaticResource MenuSelectionMarkStyle}">
                                                     <Setter Property="Visibility" Value="Collapsed"></Setter>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding ServerOrderBy}" Value="{x:Static locality:EnumServerOrderBy.AddressAsc}">
@@ -379,39 +335,17 @@
                                     </MenuItem.Icon>
                                     <MenuItem.Header>
                                         <Grid>
-                                            <Path Data="M 7,3 L 13,3 L 10,0 L 7,3" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MenuItem}, Path=Foreground}">
-                                                <Path.Style>
-                                                    <Style TargetType="Path" BasedOn="{StaticResource HeaderPathStyle}">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ServerOrderBy}" Value="{x:Static locality:EnumServerOrderBy.AddressAsc}">
-                                                                <Setter Property="Visibility" Value="Visible"></Setter>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Path.Style>
-                                            </Path>
-                                            <Path Data="M 7,0 L 10,3 L 13,0 L 7,0" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MenuItem}, Path=Foreground}">
-                                                <Path.Style>
-                                                    <Style TargetType="Path" BasedOn="{StaticResource HeaderPathStyle}">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ServerOrderBy}" Value="{x:Static locality:EnumServerOrderBy.AddressDesc}">
-                                                                <Setter Property="Visibility" Value="Visible"></Setter>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Path.Style>
-                                            </Path>
-                                            <TextBlock Margin="5" HorizontalAlignment="Left" Text="{DynamicResource Hostname}"></TextBlock>
+                                            <TextBlock HorizontalAlignment="Left" Text="{DynamicResource Hostname}"></TextBlock>
                                         </Grid>
                                     </MenuItem.Header>
                                 </MenuItem>
 
 
-                                <MenuItem Command="{Binding CmdReOrder}" CommandParameter="{x:Static locality:EnumServerOrderBy.Custom}">
+                                <MenuItem Style="{StaticResource UniformOptionMenuItemStyle}" Command="{Binding CmdChooseSortField}" CommandParameter="{x:Static locality:EnumServerOrderBy.Custom}">
                                     <MenuItem.Icon>
-                                        <Path UseLayoutRounding="True" Data="{StaticResource GeometryHook}" Fill="{DynamicResource PrimaryTextBrush}" Stretch="Uniform">
+                                        <Path>
                                             <Path.Style>
-                                                <Style TargetType="Path">
+                                                <Style TargetType="Path" BasedOn="{StaticResource MenuSelectionMarkStyle}">
                                                     <Setter Property="Visibility" Value="Collapsed"></Setter>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding ServerOrderBy}" Value="{x:Static locality:EnumServerOrderBy.Custom}">
@@ -424,15 +358,25 @@
                                     </MenuItem.Icon>
                                     <MenuItem.Header>
                                         <Grid>
-                                            <TextBlock Margin="5" HorizontalAlignment="Left" Text="{DynamicResource 'Sort by drag'}"></TextBlock>
+                                            <TextBlock HorizontalAlignment="Left" Text="{DynamicResource 'Sort by drag'}"></TextBlock>
                                         </Grid>
                                     </MenuItem.Header>
                                 </MenuItem>
+                                <Separator Style="{StaticResource MenuDividerStyle}" />
+                                <MenuItem Style="{StaticResource UniformOptionMenuItemStyle}" IsCheckable="True"
+                                          IsChecked="{Binding IsSortDescending, Mode=TwoWay}"
+                                          IsEnabled="{Binding CanChangeSortDirection}">
+                                    <MenuItem.Icon>
+                                        <Path Style="{StaticResource MenuSelectionMarkStyle}"
+                                              Visibility="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=MenuItem}, Converter={StaticResource ConverterBool2Visible}}" />
+                                    </MenuItem.Icon>
+                                    <MenuItem.Header><TextBlock Text="降序排列" HorizontalAlignment="Left" /></MenuItem.Header>
+                                </MenuItem>
                             </MenuItem>
+                            <MenuItem x:Name="ThemePresetMenu" Header="{DynamicResource Theme}" />
+                            <Separator Style="{StaticResource MenuDividerStyle}" />
+                            <MenuItem Header="{DynamicResource Options}" Command="{Binding CmdGoSysOptionsPage}" />
                             <MenuItem Command="{Binding CmdGoAboutPage}">
-                                <MenuItem.Icon>
-                                    <Image Source="/Resources/Image/Logo/logo32.png" Width="20"></Image>
-                                </MenuItem.Icon>
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{DynamicResource About}" VerticalAlignment="Center"></TextBlock>
@@ -454,69 +398,10 @@
                                     </StackPanel>
                                 </MenuItem.Header>
                             </MenuItem>
-                            <Separator Style="{StaticResource SeparatorBaseStyle}"/>
-                            <MenuItem Header="{DynamicResource Exit}" Command="{Binding CmdExit}"></MenuItem>
                         </StackPanel>
                     </Border>
                 </Popup>
 
-                <Button Name="BtnMinimize" Style="{StaticResource ButtonBarPrimaryStyle}"
-                               Width="45" Height="35" VerticalAlignment="Top" BorderThickness="0">
-                    <Rectangle Width="10" Height="1" Stroke="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" StrokeThickness="0.5" />
-                </Button>
-
-                <Button Name="BtnMaximize" Style="{StaticResource ButtonBarPrimaryStyle}" Width="45" Height="35" VerticalAlignment="Top">
-                    <Grid>
-                        <Path Height="10" Width="10"
-                              StrokeThickness="0.5" 
-                              Stroke="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}"
-                              Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}"
-                              Data="F1 M 5.500000 -82.500000 L 82.500000 -82.500000 L 82.500000 -5.500000 L 5.500000 -5.500000 Z M 77.000000 -11.000000 L 77.000000 -77.000000 L 11.000000 -77.000000 L 11.000000 -11.000000 Z "
-                              Stretch="Uniform">
-                            <Path.Style>
-                                <Style TargetType="Path">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Path=WindowState}" Value="Maximized">
-                                            <Setter Property="Visibility" Value="Hidden"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Path.Style>
-                        </Path>
-
-                        <Path Height="10" Width="10"
-                              StrokeThickness="1" 
-                              Stroke="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}"
-                              Data="M2,2 L2,0 L8,0 L8,6 L6,6 M0,2 L6,2 L6,8 L0,8 Z"
-                              Stretch="Uniform">
-                            <Path.Style>
-                                <Style TargetType="Path">
-                                    <Setter Property="Visibility" Value="Hidden"></Setter>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Path=WindowState}" Value="Maximized">
-                                            <Setter Property="Visibility" Value="Visible"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Path.Style>
-                        </Path>
-                    </Grid>
-                </Button>
-
-                <Button Name="BtnClose" Width="45" Height="35" VerticalAlignment="Top"
-                    Style="{StaticResource ButtonBarPrimaryStyle}"
-                    attachProperty:VisionElement.ForegroundAccent="White"
-                    attachProperty:VisionElement.BackgroundAccent="Red"
-                    attachProperty:VisionElement.ForegroundOnMouseDown="White"
-                    attachProperty:VisionElement.BackgroundOnMouseDown="Red">
-                    <Path Height="10" Width="10"
-                          StrokeThickness="0.5" 
-                          Stroke="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}"
-                          Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}"
-                          Data="F1 M 47.910156 -44.000000 L 87.183594 -4.683594 L 83.316406 -0.816406 L 44.000000 -40.089844 L 4.683594 -0.816406 L 0.816406 -4.683594 L 40.089844 -44.000000 L 0.816406 -83.316406 L 4.683594 -87.183594 L 44.000000 -47.910156 L 83.316406 -87.183594 L 87.183594 -83.316406 Z "
-                          Stretch="Uniform">
-                    </Path>
-                </Button>
             </StackPanel>
 
 
@@ -601,6 +486,32 @@
                         </Style>
                     </ContentControl.Style>
                 </ContentControl>
+            </Grid>
+            <Grid x:Name="ConnectionSearchBar" Grid.Row="0" Panel.ZIndex="100"
+                  Visibility="Collapsed" Width="360" Height="36" Margin="0,4,0,4"
+                  HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" SnapsToDevicePixels="True"
+                  TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType">
+                <Border CornerRadius="10" Background="{DynamicResource PrimaryDarkBrush}" IsHitTestVisible="False">
+                    <Border.Effect><DropShadowEffect BlurRadius="14" ShadowDepth="3" Opacity="0.3" /></Border.Effect>
+                </Border>
+                <Border CornerRadius="10" Background="{DynamicResource PrimaryDarkBrush}"
+                        BorderBrush="{DynamicResource PrimaryLightBrush}" BorderThickness="1" Padding="10,6">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="SearchConnectionsTextBox" BorderThickness="0"
+                                 Style="{StaticResource ConnectionSearchTextBoxStyle}" Background="Transparent"
+                                 Text="{Binding MainFilterString, UpdateSourceTrigger=PropertyChanged}"
+                                 Tag="搜索名称、目标或账户" KeyUp="MainFilter_OnKeyUp" VerticalContentAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{Binding ConnectionSearchSummary}" Margin="10,0" FontSize="14"
+                                   Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center" />
+                        <Border Grid.Column="2" Width="1" Background="{DynamicResource PrimaryLightBrush}" Margin="0,2,6,2" />
+                        <Button Grid.Column="3" Content="×" Width="28" FontSize="18" ToolTip="关闭搜索 (Esc)"
+                                Style="{StaticResource ButtonBarPrimaryStyle}" Click="CloseConnectionSearch_OnClick" />
+                    </Grid>
+                </Border>
             </Grid>
         </Grid>
 

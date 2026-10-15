@@ -1,0 +1,255 @@
+diff --git a/Shawn.Utils.WpfResources/Theme/Styles/ComboBoxStyle.xaml b/Shawn.Utils.WpfResources/Theme/Styles/ComboBoxStyle.xaml
+index 6fde077..01be0ce 100644
+--- a/Shawn.Utils.WpfResources/Theme/Styles/ComboBoxStyle.xaml
++++ b/Shawn.Utils.WpfResources/Theme/Styles/ComboBoxStyle.xaml
+@@ -258,14 +258,15 @@
+                         Margin="8,0,8,8" Effect="{DynamicResource EffectShadow2}"
+                         Background="{TemplateBinding Background}" 
+                         BorderBrush="{TemplateBinding BorderBrush}" 
+-                        CornerRadius="{Binding Path=(attachProperty:VisionElement.BorderCornerRadius),RelativeSource={RelativeSource TemplatedParent}}">
++                        CornerRadius="8">
+                     <Grid Name="DropDown" SnapsToDevicePixels="True" 
+                           MinWidth="{TemplateBinding FrameworkElement.ActualWidth}" MaxHeight="{TemplateBinding ComboBox.MaxDropDownHeight}">
+                         <Border SnapsToDevicePixels="True"
+                                 Name="BorderForItemsPresenter"
++                                Padding="4"
+                                 BorderThickness="{TemplateBinding BorderThickness}" 
+                                 BorderBrush="{TemplateBinding BorderBrush}" 
+-                                CornerRadius="{Binding Path=(attachProperty:VisionElement.BorderCornerRadius),RelativeSource={RelativeSource TemplatedParent}}">
++                                CornerRadius="8">
+                             <ScrollViewer SnapsToDevicePixels="True">
+                                 <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" 
+                                                 TextElement.FontFamily="{TemplateBinding FontFamily}"
+@@ -359,4 +360,4 @@
+ 
+     <Style TargetType="ComboBox" BasedOn="{StaticResource ComboBoxAccentStyle}"></Style>
+ 
+-</ResourceDictionary>
+\ No newline at end of file
++</ResourceDictionary>
+diff --git a/Shawn.Utils.WpfResources/Theme/Styles/Menu.xaml b/Shawn.Utils.WpfResources/Theme/Styles/Menu.xaml
+index 41ff8b3..05f0510 100644
+--- a/Shawn.Utils.WpfResources/Theme/Styles/Menu.xaml
++++ b/Shawn.Utils.WpfResources/Theme/Styles/Menu.xaml
+@@ -1,4 +1,4 @@
+-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
++<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+     <ResourceDictionary.MergedDictionaries>
+         <ResourceDictionary Source="BaseStyle.xaml"></ResourceDictionary>
+@@ -27,7 +27,7 @@
+         <Setter Property="BorderThickness" Value="0"/>
+         <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+         <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
+-        <Setter Property="Background" Value="{DynamicResource PrimaryDarkBrush}"/>
++        <Setter Property="Background" Value="{DynamicResource MenuSurfaceBrush}"/>
+         <Setter Property="Cursor" Value="Hand" />
+         <Setter Property="Margin" Value="0"/>
+         <!--<Setter Property="attachProperty:VisionElement.Opacity" Value="1"/>
+@@ -83,11 +83,11 @@
+                                             <Grid.Effect>
+                                                 <DropShadowEffect BlurRadius="4" ShadowDepth="4" Color="Black" Opacity="0.5" Direction="300"></DropShadowEffect>
+                                             </Grid.Effect>
+-                                            <Border CornerRadius="0,0,4,4" 
++                                            <Border CornerRadius="8" Padding="4"
+                                                         x:Name="SubMenuBorder" 
+-                                                        BorderThickness="0"
++                                                        BorderThickness="1" BorderBrush="{DynamicResource MenuBorderBrush}"
+                                                         SnapsToDevicePixels="True"
+-                                                        Background="{DynamicResource PrimaryDarkBrush}">
++                                                        Background="{DynamicResource MenuSurfaceBrush}">
+                                                 <ItemsPresenter x:Name="ItemsPresenter"
+                                                                 TextElement.FontFamily="{TemplateBinding FontFamily}"
+                                                                 TextElement.FontSize="{TemplateBinding FontSize}"
+@@ -104,24 +104,24 @@
+                                     <Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
+                                 </Trigger>
+                                 <Trigger Property="IsHighlighted" Value="True">
+-                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource PrimaryLightBrush}"/>
++                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource MenuHoverBrush}"/>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                                 <Trigger Property="IsMouseOver" Value="True">
+-                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource PrimaryLightBrush}"/>
++                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource MenuHoverBrush}"/>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                                 <Trigger Property="IsPressed" Value="True">
+                                     <Setter Property="Background" TargetName="templateRoot">
+                                         <Setter.Value>
+-                                            <SolidColorBrush Color="{DynamicResource PrimaryLightColor}" Opacity="0.8"></SolidColorBrush>
++                                            <SolidColorBrush Color="{DynamicResource MenuHoverColor}" Opacity="0.8"></SolidColorBrush>
+                                         </Setter.Value>
+                                     </Setter>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                                 <Trigger Property="IsSubmenuOpen" Value="True">
+                                     <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource AccentMidBrush}"/>
+-                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource PrimaryDarkBrush}"/>
++                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource MenuSurfaceBrush}"/>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                             </ControlTemplate.Triggers>
+@@ -180,24 +180,24 @@
+                                     <Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
+                                 </Trigger>
+                                 <Trigger Property="IsHighlighted" Value="True">
+-                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource PrimaryLightBrush}"/>
++                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource MenuHoverBrush}"/>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                                 <Trigger Property="IsMouseOver" Value="True">
+-                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource PrimaryLightBrush}"/>
++                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource MenuHoverBrush}"/>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                                 <Trigger Property="IsPressed" Value="True">
+                                     <Setter Property="Background" TargetName="templateRoot">
+                                         <Setter.Value>
+-                                            <SolidColorBrush Color="{DynamicResource PrimaryLightColor}" Opacity="0.8"></SolidColorBrush>
++                                            <SolidColorBrush Color="{DynamicResource MenuHoverColor}" Opacity="0.8"></SolidColorBrush>
+                                         </Setter.Value>
+                                     </Setter>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                                 <Trigger Property="IsSubmenuOpen" Value="True">
+                                     <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource AccentMidBrush}"/>
+-                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource PrimaryDarkBrush}"/>
++                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource MenuSurfaceBrush}"/>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                             </ControlTemplate.Triggers>
+@@ -280,11 +280,11 @@
+                                             </Grid.Effect>
+                                         </Grid>-->
+ 
+-                                        <Border CornerRadius="0,0,4,4" 
++                                        <Border CornerRadius="8" Padding="4"
+                                                 x:Name="SubMenuBorder" 
+-                                                BorderThickness="0"
++                                                BorderThickness="1" BorderBrush="{DynamicResource MenuBorderBrush}"
+                                                 SnapsToDevicePixels="True"
+-                                                Background="{DynamicResource PrimaryDarkBrush}">
++                                                Background="{DynamicResource MenuSurfaceBrush}">
+                                             <ItemsPresenter x:Name="ItemsPresenter"
+                                                             TextElement.FontFamily="{TemplateBinding FontFamily}"
+                                                             TextElement.FontSize="{TemplateBinding FontSize}"
+@@ -300,25 +300,25 @@
+                                     <Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
+                                 </Trigger>
+                                 <Trigger Property="IsMouseOver" Value="True">
+-                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource PrimaryLightBrush}"/>
++                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource MenuHoverBrush}"/>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                                 <Trigger Property="IsPressed" Value="True">
+                                     <Setter Property="Background" TargetName="templateRoot">
+                                         <Setter.Value>
+-                                            <SolidColorBrush Color="{DynamicResource PrimaryLightColor}" Opacity="0.8"></SolidColorBrush>
++                                            <SolidColorBrush Color="{DynamicResource MenuHoverColor}" Opacity="0.8"></SolidColorBrush>
+                                         </Setter.Value>
+                                     </Setter>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                                 <Trigger Property="IsHighlighted" Value="True">
+                                     <Setter Property="IsOpen" Value="True" TargetName="PART_Popup"/>
+-                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource PrimaryLightBrush}"/>
++                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource MenuHoverBrush}"/>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                                 <Trigger Property="IsSubmenuOpen" Value="True">
+                                     <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource AccentMidBrush}"/>
+-                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource PrimaryLightBrush}"/>
++                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource MenuHoverBrush}"/>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                             </ControlTemplate.Triggers>
+@@ -385,24 +385,24 @@
+                                     <Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
+                                 </Trigger>
+                                 <Trigger Property="IsMouseOver" Value="True">
+-                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource PrimaryLightBrush}"/>
++                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource MenuHoverBrush}"/>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                                 <Trigger Property="IsPressed" Value="True">
+                                     <Setter Property="Background" TargetName="templateRoot">
+                                         <Setter.Value>
+-                                            <SolidColorBrush Color="{DynamicResource PrimaryLightColor}" Opacity="0.8"></SolidColorBrush>
++                                            <SolidColorBrush Color="{DynamicResource MenuHoverColor}" Opacity="0.8"></SolidColorBrush>
+                                         </Setter.Value>
+                                     </Setter>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                                 <Trigger Property="IsHighlighted" Value="True">
+-                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource PrimaryLightBrush}"/>
++                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource MenuHoverBrush}"/>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                                 <Trigger Property="IsSubmenuOpen" Value="True">
+                                     <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource AccentMidBrush}"/>
+-                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource PrimaryLightBrush}"/>
++                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource MenuHoverBrush}"/>
+                                     <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{DynamicResource PrimaryTextBrush}"/>
+                                 </Trigger>
+                             </ControlTemplate.Triggers>
+@@ -444,9 +444,9 @@
+ 
+ 
+     <Style x:Key="ContextMenuBaseStyle" TargetType="ContextMenu" BasedOn="{StaticResource ControlBase}">
+-        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderBrush}"/>
++        <Setter Property="BorderBrush" Value="{DynamicResource MenuBorderBrush}"/>
+         <Setter Property="BorderThickness" Value="1"/>
+-        <Setter Property="Background" Value="{DynamicResource PrimaryMidBrush}"/>
++        <Setter Property="Background" Value="{DynamicResource MenuSurfaceBrush}"/>
+         <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
+         <Setter Property="SnapsToDevicePixels" Value="True" />
+         <Setter Property="OverridesDefaultStyle" Value="True" />
+@@ -455,18 +455,12 @@
+         <Setter Property="Template">
+             <Setter.Value>
+                 <ControlTemplate TargetType="{x:Type ContextMenu}">
+-                    <Border x:Name="Border"
++                    <Border x:Name="Border" CornerRadius="8" Padding="4"
+                             Background="{TemplateBinding Background}"
+                             BorderBrush="{TemplateBinding BorderBrush}"
+                             BorderThickness="{TemplateBinding BorderThickness}">
+                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                     </Border>
+-                    <ControlTemplate.Triggers>
+-                        <Trigger Property="HasDropShadow" Value="true">
+-                            <Setter TargetName="Border" Property="Padding" Value="0,3,0,3" />
+-                            <Setter TargetName="Border" Property="CornerRadius" Value="4" />
+-                        </Trigger>
+-                    </ControlTemplate.Triggers>
+                 </ControlTemplate>
+             </Setter.Value>
+         </Setter>
+@@ -481,4 +475,4 @@
+     <Style TargetType="ContextMenu" BasedOn="{StaticResource ContextMenuPrimaryStyle}"></Style>
+     <Style TargetType="MenuItem" BasedOn="{StaticResource MenuItemPrimaryStyle}"></Style>
+     <Style TargetType="Separator" BasedOn="{StaticResource SeparatorPrimaryStyle}"></Style>
+-</ResourceDictionary>
+\ No newline at end of file
++</ResourceDictionary>
+diff --git a/Shawn.Utils.WpfResources/Theme/Styles/WindowChromeBase.cs b/Shawn.Utils.WpfResources/Theme/Styles/WindowChromeBase.cs
+index cb6ef93..b17971a 100644
+--- a/Shawn.Utils.WpfResources/Theme/Styles/WindowChromeBase.cs
++++ b/Shawn.Utils.WpfResources/Theme/Styles/WindowChromeBase.cs
+@@ -12,7 +12,8 @@ namespace Shawn.Utils.WpfResources.Theme.Styles
+         protected override void OnSourceInitialized(EventArgs e)
+         {
+             base.OnSourceInitialized(e);
+-            ((HwndSource)PresentationSource.FromVisual(this)).AddHook(HookProc);
++            // A native HWND may exist before the hidden WPF visual is attached.
++            HwndSource.FromHwnd(new WindowInteropHelper(this).Handle)?.AddHook(HookProc);
+         }
+ 
+         private IntPtr HookProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+@@ -32,4 +33,4 @@ namespace Shawn.Utils.WpfResources.Theme.Styles
+             return IntPtr.Zero;
+         }
+     }
+-}
+\ No newline at end of file
++}

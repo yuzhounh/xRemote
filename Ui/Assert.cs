@@ -2,20 +2,22 @@ namespace _1RM
 {
     internal static class Assert
     {
+        // Preserve this storage identity for existing profiles, databases and credential keys.
         private const string APP_NAME_RAW = "1Remote";
+        private const string PRODUCT_NAME = "xRemote";
 #if DEBUG
         public const string APP_NAME = $"{APP_NAME_RAW}_Debug";
 #if FOR_MICROSOFT_STORE_ONLY
-        public const string APP_DISPLAY_NAME = $"{APP_NAME}(Store)_Debug";
+        public const string APP_DISPLAY_NAME = $"{PRODUCT_NAME}(Store)_Debug";
 #else
-        public const string APP_DISPLAY_NAME = APP_NAME;
+        public const string APP_DISPLAY_NAME = $"{PRODUCT_NAME}_Debug";
 #endif
 #else
         public const string APP_NAME = $"{APP_NAME_RAW}";
 #if FOR_MICROSOFT_STORE_ONLY
-        public const string APP_DISPLAY_NAME = $"{APP_NAME}(Store)";
+        public const string APP_DISPLAY_NAME = $"{PRODUCT_NAME}(Store)";
 #else
-        public const string APP_DISPLAY_NAME = APP_NAME;
+        public const string APP_DISPLAY_NAME = PRODUCT_NAME;
 #endif
 #endif
 

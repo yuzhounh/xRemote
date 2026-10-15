@@ -49,6 +49,7 @@ namespace _1RM
             // Configure the IoC container in here;
             builder.Bind<ILanguageService>().And<LanguageService>().ToInstance(AppInitHelper.LanguageServiceObj);
             builder.Bind<TaskTrayService>().ToSelf().InSingletonScope();
+            builder.Bind<ConnectionStatusService>().ToSelf().InSingletonScope();
             builder.Bind<LocalityService>().ToSelf().InSingletonScope();
             builder.Bind<KeywordMatchService>().ToInstance(AppInitHelper.KeywordMatchServiceObj);
             builder.Bind<ConfigurationService>().ToInstance(AppInitHelper.ConfigurationServiceObj);
@@ -109,6 +110,7 @@ namespace _1RM
             // init Database here after ui init, to show alert if db connection goes wrong.
             AppInitHelper.InitOnLaunch();
             IoC.Get<TaskTrayService>().TaskTrayInit();
+            IoC.Get<ConnectionStatusService>().Start();
         }
 
 
@@ -120,6 +122,7 @@ namespace _1RM
                 Thread.Sleep(5 * 1000);
                 Environment.Exit(1);
             });
+            IoC.Get<ConnectionStatusService>().Dispose();
             IoC.Get<TaskTrayService>().TaskTrayDispose();
             IoC.Get<SessionControlService>()?.Release();
             if (IoC.Get<LauncherWindowViewModel>()?.View != null)

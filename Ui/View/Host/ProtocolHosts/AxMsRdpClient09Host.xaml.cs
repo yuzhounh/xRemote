@@ -304,7 +304,9 @@ namespace _1RM.View.Host.ProtocolHosts
         {
             Debug.Assert(_rdpClient != null); if (_rdpClient == null) return;
             SimpleLogHelper.Debug("RDP Host: init conn bar");
-            _rdpClient.AdvancedSettings6.DisplayConnectionBar = _rdpSettings.IsFullScreenWithConnectionBar == true;
+            // Full screen is button-driven. Always retain the native top bar so
+            // the user can restore the window without reserving a remote key.
+            _rdpClient.AdvancedSettings6.DisplayConnectionBar = true;
             if (_rdpClient.AdvancedSettings6.DisplayConnectionBar)
             {
                 _rdpClient.AdvancedSettings6.ConnectionBarShowPinButton = true;

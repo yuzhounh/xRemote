@@ -238,6 +238,7 @@ namespace _1RM.View.Host.ProtocolHosts
         private void OnRdpClientLoginComplete(object? sender, EventArgs e)
         {
             SimpleLogHelper.Debug("RDP Host:  OnRdpClientLoginComplete");
+            LocalityConnectRecorder.SuccessfulConnectTimeAddOrUpdate(_rdpSettings);
 
             OnCanResizeNowChanged?.Invoke();
             RdpHost.Visibility = Visibility.Visible;

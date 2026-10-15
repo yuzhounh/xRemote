@@ -1,4 +1,4 @@
-﻿<protocolConfig:ExternalRunnerSettingsBase x:Class="_1RM.View.Settings.ProtocolConfig.ExternalRunnerSettings"
+<protocolConfig:ExternalRunnerSettingsBase x:Class="_1RM.View.Settings.ProtocolConfig.ExternalRunnerSettings"
                             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -30,7 +30,8 @@
                 Background="{DynamicResource BackgroundBrush}"
                 CornerRadius="10" BorderThickness="0">
         </Border>
-        <Grid Grid.Row="0" Background="{DynamicResource PrimaryMidBrush}">
+        <Grid Grid.Row="0" Background="{DynamicResource ProtocolCardHeaderBrush}">
+            <Border VerticalAlignment="Bottom" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource ProtocolCardDividerBrush}" IsHitTestVisible="False" />
             <TextBlock HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="{DynamicResource HeadFontSize}" Text="{Binding ExternalRunner.Name}" Margin="5"></TextBlock>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <!--Share-->
@@ -69,7 +70,7 @@
             <Grid Style="{StaticResource GridOneRow}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="ExternalRunnerColumn1"></ColumnDefinition>
-                    <ColumnDefinition Width="290"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="ExternalRunnerColumn3"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="{DynamicResource 'Exe path'}"></TextBlock>
@@ -99,7 +100,7 @@
             <Grid Style="{StaticResource GridOneRow}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="ExternalRunnerColumn1"></ColumnDefinition>
-                    <ColumnDefinition Width="290"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="ExternalRunnerColumn3"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="{DynamicResource 'Cmd parameter'}"></TextBlock>
@@ -159,7 +160,7 @@
             <Grid Style="{StaticResource GridOneRow}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="ExternalRunnerColumn1"></ColumnDefinition>
-                    <ColumnDefinition Width="290"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="ExternalRunnerColumn3"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <StackPanel>
@@ -170,7 +171,7 @@
 
                     <TextBlock TextWrapping="Wrap"
                                HorizontalAlignment="Left"
-                               Width="290"
+                               MaxWidth="420"
                                Margin="0"
                                FontSize="{DynamicResource GlobalFontSizeSmall}"
                                Text="{DynamicResource 'Before runner start the environment variables will be set'}" 
@@ -214,13 +215,13 @@
                                     <TextBox Grid.Column="0" Margin="2" 
                                              Text="{Binding Key, UpdateSourceTrigger=PropertyChanged}" 
                                              Tag="Key e.g. User"
-                                             ToolTip="Key e.g. User"/>
+                                             ToolTip="{DynamicResource Settings.EnvironmentKeyHint}"/>
 
                                     <controls:AutoCompleteComboBox Grid.Column="1" Margin="2" 
                                                                    Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" 
                                                                    Selections="{Binding DataContext.ExternalRunner.MarcoNames, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type protocolConfig:ExternalRunnerSettingsBase}}}"
                                                                    Tag="Value e.g. %1RM_USERNAME%"
-                                                                   ToolTip="Value e.g. %1RM_USERNAME%"/>
+                                                                   ToolTip="{DynamicResource Settings.EnvironmentValueHint}"/>
 
                                     <Button Grid.Column="2" Width="10" Height="10"
                                             ToolTip="{DynamicResource 'Delete'}"
@@ -242,10 +243,10 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <Button Width="20" Height="20" 
-                            Margin="20 0 20 0"
+                    <Button Width="28" Height="28"
+                            Margin="0"
                             ToolTip="{DynamicResource 'Add environment variables'}"
-                            Style="{StaticResource ButtonBarTransparentStyle}"
+                            Style="{StaticResource LeftAlignedAddButtonStyle}"
                             HorizontalAlignment="Left"
                             Command="{Binding CmdAddEnvironmentVariable}">
                         <Grid Height="15" Width="15">
@@ -264,21 +265,21 @@
             <Grid Style="{StaticResource GridOneRow}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="ExternalRunnerColumn1"></ColumnDefinition>
-                    <ColumnDefinition Width="290"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="ExternalRunnerColumn3"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <StackPanel>
-                    <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="Special Characters"></TextBlock>
+                    <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="{DynamicResource Settings.SpecialCharacters}"></TextBlock>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Grid.ColumnSpan="2">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock TextWrapping="Wrap"
                                HorizontalAlignment="Left"
-                               Width="290"
+                               MaxWidth="420"
                                Margin="0"
                                FontSize="{DynamicResource GlobalFontSizeSmall}"
-                               Text="Sometime special characters (like @ in username, see example below) have to be encoded using %XX syntax" 
+                               Text="{DynamicResource Settings.SpecialCharacterHint}"
                                Opacity="0.8"></TextBlock>
                         <TextBlock VerticalAlignment="Center" Margin="2 0">
                             <Hyperlink NavigateUri="https://1remote.github.io/usage/protocol/runner/" TextDecorations="{x:Null}" 
@@ -325,7 +326,7 @@
                                     <TextBox Grid.Column="0" Margin="2" 
                                              Text="{Binding Key, UpdateSourceTrigger=PropertyChanged}" 
                                              Tag="Key e.g. User"
-                                             ToolTip="Key e.g. User"/>
+                                             ToolTip="{DynamicResource Settings.EnvironmentKeyHint}"/>
 
 
                                     <TextBox Grid.Column="1" Margin="2" 
@@ -353,10 +354,10 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <Button Width="20" Height="20" 
-                            Margin="20 0 20 0"
+                    <Button Width="28" Height="28"
+                            Margin="0"
                             ToolTip="{DynamicResource 'Add'}"
-                            Style="{StaticResource ButtonBarTransparentStyle}"
+                            Style="{StaticResource LeftAlignedAddButtonStyle}"
                             HorizontalAlignment="Left"
                             Command="{Binding CmdAddSpecialCharacter}">
                         <Grid Height="15" Width="15">
@@ -373,7 +374,7 @@
             <Grid Style="{StaticResource GridOneRow}" ToolTip="{DynamicResource 'Hosting this exe in 1Remote tab view?'}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="ExternalRunnerColumn1"></ColumnDefinition>
-                    <ColumnDefinition Width="290"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="ExternalRunnerColumn3"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="{DynamicResource 'Hosting'}"></TextBlock>

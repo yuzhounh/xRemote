@@ -36,9 +36,9 @@
 
         <Border Name="BorderMainContent" Padding="10 40">
             <StackPanel MinHeight="{x:Static view:LauncherWindowViewModel.LAUNCHER_GRID_KEYWORD_HEIGHT}">
-                <Border CornerRadius="{x:Static view:LauncherWindowViewModel.LauncherOutlineCornerRadiusObj}" Background="{DynamicResource PrimaryMidBrush}">
+                <Border CornerRadius="{x:Static view:LauncherWindowViewModel.LauncherOutlineCornerRadiusObj}" BorderThickness="1" BorderBrush="{DynamicResource MenuBorderBrush}" Background="{DynamicResource LauncherSurfaceBrush}">
                     <Border.Effect>
-                        <DropShadowEffect BlurRadius="10" />
+                        <DropShadowEffect BlurRadius="20" ShadowDepth="3" Opacity="0.18" />
                     </Border.Effect>
 
                     <Grid Clip="{Binding GridMainClip}" 

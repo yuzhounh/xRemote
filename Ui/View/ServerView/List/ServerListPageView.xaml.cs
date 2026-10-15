@@ -15,6 +15,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -409,12 +410,26 @@ namespace _1RM.View.ServerView
             ServerPageView_TagListHelper.HeaderTag_OnClick(DataContext, sender, e);
         }
 
-        private void ServerName_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void ColumnResize_OnDragDelta(object sender, DragDeltaEventArgs e)
         {
-            if (sender is Grid g && DataContext is ServerListPageViewModel vm)
+            if (sender is Thumb thumb && DataContext is ServerListPageViewModel vm)
             {
-                vm.NameWidth = e.NewSize.Width;
+                switch (thumb.Tag as string)
+                {
+                    case "Status": vm.StatusWidth += e.HorizontalChange; break;
+                    case "Name": vm.NameWidth += e.HorizontalChange; break;
+                    case "Address": vm.AddressWidth += e.HorizontalChange; break;
+                    case "Protocol": vm.ProtocolWidth += e.HorizontalChange; break;
+                }
+                e.Handled = true;
             }
+        }
+
+        private void ColumnResize_OnDragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            // Persist once per drag, rather than writing JSON on every mouse move.
+            LocalityListViewService.Save();
+            e.Handled = true;
         }
 
         private void ServerNote_SizeChanged(object sender, SizeChangedEventArgs e)

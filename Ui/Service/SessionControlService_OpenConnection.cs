@@ -231,11 +231,16 @@ namespace _1RM.Service
 
 
 
+            // Apply the same first-use prompt / remembered-password policy to all RDP profiles.
+            if (protocolClone is RDP managedRdp)
+                LocalRdpPasswordStore.PrepareForConnect(managedRdp);
+
             // check if it needs password
             if (protocolClone is ProtocolBaseWithAddressPortUserPwd { AskPasswordWhenConnect: true } pb)
             {
                 bool flag = false;
-                var pwdDlg = new PasswordPopupDialogViewModel(protocolClone is SSH or SFTP)
+                var pwdDlg = new PasswordPopupDialogViewModel(protocolClone is SSH or SFTP,
+                    protocolClone is RDP && !protocolClone.IsTmpSession())
                 {
                     Title = $"[{pb.ProtocolDisplayName}]({pb.DisplayName}) -> {pb.Address}:{pb.Port}",
                     UserName = pb.UserName
@@ -249,8 +254,9 @@ namespace _1RM.Service
                 else
                 {
                     pwdDlg.UsePrivateKeyForConnect = false;
-                    pwdDlg.Password = pb.Password;
+                    pwdDlg.Password = pb is RDP ? "" : pb.Password;
                 }
+                if (pwdDlg.CanRememberInfo) pwdDlg.IsRememberInfo = true;
 
                 Execute.OnUIThreadSync(() =>
                 {
@@ -272,6 +278,23 @@ namespace _1RM.Service
                         pb.UsePrivateKeyForConnect = false;
                         pb.PrivateKey = "";
                         pb.Password = pwdDlg.Password;
+                    }
+                    if (pb is RDP rememberRdp && pwdDlg.CanRememberInfo && pwdDlg.IsRememberInfo
+                        && !string.IsNullOrEmpty(pwdDlg.Password))
+                    {
+                        try
+                        {
+                            LocalRdpPasswordStore.Remember(rememberRdp, pwdDlg.Password);
+                            var configured = (RDP)protocol.Clone();
+                            configured.UserName = pb.UserName;
+                            configured.AskPasswordWhenConnect = false;
+                            var saved = _appData.UpdateServer(configured);
+                            if (!saved.IsSuccess) MessageBoxHelper.Warning("密码已保存在本机，但连接设置未能更新，下次可能仍需输入。请检查数据源写入权限。");
+                        }
+                        catch (Exception ex) when (ex is System.IO.IOException or UnauthorizedAccessException or System.Security.Cryptography.CryptographicException or Newtonsoft.Json.JsonException)
+                        {
+                            MessageBoxHelper.Warning("无法在本机记住密码；本次仍会继续连接。请检查本机配置目录权限。");
+                        }
                     }
                     pwdDlg.PrivateKey = "";
                     pwdDlg.Password = "";

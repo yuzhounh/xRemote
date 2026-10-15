@@ -5,6 +5,7 @@ on:
 
 jobs:
   close-issues:
+    if: github.repository == '1Remote/1Remote'
     runs-on: ubuntu-latest
     permissions:
       issues: write

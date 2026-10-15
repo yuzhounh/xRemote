@@ -272,7 +272,7 @@ Runner for {ExternalRunner.OwnerProtocolName}
 ```
 "
                         );
-                    if (MessageBoxHelper.Confirm($"You runner({ExternalRunner.Name}) is copied to clipboard, do you want to share to Github?", "Share", ownerViewModel: IoC.Get<MainWindowViewModel>()))
+                    if (MessageBoxHelper.Confirm(IoC.Translate("You runner({0}) is copied to clipboard, do you want to share to Github?", ExternalRunner.Name), IoC.Translate("Share"), ownerViewModel: IoC.Get<MainWindowViewModel>()))
                     {
                         HyperlinkHelper.OpenUriBySystem("https://github.com/1Remote/1Remote/issues/new?assignees=VShawn&labels=area-config&template=runner_sharing.md&title=");
                     }

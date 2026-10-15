@@ -93,7 +93,7 @@
                                  />
 
 
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Database"></TextBlock>
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="{DynamicResource Settings.Database}"></TextBlock>
                         <TextBox Grid.Row="3" Grid.Column="1" 
                                  Style="{StaticResource TbInput}"
                                  Text="{Binding DatabaseName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}"

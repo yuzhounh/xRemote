@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="_1RM.View.Settings.DataSource.DataSourceView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:uiText="clr-namespace:_1RM.Controls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:_1RM.View.Settings.DataSource"
@@ -119,8 +120,8 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding DataSourceName}"></TextBlock>
-                                <TextBlock Text=" (Readonly)" Visibility="{Binding IsWritable, Converter={StaticResource ConverterBool2VisibleInv}}"></TextBlock>
+                                <uiText:LocalizedOptionText Value="{Binding DataSourceName}" ResourcePrefix="DataSourceName." />
+                                <TextBlock Text="{DynamicResource Settings.ReadOnly}" Visibility="{Binding IsWritable, Converter={StaticResource ConverterBool2VisibleInv}}"></TextBlock>
                                 <Grid Width="20"></Grid>
                             </StackPanel>
                         </DataTemplate>

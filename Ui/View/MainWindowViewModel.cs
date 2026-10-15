@@ -139,14 +139,46 @@ namespace _1RM.View
                     LocalityListViewService.ServerOrderBySet(value);
                 }
                 RaisePropertyChanged();
+                RaisePropertyChanged(nameof(IsSortDescending));
+                RaisePropertyChanged(nameof(CanChangeSortDirection));
             }
         }
+
+        public bool CanChangeSortDirection => ServerOrderBy != EnumServerOrderBy.Custom;
+        public bool IsSortDescending
+        {
+            get => ServerOrderBy is EnumServerOrderBy.IdDesc or EnumServerOrderBy.NameDesc
+                or EnumServerOrderBy.ProtocolDesc or EnumServerOrderBy.AddressDesc;
+            set
+            {
+                if (!CanChangeSortDirection || value == IsSortDescending) return;
+                ServerOrderBy = WithSortDirection(ServerOrderBy, value);
+                ActiveServerViewModel.ApplySort();
+            }
+        }
+
+        internal static EnumServerOrderBy WithSortDirection(EnumServerOrderBy field, bool descending) => field switch
+        {
+            EnumServerOrderBy.ProtocolAsc or EnumServerOrderBy.ProtocolDesc => descending ? EnumServerOrderBy.ProtocolDesc : EnumServerOrderBy.ProtocolAsc,
+            EnumServerOrderBy.NameAsc or EnumServerOrderBy.NameDesc => descending ? EnumServerOrderBy.NameDesc : EnumServerOrderBy.NameAsc,
+            EnumServerOrderBy.AddressAsc or EnumServerOrderBy.AddressDesc => descending ? EnumServerOrderBy.AddressDesc : EnumServerOrderBy.AddressAsc,
+            EnumServerOrderBy.IdAsc or EnumServerOrderBy.IdDesc => descending ? EnumServerOrderBy.IdDesc : EnumServerOrderBy.IdAsc,
+            _ => field
+        };
+
+        private RelayCommand? _cmdChooseSortField;
+        public RelayCommand CmdChooseSortField => _cmdChooseSortField ??= new RelayCommand(o =>
+        {
+            if (o is not EnumServerOrderBy sortField) return;
+            ServerOrderBy = WithSortDirection(sortField, IsSortDescending);
+            ActiveServerViewModel.ApplySort();
+        });
 
         public void SetServerOrderBy(object? o)
         {
             var newOrderBy = EnumServerOrderBy.IdAsc;
             if (int.TryParse(o?.ToString(), out var ot)
-                && ot is >= (int)EnumServerOrderBy.IdAsc and <= (int)EnumServerOrderBy.Custom)
+                && ot is >= (int)EnumServerOrderBy.IdDesc and <= (int)EnumServerOrderBy.Custom)
             {
                 newOrderBy = (EnumServerOrderBy)ot;
             }
@@ -484,6 +516,7 @@ namespace _1RM.View
                 {
                     if (window.WindowState == WindowState.Minimized)
                         window.WindowState = WindowState.Normal;
+                    window.EnsureVisibleLocation();
                     if (window.IsVisible == false)
                     {
                         if (isForceActivate) HideMe();
@@ -548,6 +581,8 @@ namespace _1RM.View
 
         private readonly DebounceDispatcher _debounceDispatcher = new();
         private string _mainFilterString = "";
+        public string ConnectionSearchSummary => $"{ActiveServerViewModel?.IsServerVisible.Count(x => x.Value) ?? 0} 项";
+        public void RefreshConnectionSearchSummary() => RaisePropertyChanged(nameof(ConnectionSearchSummary));
         public string MainFilterString
         {
             get => _mainFilterString;
@@ -561,6 +596,7 @@ namespace _1RM.View
                         if (_mainFilterString != MainFilterString) return;
                         // MainFilterString changed -> refresh view source -> calc visible in `ServerListItemSource_OnFilter`
                         ActiveServerViewModel?.CalcServerVisibleAndRefresh();
+                        RefreshConnectionSearchSummary();
                     });
                 }
             }

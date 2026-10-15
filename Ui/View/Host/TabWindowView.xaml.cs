@@ -13,12 +13,50 @@ using System.Linq;
 using Shawn.Utils;
 using Shawn.Utils.Wpf;
 using _1RM.View.Host.ProtocolHosts;
+using _1RM.Model;
+using Dragablz;
+using _1RM.View.Utils;
+using Microsoft.UI.Windowing;
+using Windows.Graphics;
 
 namespace _1RM.View.Host
 {
     public partial class TabWindowView
     {
-        public const double TITLE_BAR_HEIGHT = 30;
+        public const double TITLE_BAR_HEIGHT = 48;
+
+        public static readonly DependencyProperty NativeCaptionHeightProperty = DependencyProperty.Register(
+            nameof(NativeCaptionHeight), typeof(double), typeof(TabWindowView), new PropertyMetadata(TITLE_BAR_HEIGHT));
+        public double NativeCaptionHeight
+        {
+            get => (double)GetValue(NativeCaptionHeightProperty);
+            private set => SetValue(NativeCaptionHeightProperty, value);
+        }
+        public static readonly DependencyProperty NativeCaptionReservedWidthProperty = DependencyProperty.Register(
+            nameof(NativeCaptionReservedWidth), typeof(double), typeof(TabWindowView), new PropertyMetadata(189.0));
+        public double NativeCaptionReservedWidth
+        {
+            get => (double)GetValue(NativeCaptionReservedWidthProperty);
+            private set => SetValue(NativeCaptionReservedWidthProperty, value);
+        }
+        private readonly NativeMainTitleBar _nativeTitleBar;
+
+        private RectInt32[] LayoutNativeCaption(AppWindowTitleBar bar, double scaleX, double scaleY)
+        {
+            NativeCaptionHeight = bar.Height > 0 ? bar.Height / scaleY : TITLE_BAR_HEIGHT;
+            double right = Math.Max(0, bar.RightInset / scaleX);
+            NativeCaptionReservedWidth = right + SessionFullScreenButton.Width;
+            SessionFullScreenButton.Margin = new Thickness(0, 0, right, 0);
+            if (TabablzControl.HeaderSuffixContent is not Grid suffix
+                || suffix.Children.OfType<Grid>().FirstOrDefault() is not { } actions
+                || actions.Children.OfType<Grid>().FirstOrDefault(x => x.Tag as string == "NativeCaptionDragRegion") is not { } drag
+                || drag.ActualWidth <= 0)
+                return Array.Empty<RectInt32>();
+            // The root grid is the extended client area, including the caption.
+            var origin = drag.TranslatePoint(new Point(0, 0), (UIElement)Content);
+            return new[] { new RectInt32((int)Math.Ceiling(origin.X * scaleX), 0,
+                Math.Max(0, (int)Math.Floor(drag.ActualWidth * scaleX)), (int)Math.Ceiling(NativeCaptionHeight * scaleY)) };
+        }
 
         protected readonly TabWindowViewModel Vm;
         public string Token => Vm.Token;
@@ -26,6 +64,86 @@ namespace _1RM.View.Host
         private IntPtr _myHandle = IntPtr.Zero;
         private System.Windows.Interop.HwndSource? _hwndSource;
         private System.Windows.Interop.HwndSourceHook? _wndProcHook;
+        private bool _separatorUpdatePending;
+
+        private void QueueTabSeparatorUpdate()
+        {
+            if (_separatorUpdatePending) return;
+            _separatorUpdatePending = true;
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() =>
+            {
+                _separatorUpdatePending = false;
+                var headers = TabablzControl.GetOrderedHeaders()?.ToArray();
+                if (headers == null) return;
+                for (var i = 0; i < headers.Length; i++)
+                    ChromeTabBackground.SetShowSeparator(headers[i], !headers[i].IsSelected
+                        && !(i + 1 < headers.Length && headers[i + 1].IsSelected));
+            }));
+        }
+
+        private void RecentConnections_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button { ContextMenu: { } menu } button) return;
+            PopulateRecentConnections(menu);
+            menu.PlacementTarget = button;
+            menu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            menu.IsOpen = true;
+        }
+
+        private void PopulateRecentConnections(ContextMenu menu)
+        {
+            menu.Items.Clear();
+            var orderedTabs = TabablzControl.GetOrderedHeaders()?
+                .Select(x => x.DataContext as TabItemViewModel ?? x.Content as TabItemViewModel)
+                .OfType<TabItemViewModel>().Where(Vm.Items.Contains).ToArray();
+            var tabs = orderedTabs is { Length: > 0 } ? orderedTabs : Vm.Items.ToArray();
+            if (tabs.Length > 0)
+            {
+                menu.Items.Add(new MenuItem { Header = "当前标签页", IsEnabled = false });
+                foreach (var tab in tabs)
+                {
+                    var item = new MenuItem
+                    {
+                        Header = tab.DisplayName,
+                        ToolTip = tab.Content.ProtocolServer.SubTitle,
+                        IsChecked = tab == Vm.SelectedItem,
+                        Icon = new Image { Source = tab.IconImg, Width = 16, Height = 16 }
+                    };
+                    item.Click += (_, _) =>
+                    {
+                        if (!Vm.Items.Contains(tab)) return;
+                        Vm.SelectedItem = tab;
+                        Activate();
+                    };
+                    menu.Items.Add(item);
+                }
+            }
+            var openIds = tabs.Select(x => x.Content.ProtocolServer.Id).ToHashSet();
+            var recent = IoC.Get<GlobalData>().VmItemList
+                .Select(x => new { Server = x.Server, Last = LocalityConnectRecorder.SuccessfulConnectTimeGet(x.Server) })
+                .Where(x => x.Last > DateTime.MinValue && !openIds.Contains(x.Server.Id))
+                .OrderByDescending(x => x.Last).Take(8).ToArray();
+            if (recent.Length > 0)
+            {
+                if (menu.Items.Count > 0) menu.Items.Add(new Separator());
+                menu.Items.Add(new MenuItem { Header = "最近使用", IsEnabled = false });
+            }
+            if (recent.Length == 0 && tabs.Length == 0)
+                menu.Items.Add(new MenuItem { Header = "暂无最近连接", IsEnabled = false });
+            foreach (var entry in recent)
+            {
+                var server = entry.Server;
+                var item = new MenuItem
+                {
+                    Header = server.DisplayName,
+                    ToolTip = server.SubTitle,
+                    Icon = new Image { Source = server.IconImg, Width = 16, Height = 16 }
+                };
+                item.Click += (_, _) => GlobalEventHelper.OnRequestServerConnect?.Invoke(
+                    server, fromView: "Recent connections", assignTabToken: Vm.Token);
+                menu.Items.Add(item);
+            }
+        }
 
 
 
@@ -34,6 +152,11 @@ namespace _1RM.View.Host
             InitializeComponent();
             Vm = new TabWindowViewModel(this);
             DataContext = Vm;
+            _nativeTitleBar = new NativeMainTitleBar(this, TabablzControl,
+                () => Vm.CmdCloseAll.Execute(null), LayoutNativeCaption);
+            Vm.Items.CollectionChanged += (_, _) => QueueTabSeparatorUpdate();
+            TabablzControl.AddHandler(DragablzItem.LogicalIndexChangedEvent,
+                new RoutedPropertyChangedEventHandler<int>((_, _) => QueueTabSeparatorUpdate()));
 
             this.MinWidth = this.MinHeight = 300;
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -42,8 +165,17 @@ namespace _1RM.View.Host
             Focusable = true;
             this.Loaded += (_, _) =>
             {
+                // Bind to the actual prefix button after template creation. Window-level
+                // routed event Source may be retargeted by the tab control/template.
+                if (TabablzControl.HeaderPrefixContent is Panel prefix)
+                    foreach (var button in prefix.Children.OfType<Button>().Where(x => x.Tag as string == "RecentConnections"))
+                    {
+                        button.Click -= RecentConnections_OnClick;
+                        button.Click += RecentConnections_OnClick;
+                    }
                 InitWindowSizeOnLoaded();
                 TimerInitOnLoaded();
+                QueueTabSeparatorUpdate();
                 _myHandle = new WindowInteropHelper(this).Handle;
                 Keyboard.Focus(this);
 
@@ -61,14 +193,6 @@ namespace _1RM.View.Host
                     }
                     SimpleLogHelper.DebugInfo($"(Window size changed) Tab size change to:W = {this.ActualWidth}, H = {this.ActualHeight}");
                 };
-
-                // remember window pos when size changed
-                OnDragEnd += () =>
-                {
-                    IoC.Get<LocalityService>().TabWindowTop = this.Top;
-                    IoC.Get<LocalityService>().TabWindowLeft = this.Left;
-                };
-
 
                 StateChanged += delegate
                 {
@@ -137,6 +261,14 @@ namespace _1RM.View.Host
 
         private IntPtr AdditionalWndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
+            // Persist placement and restore integrated-app focus after native caption dragging.
+            if (msg == 0x0232 && WindowState == WindowState.Normal) // WM_EXITSIZEMOVE
+            {
+                IoC.Get<LocalityService>().TabWindowTop = Top;
+                IoC.Get<LocalityService>().TabWindowLeft = Left;
+                if (Vm?.SelectedItem?.Content?.GetProtocolHostType() != ProtocolHostType.Integrate)
+                    RunForIntegrate();
+            }
             const int WM_GETICON = 0x007F;
             const int ICON_BIG = 1;
             const int ICON_SMALL = 0;
@@ -206,6 +338,7 @@ namespace _1RM.View.Host
 
         protected virtual void TabablzControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            QueueTabSeparatorUpdate();
             if (Vm?.SelectedItem?.Content != null)
             {
                 this.Icon = IoC.Get<ConfigurationService>().General.ShowSessionIconInSessionWindow ?
@@ -229,30 +362,14 @@ namespace _1RM.View.Host
                 var tabContentBorderWithColor = (Thickness)this.Resources["TabContentBorderWithColor"];
                 var tabContentBorderWithOutColor = (Thickness)this.Resources["TabContentBorderWithOutColor"];
 
-                var screenEx = ScreenInfoEx.GetCurrentScreen(this);
                 double actualWidth = TabablzControl.ActualWidth;
-                double actualHeight = this.WindowState == WindowState.Maximized ? screenEx.VirtualWorkingArea.Height : TabablzControl.ActualHeight;
+                double actualHeight = TabablzControl.ActualHeight;
                 double border1 = withoutBorderColor ? tabContentBorderWithOutColor.Left + tabContentBorderWithOutColor.Right : tabContentBorderWithColor.Left + tabContentBorderWithColor.Right;
                 double border2 = withoutBorderColor ? tabContentBorderWithOutColor.Top + tabContentBorderWithOutColor.Bottom : tabContentBorderWithColor.Top + tabContentBorderWithColor.Bottom;
                 size.Width = actualWidth - border1;
-                size.Height = actualHeight - TITLE_BAR_HEIGHT - border2;
+                size.Height = actualHeight - NativeCaptionHeight - border2;
             });
             return size;
-        }
-
-
-
-        /// <summary>
-        /// double click title bar to Maximized
-        /// </summary>
-        public override void WinTitleBar_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ClickCount == 2)
-            {
-                if (Vm.SelectedItem?.Content.CanResizeNow() == false)
-                    return;
-            }
-            base.WinTitleBar_OnPreviewMouseDown(sender, e);
         }
 
 
@@ -265,19 +382,5 @@ namespace _1RM.View.Host
             RunForIntegrate();
         }
 
-        public override void WinTitleBar_OnPreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            var isDragging = _isDragging;
-            base.WinTitleBar_OnPreviewMouseMove(sender, e);
-            if (Vm?.SelectedItem?.Content?.GetProtocolHostType() != ProtocolHostType.Integrate)
-            {
-                // When stop dragging, focus on the integrated exe
-                if (isDragging && !_isDragging)
-                {
-                    // focus to be on the integrated exe after drag on the WPF window.
-                    RunForIntegrate();
-                }
-            }
-        }
     }
 }

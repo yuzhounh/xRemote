@@ -220,7 +220,7 @@ namespace _1RM.View.Launcher
             // show server list
             if (view.GridActionsList.Visibility != Visibility.Visible)
             {
-                var tmp = LauncherWindowViewModel.LAUNCHER_SERVER_LIST_ITEM_HEIGHT * Math.Min(VmServerList.Count, LauncherWindowViewModel.LAUNCHER_OUTLINE_CORNER_RADIUS);
+                var tmp = LauncherWindowViewModel.LAUNCHER_SERVER_LIST_ITEM_HEIGHT * Math.Min(VmServerList.Count, LauncherWindowViewModel.MAX_SERVER_COUNT);
                 ret = LauncherWindowViewModel.LAUNCHER_GRID_KEYWORD_HEIGHT + tmp;
             }
             return ret;

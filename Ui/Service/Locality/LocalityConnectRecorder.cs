@@ -20,6 +20,7 @@ namespace _1RM.Service.Locality
         /// keep the last connect time of each server, in order to sort the server list
         /// </summary>
         public ConcurrentDictionary<string, long> ConnectRecodes = new ConcurrentDictionary<string, long>();
+        public ConcurrentDictionary<string, long> SuccessfulConnections = new ConcurrentDictionary<string, long>();
         public List<QuickConnectionItem> QuickConnectionHistory = new List<QuickConnectionItem>();
         public ConcurrentDictionary<string, RdpLocalSetting> RdpCaches = new ConcurrentDictionary<string, RdpLocalSetting>();
     }
@@ -77,6 +78,21 @@ namespace _1RM.Service.Locality
             _settings.ConnectRecodes.AddOrUpdate(vmServer.Id, time, (s, l) => time);
             Save();
             vmServer.LastConnectTime = ConnectTimeGet(vmServer.Server);
+        }
+
+        public static void SuccessfulConnectTimeAddOrUpdate(ProtocolBase server)
+        {
+            if (string.IsNullOrEmpty(server.Id)) return;
+            Load();
+            _settings.SuccessfulConnections[server.Id] = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            Save();
+        }
+
+        public static DateTime SuccessfulConnectTimeGet(ProtocolBase server)
+        {
+            Load();
+            return _settings.SuccessfulConnections.TryGetValue(server.Id, out var value)
+                ? DateTimeOffset.FromUnixTimeMilliseconds(value).LocalDateTime : DateTime.MinValue;
         }
 
         public static DateTime ConnectTimeGet(ProtocolBase server)

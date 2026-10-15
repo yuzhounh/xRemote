@@ -18,6 +18,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Resources/Converter/Converter.xaml"></ResourceDictionary>
                 <ResourceDictionary Source="pack://application:,,,/Resources/Theme/Markdown.xaml"></ResourceDictionary>
                 <ResourceDictionary Source="pack://application:,,,/Resources/Icons/SVG.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="./Resources/Theme/SettingsTextFallback.xaml" />
                 <ResourceDictionary Source="./Resources/Languages/en-us.xaml"></ResourceDictionary>
                 <ResourceDictionary>
                     <Style x:Key="EditorRowGrid" TargetType="Grid">

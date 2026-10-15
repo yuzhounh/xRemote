@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using Shawn.Utils;
 using System.Windows.Media;
 
@@ -49,7 +50,7 @@ namespace _1RM.View.Launcher
         {
             if (flags.Count == Text.Length && flags.Any(x => x))
             {
-                var sp = new StackPanel() { Orientation = System.Windows.Controls.Orientation.Horizontal };
+                var sp = new TextBlock { TextTrimming = TextTrimming.CharacterEllipsis };
                 for (int i = 0; i < flags.Count; i++)
                 {
                     int j = i + 1;
@@ -60,13 +61,13 @@ namespace _1RM.View.Launcher
                     }
                     var text = Text.Substring(i, j - i);
                     if (flags[i])
-                        sp.Children.Add(new TextBlock()
+                        sp.Inlines.Add(new Run()
                         {
                             Text = text,
-                            Background = HighLightBrush,
+                            FontWeight = FontWeights.SemiBold,
                         });
                     else
-                        sp.Children.Add(new TextBlock()
+                        sp.Inlines.Add(new Run()
                         {
                             Text = text,
                         });

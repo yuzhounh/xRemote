@@ -10,8 +10,11 @@
         <UseWindowsForms>True</UseWindowsForms>
         <RootNamespace>_1RM</RootNamespace>
         <AssemblyName>1Remote</AssemblyName>
+        <SkipDeveloperBuildHooks Condition="'$(SkipDeveloperBuildHooks)'==''">true</SkipDeveloperBuildHooks>
         <Configurations>Debug;Release;StoreDebug;StoreRelease;ReleaseNet48;ReleaseNet6</Configurations>
         <ApplicationManifest>app.manifest</ApplicationManifest>
+        <WindowsPackageType>None</WindowsPackageType>
+        <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
         <ApplicationIcon Condition="$(Configuration.Contains('Debug'))">LOGO_D.ico</ApplicationIcon>
         <ApplicationIcon Condition="!$(Configuration.Contains('Debug'))">LOGO.ico</ApplicationIcon>
@@ -79,12 +82,21 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <AssemblyVersion>1.3.0.10622</AssemblyVersion>
+        <!-- AppVersion.cs is the source of truth for the upstream baseline and fork revision. -->
+        <_VersionSource>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)/AppVersion.cs'))</_VersionSource>
+        <_UpstreamMajor>$([System.Text.RegularExpressions.Regex]::Match('$(_VersionSource)', '(?&lt;=Major = )\d+').Value)</_UpstreamMajor>
+        <_UpstreamMinor>$([System.Text.RegularExpressions.Regex]::Match('$(_VersionSource)', '(?&lt;=Minor = )\d+').Value)</_UpstreamMinor>
+        <_UpstreamPatch>$([System.Text.RegularExpressions.Regex]::Match('$(_VersionSource)', '(?&lt;=Patch = )\d+').Value)</_UpstreamPatch>
+        <_ForkRevision>$([System.Text.RegularExpressions.Regex]::Match('$(_VersionSource)', '(?&lt;=ForkRevision = )\d+').Value)</_ForkRevision>
+        <UpstreamVersion>$(_UpstreamMajor).$(_UpstreamMinor).$(_UpstreamPatch)</UpstreamVersion>
+        <AssemblyVersion>$(UpstreamVersion).$(_ForkRevision)</AssemblyVersion>
         <FileVersion>$(AssemblyVersion)</FileVersion>
-        <Version>$(AssemblyVersion)</Version>
+        <Version>$(UpstreamVersion)-r$(_ForkRevision)</Version>
+        <InformationalVersion>$(UpstreamVersion) Rev.$(_ForkRevision)</InformationalVersion>
+        <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
         <Authors>Shawn Veck</Authors>
-        <Product>1Remote</Product>
-        <Description>1Remote is a modern personal remote session manager and launcher.</Description>
+        <Product>xRemote</Product>
+        <Description>xRemote, based on 1Remote $(UpstreamVersion).</Description>
         <Copyright>1remote.github.io</Copyright>
     </PropertyGroup>
 
@@ -175,6 +187,7 @@
         <PackageReference Include="MySql.Data" Version="8.0.30" />
         <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.1" />
         <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.1" />
+        <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.8.260803002" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="Npgsql" Version="9.0.2" />
         <PackageReference Include="NUlid" Version="1.7.1" />
@@ -501,11 +514,11 @@
         </Page>
     </ItemGroup>
 
-    <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)'!='Debug'">
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)'!='Debug' and '$(SkipDeveloperBuildHooks)'!='true'">
         <Exec Command="powershell.exe ..\scripts\Set-Secret.ps1 -filePath .\Ui\Assert.cs -Pattern &quot;===REPLACE_ME_WITH_APP_CENTER_SECRET===&quot; -localSecretFilePath &quot;C:\1Remote_Secret\APP_CENTER_SECRET_1REMOTE.txt&quot;&#xD;&#xA;powershell.exe ..\scripts\Set-Secret.ps1 -filePath .\Ui\Assert.cs -Pattern &quot;===REPLACE_ME_WITH_SENTRY_IO_DEN===&quot; -localSecretFilePath &quot;C:\1Remote_Secret\SENTRY_IO_DEN.txt&quot;&#xD;&#xA;powershell.exe ..\scripts\Set-Secret.ps1 -filePath .\Ui\Assert.cs -Pattern &quot;===REPLACE_ME_WITH_SALT===&quot; -localSecretFilePath &quot;C:\1Remote_Secret\Salt.txt&quot;&#xD;&#xA;powershell.exe ..\scripts\Set-BuildDate.ps1 -filePath .\Ui\AppVersion.cs&#xD;&#xA;powershell.exe ..\scripts\Set-AssemblyVersion.ps1" />
     </Target>
 
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)'!='Debug'">
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)'!='Debug' and '$(SkipDeveloperBuildHooks)'!='true'">
         <Exec Command="powershell.exe ..\scripts\Set-Secret.ps1 -filePath .\Ui\Assert.cs -Pattern &quot;===REPLACE_ME_WITH_APP_CENTER_SECRET===&quot; -localSecretFilePath &quot;C:\1Remote_Secret\APP_CENTER_SECRET_1REMOTE.txt&quot; -isRevert&#xD;&#xA;powershell.exe ..\scripts\Set-Secret.ps1 -filePath .\Ui\Assert.cs -Pattern &quot;===REPLACE_ME_WITH_SENTRY_IO_DEN===&quot; -localSecretFilePath &quot;C:\1Remote_Secret\SENTRY_IO_DEN.txt&quot; -isRevert&#xD;&#xA;powershell.exe ..\scripts\Set-Secret.ps1 -filePath .\Ui\Assert.cs -Pattern &quot;===REPLACE_ME_WITH_SALT===&quot; -localSecretFilePath &quot;C:\1Remote_Secret\Salt.txt&quot; -isRevert&#xD;&#xA;powershell.exe ..\scripts\Set-BuildDate.ps1 -filePath .\Ui\AppVersion.cs -isRevert" />
     </Target>
 </Project>

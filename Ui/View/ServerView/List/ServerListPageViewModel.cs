@@ -47,6 +47,8 @@ namespace _1RM.View.ServerView
             {
                 if (SetAndNotifyIfChanged(ref this._briefNoteVisibility, value))
                 {
+                    RaisePropertyChanged(nameof(NoteWidth));
+                    RaisePropertyChanged(nameof(NoteMinimumWidth));
                     UpdateNote();
                 }
             }
@@ -87,20 +89,57 @@ namespace _1RM.View.ServerView
             get => LocalityListViewService.Settings.ServerListNameWidth;
             set
             {
-                LocalityListViewService.ServerListNameWidthSet(value);
+                if (!double.IsFinite(value)) return;
+                LocalityListViewService.Settings.ServerListNameWidth = Math.Clamp(value, 100, 1600);
+                RaisePropertyChanged();
+            }
+        }
+
+        public double StatusWidth
+        {
+            get => LocalityListViewService.Settings.ServerListStatusWidth;
+            set
+            {
+                if (!double.IsFinite(value)) return;
+                LocalityListViewService.Settings.ServerListStatusWidth = Math.Clamp(value, 64, 400);
+                RaisePropertyChanged();
+            }
+        }
+
+        public double AddressWidth
+        {
+            get => LocalityListViewService.Settings.ServerListAddressWidth;
+            set
+            {
+                if (!double.IsFinite(value)) return;
+                LocalityListViewService.Settings.ServerListAddressWidth = Math.Clamp(value, 200, 2000);
+                RaisePropertyChanged();
+            }
+        }
+
+        public double ProtocolWidth
+        {
+            get => LocalityListViewService.Settings.ServerListProtocolWidth;
+            set
+            {
+                if (!double.IsFinite(value)) return;
+                LocalityListViewService.Settings.ServerListProtocolWidth = Math.Clamp(value, 70, 400);
                 RaisePropertyChanged();
             }
         }
 
         public double NoteWidth
         {
-            get => LocalityListViewService.Settings.ServerListNoteWidth;
+            get => BriefNoteVisibility == Visibility.Visible ? LocalityListViewService.Settings.ServerListNoteWidth : 0;
             set
             {
+                if (BriefNoteVisibility != Visibility.Visible) return;
                 LocalityListViewService.ServerListNoteWidthSet(value);
                 RaisePropertyChanged();
             }
         }
+
+        public double NoteMinimumWidth => BriefNoteVisibility == Visibility.Visible ? 50 : 0;
 
         protected override void OnViewLoaded()
         {
@@ -275,6 +314,10 @@ namespace _1RM.View.ServerView
                     var direction = ListSortDirection.Ascending;
                     switch (orderBy)
                     {
+                        case EnumServerOrderBy.IdDesc:
+                            propertyName = nameof(ProtocolBaseViewModel.Id);
+                            direction = ListSortDirection.Descending;
+                            break;
                         case EnumServerOrderBy.IdAsc:
                             propertyName = nameof(ProtocolBaseViewModel.Id);
                             direction = ListSortDirection.Ascending;

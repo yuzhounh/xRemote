@@ -1,4 +1,44 @@
-# 1Remote
+# xRemote
+
+Personal fork of **1Remote**. Current version: **xRemote 1.3.0 Rev.7**.
+
+The full upstream baseline and xRemote revision are defined separately in `Ui/AppVersion.cs`.
+Change the upstream version only when integrating that upstream release. Increment `ForkRevision`
+only for a published xRemote release, including after upstream upgrades; never reset it.
+Repeated builds and ordinary edits do not increment it. Tags use `v1.3.0-r7` and release packages
+use `xRemote-v1.3.0-r7-x64.zip`. Windows numeric file versions use `1.3.0.7`;
+the interface and product version show `1.3.0 Rev.7`.
+
+Updates are checked only against [yuzhounh/xRemote releases](https://github.com/yuzhounh/xRemote/releases).
+The enabled-by-default setting checks stable tags of the form `v1.3.0-r7`, comparing both the
+upstream baseline and xRemote revision. It does not check or install upstream 1Remote releases.
+Update notifications open the matching xRemote release page; installation remains manual.
+
+### Build xRemote on Windows
+
+Install the .NET 9 SDK, initialize the repository's submodules, and apply the maintained dependency patch:
+
+```powershell
+git submodule update --init --recursive
+.\scripts\Prepare-Dependencies.ps1
+dotnet publish Ui/Ui.csproj -c Release -r win-x64 --self-contained true -o artifacts/publish
+.\scripts\Package-WindowsRelease.ps1 -PublishDirectory artifacts/publish
+.\scripts\Build-WindowsInstaller.ps1 -PackageDirectory artifacts/package-1.3.0-r7
+```
+
+The published app host is `1Remote.exe`; release packaging renames it to `xRemote.exe`.
+Internal DLL and user-data filenames remain unchanged. Distribution packages contain only program
+files and a portable-mode marker, never local profiles, databases, connection settings or credentials.
+The optional Inno Setup 6 installer uses the same program files, creates shortcuts and uninstall
+registration, and stores profiles in the existing Windows AppData locations. It preserves existing
+portable storage when deliberately installed over a portable profile; uninstall does not delete profiles.
+Both the portable ZIP and installer EXE are published in each Windows release.
+
+Existing `1Remote` profile filenames, assembly identity and credential storage keys are retained
+for compatibility. Upstream developer build hooks are disabled by default. The original upstream
+description follows; its update links refer to 1Remote releases.
+
+## Upstream 1Remote
 
 English | [中文](https://github.com/1Remote/1Remote/wiki/Intro%E2%80%90ZhCn)
 

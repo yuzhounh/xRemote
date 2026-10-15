@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Timers;
+using System.Threading;
+using System.Threading.Tasks;
+using Timer = System.Timers.Timer;
 using _1RM.Service;
 using _1RM.View.Utils;
 using _1RM.View.Utils.MaskAndPop;
@@ -16,7 +15,7 @@ namespace _1RM.View
     public class AboutPageViewModel : PopupBase
     {
         private Timer? _checkUpdateTimer;
-        private VersionHelper? _checker;
+        private int _checkingUpdate;
 
         public AboutPageViewModel()
         {
@@ -26,15 +25,9 @@ namespace _1RM.View
         public void StartVersionCheckTimer()
         {
             if (IoC.Get<ConfigurationService>().General.DoNotCheckNewVersion)
-                return;
-
-            if (_checker == null)
             {
-                _checker = new VersionHelper(AppVersion.VersionData,
-                    AppVersion.UpdateCheckUrls,
-                    AppVersion.UpdatePublishUrls,
-                    customCheckMethod: CustomCheckMethod);
-                _checker.OnNewVersionRelease += OnNewVersionRelease;
+                _checkUpdateTimer?.Stop();
+                return;
             }
             if (_checkUpdateTimer == null)
             {
@@ -50,42 +43,12 @@ namespace _1RM.View
                         _checkUpdateTimer.Stop(); // Stop timer if checking is disabled
                         return;
                     }
-                    _checker.CheckUpdateAsync();
+                    CheckUpdateAsync();
                 };
             }
-            _checker.CheckUpdateAsync();
+            CheckUpdateAsync();
             _checkUpdateTimer.Stop();
             _checkUpdateTimer.Start();
-        }
-
-        private static VersionHelper.CheckUpdateResult CustomCheckMethod(string html, string publishUrl, VersionHelper.Version currentVersion, VersionHelper.Version? ignoreVersion)
-        {
-            var ret = VersionHelper.DefaultCheckMethod(html, publishUrl, currentVersion, ignoreVersion);
-            if (ret.NewerPublished)
-                return ret;
-
-            var patterns = new List<string>()
-            {
-                @".?1remote-([\d|\.]*.*)-net",
-                @".?latest\sversion:\s*([\d|.]*)",
-            };
-            foreach (var pattern in patterns)
-            {
-                var mc = Regex.Matches(html, pattern, RegexOptions.IgnoreCase);
-                if (mc.Count <= 0) continue;
-                var versionString = mc[0].Groups[1].Value;
-                var releasedVersion = VersionHelper.Version.FromString(versionString);
-                if (ignoreVersion is not null)
-                {
-                    if (releasedVersion <= ignoreVersion)
-                    {
-                        return VersionHelper.CheckUpdateResult.False();
-                    }
-                }
-                if (releasedVersion > currentVersion)
-                    return new VersionHelper.CheckUpdateResult(true, versionString, publishUrl, versionString.FirstOrDefault() == '!' || versionString.LastOrDefault() == '!');
-            }
-            return VersionHelper.CheckUpdateResult.False();
         }
 
         ~AboutPageViewModel()
@@ -94,7 +57,7 @@ namespace _1RM.View
             _checkUpdateTimer?.Dispose();
         }
 
-        public string CurrentVersion => AppVersion.Version;
+        public string CurrentVersion => AppVersion.DisplayVersion;
         public string CurrentVersionDate => AppVersion.BuildDate.IndexOf("+", StringComparison.Ordinal) > 0 ? AppVersion.BuildDate.Substring(0, AppVersion.BuildDate.LastIndexOf("+", StringComparison.Ordinal)) : AppVersion.BuildDate;
 
 
@@ -122,7 +85,24 @@ namespace _1RM.View
 
         public void CheckUpdateAsync()
         {
-            _checker.CheckUpdateAsync();
+            if (IoC.Get<ConfigurationService>().General.DoNotCheckNewVersion) return;
+            _ = CheckForXRemoteUpdateAsync();
+        }
+
+        private async Task CheckForXRemoteUpdateAsync()
+        {
+            if (Interlocked.Exchange(ref _checkingUpdate, 1) != 0) return;
+            try
+            {
+                var result = await XRemoteUpdateService.CheckAsync().ConfigureAwait(false);
+                Execute.OnUIThread(() =>
+                {
+                    if (result.NewerPublished && !IoC.Get<ConfigurationService>().General.DoNotCheckNewVersion)
+                        OnNewVersionRelease(result);
+                });
+            }
+            catch (Exception exception) { SimpleLogHelper.Warning(exception); }
+            finally { Interlocked.Exchange(ref _checkingUpdate, 0); }
         }
 
         private void OnNewVersionRelease(VersionHelper.CheckUpdateResult result)
@@ -169,11 +149,7 @@ namespace _1RM.View
                     }
                     else
                     {
-#if FOR_MICROSOFT_STORE_ONLY
-                        HyperlinkHelper.OpenUriBySystem("ms-windows-store://review/?productid=9PNMNF92JNFP");
-#else
                         HyperlinkHelper.OpenUriBySystem(NewVersionUrl);
-#endif
                     }
                 });
             }

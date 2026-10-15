@@ -19,16 +19,16 @@ namespace _1RM.Service
             Themes.Add("Light", new ThemeConfig()
             {
                 ThemeName = "Light",
-                PrimaryMidColor = "#FFF2F3F5",
+                PrimaryMidColor = "#FFF5F5F5",
                 PrimaryLightColor = "#FFFFFFFF",
-                PrimaryDarkColor = "#FFE4E7EB",
-                PrimaryTextColor = "#FF232323",
-                AccentMidColor = "#FFE83D61",
-                AccentLightColor = "#FFED6884",
-                AccentDarkColor = "#FFB5304C",
+                PrimaryDarkColor = "#FFECECEC",
+                PrimaryTextColor = "#FF303030",
+                AccentMidColor = "#FF525252",
+                AccentLightColor = "#FF6B6B6B",
+                AccentDarkColor = "#FF3D3D3D",
                 AccentTextColor = "#FFFFFFFF",
                 BackgroundColor = "#FFFFFFFF",
-                BackgroundTextColor = "#000000",
+                BackgroundTextColor = "#FF303030",
             });
             Themes.Add("Dark", new ThemeConfig()
             {
@@ -60,7 +60,7 @@ namespace _1RM.Service
             });
             Themes.Add("SecretKey", new ThemeConfig()
             {
-                ThemeName = "Light",
+                ThemeName = "SecretKey",
                 PrimaryMidColor = "#FF473368",
                 PrimaryLightColor = "#796090",
                 PrimaryDarkColor = "#382853",
@@ -143,6 +143,20 @@ namespace _1RM.Service
                 BackgroundTextColor = "#FF080000",
             });
 
+            // Upgrade either shipped Light palette; preserve custom colors and fonts.
+            var oldLight = new ThemeConfig { ThemeName="Light", PrimaryMidColor="#FFF2F3F5", PrimaryLightColor="#FFFFFFFF",
+                PrimaryDarkColor="#FFE4E7EB", PrimaryTextColor="#FF232323", AccentMidColor="#FFE83D61",
+                AccentLightColor="#FFED6884", AccentDarkColor="#FFB5304C", AccentTextColor="#FFFFFFFF",
+                BackgroundColor="#FFFFFFFF", BackgroundTextColor="#000000" };
+            var blueLight = new ThemeConfig { ThemeName="Light", PrimaryMidColor="#FFD3E3FD", PrimaryLightColor="#FFE8F0FE",
+                PrimaryDarkColor="#FFE4E7EB", PrimaryTextColor="#FF232323", AccentMidColor="#FF1A73E8",
+                AccentLightColor="#FF4A90F0", AccentDarkColor="#FF1557B0", AccentTextColor="#FFFFFFFF",
+                BackgroundColor="#FFFFFFFF", BackgroundTextColor="#000000" };
+            var paletteFields = typeof(ThemeConfig).GetFields().Where(f => f.Name.EndsWith("Color", StringComparison.Ordinal)).ToArray();
+            if (defaultTheme.ThemeName == "Light" && new[] { oldLight, blueLight }.Any(palette => paletteFields.All(f =>
+                ColorAndBrushHelper.HexColorToMediaColor((string)f.GetValue(defaultTheme)!) ==
+                ColorAndBrushHelper.HexColorToMediaColor((string)f.GetValue(palette)!))))
+                foreach (var field in paletteFields) field.SetValue(defaultTheme, field.GetValue(Themes["Light"]));
             CurrentTheme = defaultTheme;
             ApplyTheme(defaultTheme);
         }
@@ -163,6 +177,31 @@ namespace _1RM.Service
             var rd = new ResourceDictionary();
             SetKey(rd, resourceTypeKey, resourceTypeValue);
             SetKey(rd, "PrimaryMidColor", ColorAndBrushHelper.HexColorToMediaColor(theme.PrimaryMidColor));
+            var background = ColorAndBrushHelper.HexColorToMediaColor(theme.BackgroundColor);
+            bool darkMenu = (background.R * 0.299 + background.G * 0.587 + background.B * 0.114) < 128;
+            bool stockLight = theme.ThemeName == "Light";
+            SetKey(rd, "MenuSurfaceBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? theme.PrimaryMidColor : theme.PrimaryDarkColor));
+            SetKey(rd, "MenuHoverColor", ColorAndBrushHelper.HexColorToMediaColor(stockLight ? "#E8E8E8" : theme.PrimaryLightColor));
+            SetKey(rd, "MenuHoverBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#E8E8E8" : theme.PrimaryLightColor));
+            SetKey(rd, "MenuBorderBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#D9D9D9" : "#707A8C"));
+            SetKey(rd, "LauncherSurfaceBrush", ColorAndBrushHelper.ColorToMediaBrush(theme.PrimaryMidColor));
+            SetKey(rd, "LauncherSecondaryBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#686868" : theme.PrimaryTextColor));
+            SetKey(rd, "LauncherSelectedBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#FFFFFF" : theme.PrimaryLightColor));
+            SetKey(rd, "LauncherHoverBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#ECECEC" : "#18FFFFFF"));
+            SetKey(rd, "LauncherSelectionBorderBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#DADADA" : "#40FFFFFF"));
+            SetKey(rd, "LauncherTitleFontSize", Math.Min(18.0, Math.Max(14.0, theme.FontSize + 2.0)));
+            SetKey(rd, "LauncherDetailFontSize", Math.Min(14.0, Math.Max(11.0, theme.FontSize - 1.0)));
+            SetKey(rd, "MainTabSelectedBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#FFFFFF" : theme.AccentMidColor));
+            SetKey(rd, "MainTabSelectedTextBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? theme.PrimaryTextColor : theme.AccentTextColor));
+            SetKey(rd, "MainTabHoverBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#E8E8E8" : theme.AccentLightColor));
+            SetKey(rd, "MenuDividerBrush", ColorAndBrushHelper.ColorToMediaBrush(darkMenu ? "#454850" : (stockLight ? "#D9D9D9" : "#D3E3FD")));
+            SetKey(rd, "DefaultBorderColor", ColorAndBrushHelper.HexColorToMediaColor(stockLight ? "#B8B8B8" : "#707A8C"));
+            SetKey(rd, "DefaultBorderBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#B8B8B8" : "#707A8C"));
+            SetKey(rd, "ProtocolSettingsSurfaceBrush", stockLight
+                ? ColorAndBrushHelper.ColorToMediaBrush(theme.PrimaryMidColor)
+                : new SolidColorBrush(ColorAndBrushHelper.HexColorToMediaColor(theme.BackgroundTextColor)) { Opacity = .25 });
+            SetKey(rd, "ProtocolCardHeaderBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? theme.BackgroundColor : theme.PrimaryMidColor));
+            SetKey(rd, "ProtocolCardDividerBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#E5E5E5" : theme.PrimaryDarkColor));
             SetKey(rd, "PrimaryLightColor", ColorAndBrushHelper.HexColorToMediaColor(theme.PrimaryLightColor));
             SetKey(rd, "PrimaryDarkColor", ColorAndBrushHelper.HexColorToMediaColor(theme.PrimaryDarkColor));
             SetKey(rd, "PrimaryTextColor", ColorAndBrushHelper.HexColorToMediaColor(theme.PrimaryTextColor));
@@ -175,6 +214,16 @@ namespace _1RM.Service
 
 
             SetKey(rd, "PrimaryMidBrush", ColorAndBrushHelper.ColorToMediaBrush(theme.PrimaryMidColor));
+            // Both windows share the same strip; light palettes need opaque selected tabs.
+            var primary = ColorAndBrushHelper.HexColorToMediaColor(theme.PrimaryMidColor);
+            bool lightTabs = primary.R * .299 + primary.G * .587 + primary.B * .114 >= 128;
+            SetKey(rd, "SessionTabStripBrush", ColorAndBrushHelper.ColorToMediaBrush(theme.PrimaryMidColor));
+            SetKey(rd, "SessionTabSelectedBrush", ColorAndBrushHelper.ColorToMediaBrush(lightTabs ? "#FFFFFF" : "#24FFFFFF"));
+            SetKey(rd, "SessionTabHoverBrush", ColorAndBrushHelper.ColorToMediaBrush(lightTabs ? (stockLight ? "#E8E8E8" : "#60FFFFFF") : "#12FFFFFF"));
+            SetKey(rd, "SessionTabSeparatorBrush", ColorAndBrushHelper.ColorToMediaBrush(lightTabs ? (stockLight ? "#DADADA" : "#40000000") : (theme.ThemeName == "Dark" ? "#406F7378" : "#40FFFFFF")));
+            SetKey(rd, "SessionTabActionHoverBrush", ColorAndBrushHelper.ColorToMediaBrush(lightTabs ? "#10000000" : "#20FFFFFF"));
+            SetKey(rd, "SessionTabActionPressedBrush", ColorAndBrushHelper.ColorToMediaBrush(lightTabs ? "#20000000" : "#35FFFFFF"));
+            SetKey(rd, "SessionTabPrefixBrush", ColorAndBrushHelper.ColorToMediaBrush(lightTabs ? (stockLight ? "#ECECEC" : "#60FFFFFF") : "#12FFFFFF"));
             SetKey(rd, "PrimaryLightBrush", ColorAndBrushHelper.ColorToMediaBrush(theme.PrimaryLightColor));
             SetKey(rd, "PrimaryDarkBrush", ColorAndBrushHelper.ColorToMediaBrush(theme.PrimaryDarkColor));
             SetKey(rd, "PrimaryTextBrush", ColorAndBrushHelper.ColorToMediaBrush(theme.PrimaryTextColor));

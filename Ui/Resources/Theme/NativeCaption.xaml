@@ -1,0 +1,50 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <system:Double x:Key="NativeCaptionButtonWidth">48</system:Double>
+    <system:Double x:Key="NativeCaptionButtonHeight">48</system:Double>
+    <SolidColorBrush x:Key="NativeCaptionForegroundBrush" Color="#CCCCCC" />
+    <SolidColorBrush x:Key="NativeCaptionActiveForegroundBrush" Color="#CCCCCC" />
+    <SolidColorBrush x:Key="NativeCaptionInactiveForegroundBrush" Color="#919196" />
+    <SolidColorBrush x:Key="NativeCaptionHoverBrush" Color="#414144" />
+    <SolidColorBrush x:Key="NativeCaptionPressedBrush" Color="#4E4E52" />
+    <Style x:Key="NativeCaptionActionStyle" TargetType="ButtonBase">
+        <Setter Property="Width" Value="{DynamicResource NativeCaptionButtonWidth}" />
+        <Setter Property="Height" Value="{DynamicResource NativeCaptionButtonHeight}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource NativeCaptionForegroundBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ButtonBase">
+                    <Border x:Name="CaptionBackground" Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="CaptionBackground" Property="Background" Value="{DynamicResource NativeCaptionHoverBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource NativeCaptionActiveForegroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="CaptionBackground" Property="Background" Value="{DynamicResource NativeCaptionPressedBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource NativeCaptionInactiveForegroundBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="NativeCaptionButtonStyle" TargetType="Button" BasedOn="{StaticResource NativeCaptionActionStyle}" />
+    <Style x:Key="NativeCaptionMenuStyle" TargetType="CheckBox" BasedOn="{StaticResource NativeCaptionActionStyle}">
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{DynamicResource NativeCaptionPressedBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource NativeCaptionActiveForegroundBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

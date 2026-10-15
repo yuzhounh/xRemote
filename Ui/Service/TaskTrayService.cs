@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using _1RM.Model;
 using _1RM.Utils;
 using _1RM.View;
+using _1RM.View.Host;
 using Dragablz.Dockablz;
 using Shawn.Utils.Interface;
 using Shawn.Utils.Wpf;
@@ -72,6 +73,7 @@ namespace _1RM.Service
             if (_taskTrayIcon != null)
             {
                 _taskTrayIcon.Visible = false;
+                _taskTrayIcon.ContextMenuStrip?.Dispose();
                 _taskTrayIcon.Dispose();
                 _taskTrayIcon = null;
             }
@@ -85,42 +87,30 @@ namespace _1RM.Service
                 // rebuild TaskTrayContextMenu while language changed
                 if (_taskTrayIcon == null) return;
 
-                var about = new System.Windows.Forms.ToolStripMenuItem(IoC.Translate("About"));
-                about.Click += (sender, args) =>
-                {
-                    //HyperlinkHelper.OpenUriBySystem("https://github.com/1Remote/1Remote");
-                    IoC.Get<MainWindowViewModel>().ShowMe(true);
-                    IoC.Get<MainWindowViewModel>().CmdGoAboutPage.Execute();
-                };
-                var linkHowToUse = new System.Windows.Forms.ToolStripMenuItem(IoC.Translate("about_page_how_to_use"));
-                linkHowToUse.Click += (sender, args) =>
-                {
-                    HyperlinkHelper.OpenUriBySystem("https://1remote.github.io/usage/quick-start/");
-                };
-                var linkFeedback = new System.Windows.Forms.ToolStripMenuItem(IoC.Translate("about_page_feedback"));
-                linkFeedback.Click += (sender, args) =>
-                {
-                    HyperlinkHelper.OpenUriBySystem("https://github.com/1Remote/1Remote/issues");
-                };
                 var exit = new System.Windows.Forms.ToolStripMenuItem(IoC.Translate("Exit"));
                 exit.Click += (sender, args) =>
                 {
                     TaskTrayDispose();
                     App.Close();
                 };
-                var resetMainWindowLocation = new System.Windows.Forms.ToolStripMenuItem(IoC.Translate("Reset main window location"));
-                resetMainWindowLocation.Click += (sender, args) =>
-                {
-                    IoC.Get<MainWindowView>().ResetLocation();
-                };
 
-                _taskTrayIcon.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
-
+                var previousMenu = _taskTrayIcon.ContextMenuStrip;
+                var menu = new TrayMenu(IsDarkTrayTheme);
+                _taskTrayIcon.ContextMenuStrip = menu;
+                // A language/recent-list change can originate inside the old menu's click handler.
+                if (previousMenu != null)
+                    Application.Current.Dispatcher.BeginInvoke(new Action(previousMenu.Dispose));
+                var open = new ToolStripMenuItem($"打开 {Assert.APP_DISPLAY_NAME}");
+                open.Click += (_, _) => IoC.Get<MainWindowViewModel>().ShowMe();
+                menu.Items.Add(open);
                 if (IoC.Get<ConfigurationService>().General.ShowRecentlySessionInTray)
                 {
-                    var protocolBaseViewModels = IoC.Get<GlobalData>().VmItemList.OrderByDescending(x => x.LastConnectTime).Take(20).ToArray();
+                    var protocolBaseViewModels = IoC.Get<GlobalData>().VmItemList
+                        .OrderBy(x => ConnectionOrder(x.Server.DisplayName))
+                        .ThenBy(x => x.Server.DisplayName, StringComparer.CurrentCultureIgnoreCase).Take(20).ToArray();
                     if (protocolBaseViewModels.Any())
                     {
+                        menu.Items.Add(new ToolStripSeparator());
                         for (var i = 0; i < 20 && i < protocolBaseViewModels.Length; i++)
                         {
                             var protocolBaseViewModel = protocolBaseViewModels[i];
@@ -144,41 +134,26 @@ namespace _1RM.Service
 
 
 
-                if (IoC.Get<ConfigurationService>().General.ShowRecentlySessionInTray == false)
-                {
-                    var item = new System.Windows.Forms.ToolStripMenuItem(IoC.Translate("Show recently used here"));
-                    item.Click += (sender, args) =>
-                    {
-                        IoC.Get<ConfigurationService>().General.ShowRecentlySessionInTray = true;
-                        IoC.Get<ConfigurationService>().Save();
-                        ReloadTaskTrayContextMenu();
-                    };
-                    _taskTrayIcon.ContextMenuStrip.Items.Add(item);
-                }
-                else
-                {
-                    if (_taskTrayIcon.ContextMenuStrip.Items.Count > 0)
-                        _taskTrayIcon.ContextMenuStrip.Items.Add("-");
-
-                    var item = new System.Windows.Forms.ToolStripMenuItem(IoC.Translate("Hide recently used"));
-                    item.Click += (sender, args) =>
-                    {
-                        IoC.Get<ConfigurationService>().General.ShowRecentlySessionInTray = false;
-                        IoC.Get<ConfigurationService>().Save();
-                        ReloadTaskTrayContextMenu();
-                    };
-                    _taskTrayIcon.ContextMenuStrip.Items.Add(item);
-                }
-
-                //_taskTrayIcon.ContextMenuStrip.Items.Add(linkHowToUse);
-                _taskTrayIcon.ContextMenuStrip.Items.Add(resetMainWindowLocation);
-                _taskTrayIcon.ContextMenuStrip.Items.Add(linkFeedback);
-                _taskTrayIcon.ContextMenuStrip.Items.Add(about);
+                menu.Items.Add(new ToolStripSeparator());
                 _taskTrayIcon.ContextMenuStrip.Items.Add(exit);
             });
 
             // After startup and initializing our application and when closing our window and minimize the application to tray we free memory with the following line:
             System.Diagnostics.Process.GetCurrentProcess().MinWorkingSet = System.Diagnostics.Process.GetCurrentProcess().MinWorkingSet;
+        }
+        internal static int ConnectionOrder(string name)
+        {
+            if (name.Equals("Office PC", StringComparison.OrdinalIgnoreCase)) return 0;
+            if (name.StartsWith("Server 120 ", StringComparison.OrdinalIgnoreCase)) return 1;
+            if (name.StartsWith("Server 140 ", StringComparison.OrdinalIgnoreCase)) return 2;
+            if (name.StartsWith("Server 141 ", StringComparison.OrdinalIgnoreCase)) return 3;
+            return 4;
+        }
+
+        private static bool IsDarkTrayTheme()
+        {
+            var color = System.Drawing.ColorTranslator.FromHtml(IoC.Get<ThemeService>().CurrentTheme.BackgroundColor);
+            return color.GetBrightness() < 0.5f;
         }
         #endregion
 

@@ -277,20 +277,11 @@ namespace _1RM.Service
                 }
             };
 
-            // init matcher
-            if (KeywordMatch.EnabledMatchers.Count > 0)
+            // One predictable, case-insensitive substring rule for connection search.
+            foreach (var matcherProvider in AvailableMatcherProviders)
             {
-                foreach (var matcherProvider in AvailableMatcherProviders)
-                {
-                    matcherProvider.Enabled = false;
-                }
-
-                foreach (var enabledName in KeywordMatch.EnabledMatchers)
-                {
-                    var first = AvailableMatcherProviders.FirstOrDefault(x => x.Name == enabledName);
-                    if (first != null)
-                        first.Enabled = true;
-                }
+                matcherProvider.Enabled = matcherProvider.Name == DirectMatchProvider.GetName();
+                matcherProvider.IsEditable = false;
             }
             AvailableMatcherProviders.First(x => x.Name == DirectMatchProvider.GetName()).Enabled = true;
             AvailableMatcherProviders.First(x => x.Name == DirectMatchProvider.GetName()).IsEditable = false;

@@ -31,37 +31,7 @@
                           SelectedValuePath="Key"
                           DisplayMemberPath="Value" />
                 </Grid>
-                <Grid Style="{StaticResource GridOneRow}" Margin="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" SharedSizeGroup="Column1"></ColumnDefinition>
-                        <ColumnDefinition MinWidth="280" SharedSizeGroup="GeneralColumn2"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="1" Margin="0 0 0 0" TextAlignment="Left" TextWrapping="WrapWithOverflow">
-                    <Hyperlink controls:HyperlinkHelper.IsOpenExternal="True"
-                               NavigateUri="https://1remote.github.io/usage/misc/help-translation/">
-                        <Hyperlink.Style>
-                            <Style TargetType="{x:Type Hyperlink}">
-                                <Setter Property="Foreground" Value="{DynamicResource AccentMidBrush}"></Setter>
-                                <Setter Property="TextBlock.TextDecorations" Value="{x:Null}"></Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Foreground" Value="{DynamicResource AccentLightBrush}"></Setter>
-                                        <Setter Property="TextBlock.TextDecorations">
-                                            <Setter.Value>
-                                                <TextDecorationCollection>
-                                                    <TextDecoration Location="Underline" />
-                                                </TextDecorationCollection>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Hyperlink.Style>
-                        Can't find your language?
-                    </Hyperlink>
-                    </TextBlock>
-                </Grid>
+
 
 
 
@@ -88,6 +58,17 @@
                         <ComboBoxItem Content="{DynamicResource Exit}"/>
                         <ComboBoxItem Content="{DynamicResource Minimize to system tray}"/>
                     </ComboBox>
+                </Grid>
+
+                <Grid Style="{StaticResource GridOneRow}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="Column1" />
+                        <ColumnDefinition MinWidth="280" SharedSizeGroup="GeneralColumn2" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="托盘菜单" />
+                    <CheckBox Grid.Column="1" Content="隐藏最近使用的会话" VerticalAlignment="Center"
+                              ToolTip="勾选后，托盘菜单不显示电脑和服务器的快捷连接列表。"
+                              IsChecked="{Binding HideTrayConnections, Mode=TwoWay}" />
                 </Grid>
 
 
@@ -165,27 +146,19 @@
                         <ColumnDefinition MinWidth="280" MaxWidth="500" SharedSizeGroup="GeneralColumn2"></ColumnDefinition>
                         <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="Log level"></TextBlock>
+                    <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="{DynamicResource Settings.LogLevel}"></TextBlock>
 
                     <ComboBox Grid.Column="1" MinWidth="200" HorizontalAlignment="Left" 
                           SelectedIndex="{Binding LogLevel, Converter={StaticResource ConverterEnumLogLevel}}">
-                        <ComboBoxItem>Debug</ComboBoxItem>
-                        <ComboBoxItem>Info</ComboBoxItem>
-                        <ComboBoxItem>Warning</ComboBoxItem>
+                        <ComboBoxItem Content="{DynamicResource Settings.Log.Debug}" />
+                        <ComboBoxItem Content="{DynamicResource Settings.Log.Info}" />
+                        <ComboBoxItem Content="{DynamicResource Settings.Log.Warning}" />
                     </ComboBox>
                 </Grid>
 
 
 
-                <TextBlock Text="Tab" Style="{StaticResource BlockTitleColumn}" />
-                <Grid Style="{StaticResource GridOneRow}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" SharedSizeGroup="Column1"></ColumnDefinition>
-                        <ColumnDefinition MinWidth="280" SharedSizeGroup="GeneralColumn2"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <CheckBox Grid.Column="1" IsChecked="{Binding TabWindowCloseButtonOnLeft, Mode=TwoWay}" Content="{DynamicResource 'Place the close button on the left side to prevent accidental touches'}" VerticalAlignment="Center"></CheckBox>
-                </Grid>
+                <TextBlock Text="{DynamicResource Settings.Tabs}" Style="{StaticResource BlockTitleColumn}" />
                 <Grid Style="{StaticResource GridOneRow}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" SharedSizeGroup="Column1"></ColumnDefinition>
@@ -195,7 +168,7 @@
                     <CheckBox Grid.Column="1" IsChecked="{Binding TabWindowSetFocusToLocalDesktopOnMouseLeaveRdpWindow, Mode=TwoWay}" Content="{DynamicResource 'Set focus to local desktop when the mouse is moved out of RDP desktop'}" VerticalAlignment="Center"></CheckBox>
                 </Grid>
 
-                <TextBlock Text="Misc" Style="{StaticResource BlockTitleColumn}" />
+                <TextBlock Text="{DynamicResource Settings.Misc}" Style="{StaticResource BlockTitleColumn}" />
                 <Grid Style="{StaticResource GridOneRow}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" SharedSizeGroup="Column1"></ColumnDefinition>
@@ -211,7 +184,7 @@
                         <ColumnDefinition MinWidth="280" SharedSizeGroup="GeneralColumn2"></ColumnDefinition>
                         <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <CheckBox Grid.Column="1" IsChecked="{Binding DoNotCheckNewVersion, Mode=TwoWay}" Content="{DynamicResource 'Do not check for new version'}" VerticalAlignment="Center"></CheckBox>
+                    <CheckBox Grid.Column="1" IsChecked="{Binding CheckNewVersion, Mode=TwoWay}" Content="{DynamicResource Settings.CheckNewVersion}" VerticalAlignment="Center"></CheckBox>
                 </Grid>
             </StackPanel>
 

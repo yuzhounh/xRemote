@@ -19,6 +19,9 @@ namespace _1RM.Service.Locality
         public Dictionary<string, bool> GroupedIsExpanded = new Dictionary<string, bool>();
         public double ServerListNameWidth = 300;
         public double ServerListNoteWidth = 100;
+        public double ServerListStatusWidth = 84;
+        public double ServerListAddressWidth = 550;
+        public double ServerListProtocolWidth = 100;
     }
 
     public static class LocalityListViewService

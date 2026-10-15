@@ -326,6 +326,9 @@ namespace _1RM.View.ServerView.Tree
             List<TreeNode> sorted;
             switch (orderBy)
             {
+                case EnumServerOrderBy.IdDesc:
+                    sorted = nodes.OrderBy(n => !n.IsFolder).ThenByDescending(n => n.Server?.Server?.Id ?? "").ToList();
+                    break;
                 case EnumServerOrderBy.IdAsc:
                     sorted = nodes.OrderBy(n => !n.IsFolder).ThenBy(n => n.Server?.Server?.Id ?? "").ToList();
                     break;

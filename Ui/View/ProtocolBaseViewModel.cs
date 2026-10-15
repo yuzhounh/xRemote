@@ -94,6 +94,32 @@ namespace _1RM.View
         }
 
         private ProtocolBase _server;
+        private string _connectionStatusText = "检测中";
+        private string _connectionStatusColor = "#FBBF24";
+        private string _connectionStatusHint = "正在检测目标端口是否可达";
+        private bool? _connectionOnline;
+        public string ConnectionStatusText => _connectionStatusText;
+        public string ConnectionStatusColor => _connectionStatusColor;
+        public string CardConnectionStatusColor => _connectionOnline == false ? "#F87171" : _connectionStatusColor;
+        public string CardConnectionStatusText => _connectionOnline == true ? "在线" : _connectionOnline == false ? "离线" : "检测中";
+        public string ConnectionStatusHint => _connectionStatusHint;
+        public System.Windows.Visibility ConnectionStatusVisibility => Server is ProtocolBaseWithAddressPort
+            ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+
+        internal void SetConnectionStatus(bool? online, string hint)
+        {
+            _connectionOnline = online;
+            _connectionStatusText = online == true ? "在线" : online == false ? "不可达" : "检测中";
+            _connectionStatusColor = online == true ? "#34D399" : online == false ? "#9CA3AF" : "#FBBF24";
+            _connectionStatusHint = hint;
+            RaisePropertyChanged(nameof(ConnectionStatusText));
+            RaisePropertyChanged(nameof(ConnectionStatusColor));
+            RaisePropertyChanged(nameof(CardConnectionStatusColor));
+            RaisePropertyChanged(nameof(CardConnectionStatusText));
+            RaisePropertyChanged(nameof(ConnectionStatusHint));
+            RaisePropertyChanged(nameof(ConnectionStatusVisibility));
+        }
+
         public ProtocolBase Server
         {
             get => _server;
@@ -102,6 +128,7 @@ namespace _1RM.View
                 if (_server != value)
                 {
                     _server = value;
+                    SetConnectionStatus(null, "正在检测目标端口是否可达");
                     _server.Tags = _server.Tags.Select(x => x.ToLower()).ToList();
 
                     if (ConverterNoteToVisibility.IsVisible(_server.Note))

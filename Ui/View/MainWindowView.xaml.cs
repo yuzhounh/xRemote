@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using _1RM.Service;
@@ -18,6 +19,7 @@ namespace _1RM.View
     {
         public MainWindowViewModel Vm { get; }
         private readonly ConfigurationService _configurationService;
+        private readonly NativeMainTitleBar _nativeTitleBar;
 
 
         public MainWindowView(MainWindowViewModel vm, LocalityService localityService, ConfigurationService configurationService)
@@ -26,6 +28,7 @@ namespace _1RM.View
             Vm = vm;
             _configurationService = configurationService;
             this.DataContext = Vm;
+            BindThemeMenu(PopupMenu, ThemePresetMenu, IoC.Get<Settings.Theme.ThemeSettingViewModel>());
             Title = Assert.APP_DISPLAY_NAME;
             // restore the window size from 
             this.Width = localityService.MainWindowWidth;
@@ -34,6 +37,7 @@ namespace _1RM.View
 
             this.SizeChanged += (sender, args) =>
             {
+                if (ConnectionSearchBar.Visibility == Visibility.Visible) UpdateSearchLayout();
                 if (this.WindowState == WindowState.Normal)
                 {
                     localityService.MainWindowState = this.WindowState;
@@ -55,8 +59,7 @@ namespace _1RM.View
                 localityService.MainWindowState = this.WindowState;
             };
 
-            WinTitleBar.PreviewMouseDown += WinTitleBar_OnPreviewMouseDown;
-            WinTitleBar.PreviewMouseMove += WinTitleBar_OnPreviewMouseMove;
+            _nativeTitleBar = new NativeMainTitleBar(this, NativeCaptionRow, WinTitleBar, CaptionMenuArea, HandleCaptionClose, ConnectionSearchBar);
 
             // Restore or reset window location
             if (double.IsNaN(localityService.MainWindowTop) || double.IsNaN(localityService.MainWindowLeft)
@@ -73,37 +76,35 @@ namespace _1RM.View
                 this.Left = localityService.MainWindowLeft;
             }
 
-            BtnClose.Click += (sender, args) =>
-            {
-                if ((_configurationService.Engagement.DoNotShowAgain == false || AppVersion.VersionData > _configurationService.Engagement.DoNotShowAgainVersion)
-                    && _configurationService.Engagement.InstallTime < DateTime.Now.AddDays(-15)
-                    && _configurationService.Engagement.LastRequestRatingsTime < DateTime.Now.AddDays(-60)
-                    && _configurationService.Engagement.ConnectCount > 100
-                   )
-                {
-                    // 显示“请求应用的评分和评价”页面 https://docs.microsoft.com/zh-cn/windows/uwp/monetize/request-ratings-and-reviews
-                    MaskLayerController.ShowMask(IoC.Get<RequestRatingViewModel>(), Vm);
-                    return;
-                }
-                vm.HideMe();
-#if DEBUG
-                App.Close();
-#else
-                switch (IoC.Get<ConfigurationService>().General.CloseButtonBehavior)
-                {
-                    case (int)GeneralConfig.EnumCloseButtonBehavior.Exit:
-                        App.Close();
-                        break;
-                    case (int)GeneralConfig.EnumCloseButtonBehavior.Minimize:
-                        // Minimize to system tray - just hide
-                    default:
-                        break;
-                }
-#endif
-            };
+        }
 
-            BtnMaximize.Click += (sender, args) => this.WindowState = (this.WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
-            BtnMinimize.Click += (sender, args) => { this.WindowState = WindowState.Minimized; };
+        private void HandleCaptionClose()
+        {
+            if ((_configurationService.Engagement.DoNotShowAgain == false || AppVersion.VersionData > _configurationService.Engagement.DoNotShowAgainVersion)
+                && _configurationService.Engagement.InstallTime < DateTime.Now.AddDays(-15)
+                && _configurationService.Engagement.LastRequestRatingsTime < DateTime.Now.AddDays(-60)
+                && _configurationService.Engagement.ConnectCount > 100
+               )
+            {
+                // 显示“请求应用的评分和评价”页面 https://docs.microsoft.com/zh-cn/windows/uwp/monetize/request-ratings-and-reviews
+                MaskLayerController.ShowMask(IoC.Get<RequestRatingViewModel>(), Vm);
+                return;
+            }
+            Vm.HideMe();
+#if DEBUG
+            App.Close();
+#else
+            switch (IoC.Get<ConfigurationService>().General.CloseButtonBehavior)
+            {
+                case (int)GeneralConfig.EnumCloseButtonBehavior.Exit:
+                    App.Close();
+                    break;
+                case (int)GeneralConfig.EnumCloseButtonBehavior.Minimize:
+                    // Minimize to system tray - just hide
+                default:
+                    break;
+            }
+#endif
         }
 
         public void ResetLocation()
@@ -119,6 +120,61 @@ namespace _1RM.View
             // Place the window in the center of the current screen
             this.Top = screenEx.VirtualWorkingAreaCenter.Y - this.Height / 2;
             this.Left = screenEx.VirtualWorkingAreaCenter.X - this.Width / 2;
+        }
+
+        public void EnsureVisibleLocation()
+        {
+            var bounds = WindowState == WindowState.Normal ? new Rect(Left, Top, Width, Height) : RestoreBounds;
+            if (bounds.IsEmpty || !double.IsFinite(bounds.X) || !double.IsFinite(bounds.Y))
+            {
+                ResetLocation();
+                return;
+            }
+            bool titleVisible = System.Windows.Forms.Screen.AllScreens.Any(screen =>
+            {
+                var area = new ScreenInfoEx(screen).VirtualWorkingArea;
+                var visible = Rect.Intersect(new Rect(bounds.X, bounds.Y, bounds.Width, 40),
+                    new Rect(area.X, area.Y, area.Width, area.Height));
+                return !visible.IsEmpty && visible.Width >= 80 && visible.Height >= 20;
+            });
+            if (!titleVisible) ResetLocation();
+        }
+
+        internal static void BindThemeMenu(System.Windows.Controls.Primitives.Popup popup,
+            System.Windows.Controls.MenuItem menu, Settings.Theme.ThemeSettingViewModel settings)
+        {
+            // Build before first expansion and refresh through the containing popup's
+            // direct event, rather than filtering a routed submenu event's Source.
+            PopulateThemeMenu(menu, settings);
+            popup.Opened += (_, _) => PopulateThemeMenu(menu, settings);
+        }
+
+        internal static void PopulateThemeMenu(System.Windows.Controls.MenuItem menu, Settings.Theme.ThemeSettingViewModel settings)
+        {
+            menu.Items.Clear();
+            foreach (var name in settings.ThemeList)
+            {
+                var item = new System.Windows.Controls.MenuItem
+                {
+                    Header = new Controls.LocalizedOptionText { Value = name, ResourcePrefix = "ThemePreset." },
+                    Tag = name, IsCheckable = true, IsChecked = settings.ThemeName == name
+                };
+                item.SetResourceReference(StyleProperty, "UniformOptionMenuItemStyle");
+                var mark = new System.Windows.Shapes.Path();
+                mark.SetResourceReference(StyleProperty, "MenuSelectionMarkStyle");
+                mark.SetBinding(VisibilityProperty, new System.Windows.Data.Binding(nameof(item.IsChecked))
+                {
+                    Source = item, Converter = new System.Windows.Controls.BooleanToVisibilityConverter()
+                });
+                item.Icon = mark;
+                item.Click += (_, _) =>
+                {
+                    settings.ThemeName = name;
+                    foreach (System.Windows.Controls.MenuItem option in menu.Items)
+                        option.IsChecked = ReferenceEquals(option, item);
+                };
+                menu.Items.Add(item);
+            }
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -154,7 +210,7 @@ namespace _1RM.View
             {
                 if (Vm.ActiveServerViewModel.TagListViewModel == null)
                 {
-                    Vm.MainFilterIsFocused = true;
+                    ShowConnectionSearch();
                 }
                 else
                 {
@@ -177,19 +233,6 @@ namespace _1RM.View
                 {
                     vm.ShowList(false);
                 }
-                else if (e.Key != Key.LeftCtrl && e.Key != Key.RightCtrl && vm.IsShownList)
-                {
-                    if (Vm.ActiveServerViewModel.TagListViewModel == null)
-                    {
-                        Vm.MainFilterIsFocused = true;
-                        Vm.MainFilterIsFocused = true;
-                    }
-                    else
-                    {
-                        Vm.ActiveServerViewModel.TagsPanelViewModel.FilterIsFocused = true;
-                        Vm.ActiveServerViewModel.TagsPanelViewModel.FilterIsFocused = true;
-                    }
-                }
             }
         }
 
@@ -202,12 +245,50 @@ namespace _1RM.View
         }
 
 
+        private void ShowConnectionSearch()
+        {
+            CbPopForMenu.IsChecked = false;
+            UpdateSearchLayout();
+            ConnectionSearchBar.Visibility = Visibility.Visible;
+            Vm.ActiveServerViewModel?.CalcServerVisibleAndRefresh(force: true);
+            Vm.RefreshConnectionSearchSummary();
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                SearchConnectionsTextBox.Focus();
+                SearchConnectionsTextBox.SelectAll();
+            }));
+        }
+
+        private void UpdateSearchLayout()
+        {
+            double reserved = Math.Max(190, CaptionMenuArea.Margin.Right + 45) + 8;
+            double available = ActualWidth - 2 * reserved;
+            bool inCaption = available >= 240;
+            System.Windows.Controls.Grid.SetRow(ConnectionSearchBar, inCaption ? 0 : 1);
+            ConnectionSearchBar.VerticalAlignment = inCaption ? VerticalAlignment.Center : VerticalAlignment.Top;
+            ConnectionSearchBar.Margin = inCaption ? new Thickness(0, 4, 0, 4) : new Thickness(0, 8, 0, 0);
+            ConnectionSearchBar.Width = Math.Max(240, Math.Min(360, inCaption ? available : ActualWidth - 32));
+        }
+
+        private void SearchConnections_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!Vm.IsShownList) Vm.ShowList(false);
+            ShowConnectionSearch();
+        }
+
+        private void CloseConnectionSearch_OnClick(object sender, RoutedEventArgs e)
+        {
+            Vm.SetMainFilterString(null, null);
+            ConnectionSearchBar.Visibility = Visibility.Collapsed;
+        }
+
         private void MainFilter_OnKeyUp(object sender, KeyEventArgs e)
         {
             // When press Esc, clear all the search keywords, but keep selected tags;
             if (e.Key != Key.Escape || sender is TextBox == false) return;
             var s = TagAndKeywordEncodeHelper.DecodeKeyword(Vm.MainFilterString);
             Vm.SetMainFilterString(s.KeyWords.Count == 0 ? null : s.TagFilterList, null);
+            ConnectionSearchBar.Visibility = Visibility.Collapsed;
         }
 
 

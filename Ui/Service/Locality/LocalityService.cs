@@ -20,6 +20,7 @@ namespace _1RM.Service.Locality
 {
     public enum EnumServerOrderBy
     {
+        IdDesc = -2,
         IdAsc = -1,
         ProtocolAsc = 0,
         ProtocolDesc = 1,
