@@ -20,6 +20,12 @@
 xRemote 是基于 [1Remote](https://github.com/1Remote/1Remote) 定制的 Windows 远程会话管理器，集中管理远程桌面、终端与文件传输连接，提供标签页、快捷搜索与多种主题。当前发布版本为 **xRemote 1.3.0 Rev.8**。
 
 <p align="center">
+  <strong>浅色主题 · 列表视图</strong><br>
+  <img src="assets/screenshots/main-window-light.jpg" width="958" alt="xRemote 浅色主题主界面，展示连接列表与在线状态">
+</p>
+
+<p align="center">
+  <strong>深色主题 · 卡片视图</strong><br>
   <img src="assets/screenshots/main-window.jpg" width="958" alt="xRemote 深色主题主界面，展示设备卡片与在线状态">
 </p>
 
