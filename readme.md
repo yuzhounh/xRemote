@@ -36,7 +36,7 @@ xRemote 是基于 [1Remote](https://github.com/1Remote/1Remote) 定制的 Window
 - **界面整理**：统一品牌标志、浅灰/深色主题、圆角菜单和中文设置，重新设计启动器并整理协议设置布局。
 - **发行维护**：采用独立 Rev. 修订号、自有 GitHub 更新源，以及自包含便携版和安装版。
 
-完整的 [版本变更与开发历史](CHANGELOG.md) 记录了 Rev.1–Rev.8 的功能迭代及累计改动。Rev.1–Rev.6 是早期本地迭代，首次公开的 Rev.7 源码已包含此前成果；独立源码标签及 GitHub 下载从 Rev.7 开始提供。
+在 [Release list](https://github.com/yuzhounh/xRemote/releases) 可逐版查看 Rev.1–Rev.8 的改动；[版本变更与开发历史](CHANGELOG.md) 提供汇总。Rev.1–Rev.6 为历史日志补录，关联的归档只含文档；各版独立应用源码标签和正式安装包从 Rev.7 开始提供，首次公开的 Rev.7 源码已包含此前成果。
 
 ## 功能特点
 

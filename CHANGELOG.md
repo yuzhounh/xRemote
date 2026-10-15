@@ -5,8 +5,8 @@ xRemote 基于 [1Remote 1.3.0](https://github.com/1Remote/1Remote/tree/1.3.0) �
 ## 记录范围与历史版本
 
 - Rev.1–Rev.8 的下述开发记录均发生于 **2026-10-15（Asia/Shanghai）**；Rev.1 中包含多轮未单独递增修订号的改动，按该阶段最终实现汇总。
-- Rev.1–Rev.6 为本地迭代，未建立对应的独立 Git 标签或 GitHub Release。首次公开的 Rev.7 源码提交汇总了此前的累计改动，不能把其中每一项都视为 Rev.7 才新增。
-- 本地仍保留 Rev.1–Rev.6 的运行产物，Rev.6 还保留 Windows 便携 ZIP 和安装 EXE。这些产物不等同于各版独立源码快照；本次补录公开开发日志，不补造历史源码标签，也不直接上传含个人配置的运行目录。
+- Rev.1–Rev.6 最初为本地迭代，未建立各版独立源码标签；现已在 [Release list](https://github.com/yuzhounh/xRemote/releases) 逐版补录开发日志。历史条目使用 `history/v1.3.0-r1` 至 `history/v1.3.0-r6` 标签，仅关联历史说明文档，GitHub 自动提供的 Source code 压缩包也只含文档。首次公开的 Rev.7 源码提交汇总了此前的累计改动，不能把其中每一项都视为 Rev.7 才新增。
+- 本地仍保留 Rev.1–Rev.6 的运行产物，Rev.6 还保留 Windows 便携 ZIP 和安装 EXE。这些产物不等同于各版独立源码快照；本次补录各版开发日志，运行目录及旧安装文件保留本地。
 - [Rev.7](https://github.com/yuzhounh/xRemote/releases/tag/v1.3.0-r7) 和 [Rev.8](https://github.com/yuzhounh/xRemote/releases/tag/v1.3.0-r8) 有正式源码标签、Windows 便携包、安装程序及 SHA-256 校验文件。
 - 早期条目依据项目保留的开发记录、构建日志、版本元数据和安装收据整理。原始机器部署、连接地址、账户和凭据记录留在本地；公开日志只保留产品改动。原记录合并描述的 Rev.6–Rev.7 功能，在下文按阶段说明，不追补未经独立源码证明的逐项提交时间。
 - 本页覆盖截至 Rev.8 的 Windows 发布历史。后续本地评审改动及 Android 开发不计入这些 Windows 发行版。
@@ -66,7 +66,7 @@ xRemote 基于 [1Remote 1.3.0](https://github.com/1Remote/1Remote/tree/1.3.0) �
 
 ### 1.3.0 Rev.6 — 自有更新源与双格式打包
 
-2026-10-15；本地构建与使用版本，未单独建立公开源码标签或 Release。
+2026-10-15；本地构建与使用版本，[历史补录](https://github.com/yuzhounh/xRemote/releases/tag/history/v1.3.0-r6)，无该版独立源码归档。
 
 - Rev.6–Rev.7 阶段将更新来源切换到 `yuzhounh/xRemote`，用正式发行标签比较基线与修订号，排除草稿、预发布和上游标签。
 - 将“不检查新版本”改为正向“检查新版本”，新配置默认开启，兼容原配置键；关闭选项后停止定时检查。
@@ -75,7 +75,7 @@ xRemote 基于 [1Remote 1.3.0](https://github.com/1Remote/1Remote/tree/1.3.0) �
 
 ### 1.3.0 Rev.5 — 菜单跟随主题与紧凑子菜单
 
-2026-10-15；本地构建与使用版本。
+2026-10-15；本地构建与使用版本，[历史补录](https://github.com/yuzhounh/xRemote/releases/tag/history/v1.3.0-r5)。
 
 - 浅色弹出菜单改为直接使用当前主题主色，与标题栏保持一致；主菜单、各级子菜单及右键菜单共用表面、边框和悬停资源。
 - 二级菜单取消固定宽度，按内容自然排布，保留统一字体、行高、选中标记、圆角和留白。
@@ -83,7 +83,7 @@ xRemote 基于 [1Remote 1.3.0](https://github.com/1Remote/1Remote/tree/1.3.0) �
 
 ### 1.3.0 Rev.4 — 中性浅灰主题与圆角菜单
 
-2026-10-15；本地构建与使用版本。
+2026-10-15；本地构建与使用版本，[历史补录](https://github.com/yuzhounh/xRemote/releases/tag/history/v1.3.0-r4)。
 
 - 将 Rev.3 的浅蓝 Light 主题调整为中性浅灰：主窗口及会话栏使用 `#F5F5F5`，内容和活动标签使用白色，文字与控件强调使用灰阶。
 - 自动迁移此前的默认 Light 配色，保留自定义颜色、字体及 Dark 基础配色。
@@ -91,7 +91,7 @@ xRemote 基于 [1Remote 1.3.0](https://github.com/1Remote/1Remote/tree/1.3.0) �
 
 ### 1.3.0 Rev.3 — 设置中文化、菜单与主题统一
 
-2026-10-15；本地构建与使用版本。
+2026-10-15；本地构建与使用版本，[历史补录](https://github.com/yuzhounh/xRemote/releases/tag/history/v1.3.0-r3)。
 
 - 补齐常规、启动器、主题及协议设置的简体中文文案；保留协议、软件、字体名称与内部标识。
 - 统一视图、排序及主题子菜单的字体、行高和选中标记，主题菜单补齐单选状态；排序 ID 显示为“记录编号”。
@@ -100,7 +100,7 @@ xRemote 基于 [1Remote 1.3.0](https://github.com/1Remote/1Remote/tree/1.3.0) �
 
 ### 1.3.0 Rev.2 — 汇总原生会话标题栏与浅色标签栏
 
-2026-10-15；本地构建与使用版本。
+2026-10-15；本地构建与使用版本，[历史补录](https://github.com/yuzhounh/xRemote/releases/tag/history/v1.3.0-r2)。
 
 - 将 Rev.1 后期累计完成的原生会话标题栏、统一细线图标及浅色标签栏改动，汇总构建为明确编号的 `1.3.0.2`。
 - 接续主窗口的原生标题栏方案，会话窗口使用系统最小化、最大化/还原和关闭按钮，保留独立全屏入口；按实际客户区及标题栏高度调整远程内容尺寸。
@@ -109,7 +109,7 @@ xRemote 基于 [1Remote 1.3.0](https://github.com/1Remote/1Remote/tree/1.3.0) �
 
 ### 1.3.0 Rev.1 — xRemote 初始定制
 
-2026-10-15；本地多轮迭代，阶段内沿用 `1.3.0.1`。
+2026-10-15；本地多轮迭代，阶段内沿用 `1.3.0.1`，[历史补录](https://github.com/yuzhounh/xRemote/releases/tag/history/v1.3.0-r1)。
 
 - 确立 xRemote 产品名、上游基线加独立 Rev. 的版本规则，提供无调试控制台的 Release 日常版。
 - 设计 Chrome 风格标签栏，迭代上下圆角、底部外拐、首尾裁剪、标签宽度与活动分隔线。
