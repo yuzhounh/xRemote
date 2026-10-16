@@ -13,9 +13,9 @@
 4. 填写所需账号信息；需要在连接时输入密码的，可使用对应密码提示选项。
 5. 点击底部“创建”。新建连接需要显式创建，不能只关闭窗口。
 
-![添加和导入菜单](images/add-menu.jpg)
+[![添加和导入菜单](images/add-menu.png)](images/add-menu.png)
 
-![新建 RDP 连接，底部为创建按钮](images/connection-new-rdp.jpg)
+[![新建 RDP 连接，底部为创建按钮](images/connection-new-rdp.png)](images/connection-new-rdp.png)
 
 默认端口通常为 RDP `3389`、SSH/SFTP `22`、VNC `5900`、FTP `21`、Telnet `23`。目标服务改过端口时，以实际配置为准。
 
@@ -23,7 +23,7 @@
 
 在主窗口双击连接，或按 `Alt + M` 打开启动器，搜索名称后按 `Enter`。部分连接会要求输入密码或进行目标服务认证，按提示完成。
 
-![包含 RDP、SSH 和 SFTP 示例连接的主窗口](images/main-window.jpg)
+[![包含 RDP、SSH 和 SFTP 示例连接的主窗口](images/main-window.png)](images/main-window.png)
 
 “在线”表示检测时目标端口可达，不表示账号认证成功，也不能判断远程是否已有其他人在使用。端口检测和真实连接使用相同的目标地址，但网络代理、服务状态等可能影响结果。
 
@@ -46,9 +46,9 @@
 - **数据与凭据**：管理连接数据库和可复用凭据。
 - **协议**：选择各类连接使用的内置或外部程序。
 
-![常规设置中的语言和关闭按钮行为](images/settings-general.jpg)
+[![常规设置中的语言和关闭按钮行为](images/settings-general.png)](images/settings-general.png)
 
-![外观设置中的主题和字体](images/settings-appearance.jpg)
+[![外观设置中的主题和字体](images/settings-appearance.png)](images/settings-appearance.png)
 
 ## 连接失败时先检查什么
 

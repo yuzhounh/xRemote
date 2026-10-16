@@ -4,7 +4,7 @@
 
 “设置 → 数据与凭据”集中管理连接数据库和可复用账号信息。连接数据、本机界面状态和本机记住的 RDP 密码分别存储，备份与迁移时需要一起考虑。
 
-![数据与凭据页面，显示本地 SQLite 及空凭据库](images/data-and-credentials.jpg)
+[![数据与凭据页面，显示本地 SQLite 及空凭据库](images/data-and-credentials.png)](images/data-and-credentials.png)
 
 <a id="storage"></a>
 ## 数据位置
@@ -42,7 +42,7 @@ xRemote 的本机 RDP 密码缓存使用 Windows 当前用户的数据保护机�
 
 点击数据源标题旁的“添加”，可配置 MySQL 或 PostgreSQL。它们需要自行准备可访问的数据库、账号和权限；添加菜单不会代为创建远程数据库服务。
 
-![添加数据源菜单中的 MySQL 和 PostgreSQL](images/data-source-types.jpg)
+[![添加数据源菜单中的 MySQL 和 PostgreSQL](images/data-source-types.png)](images/data-source-types.png)
 
 填写数据库地址、端口、库名和认证信息后，使用配置窗口的连接检查确认可用，再保存。不要把远程数据库密码当作目标 RDP 或 SSH 的登录密码；二者用途不同。
 

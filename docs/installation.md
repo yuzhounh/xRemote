@@ -24,11 +24,11 @@ xRemote 提供 Windows x64 自包含安装版和便携版。正式下载入口�
 
 ## 查看版本和更新
 
-打开主窗口右上角菜单，选择“关于”，查看版本号。`1.3.0 Rev.8` 中的 `1.3.0` 是上游基线，`Rev.8` 是 xRemote 自己的发行修订号。
+打开主窗口右上角菜单，选择“关于”，查看版本号。`1.3.0 Rev.9` 中的 `1.3.0` 是上游基线，`Rev.9` 是 xRemote 自己的发行修订号。
 
-![主菜单中的关于入口](images/main-menu.jpg)
+[![主菜单中的关于入口](images/main-menu.png)](images/main-menu.png)
 
-![关于页显示 xRemote 版本及帮助入口](images/about-version.jpg)
+[![关于页显示 xRemote 版本及帮助入口](images/about-version.png)](images/about-version.png)
 
 “设置 → 常规”中的“检查新版本”控制自动检查。发现新版时，应用提供发布页入口，由你下载并手动安装；检查更新不会自动覆盖程序或替你完成升级。
 

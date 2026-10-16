@@ -8,7 +8,7 @@ xRemote 提供主窗口搜索和全局快捷启动器。前者用于筛选当前
 
 在主窗口按 `Ctrl + F` 打开搜索栏，输入名称、目标地址或账号。右侧显示筛选后的数量；点击搜索栏的关闭按钮或按 `Esc` 退出搜索。
 
-![Ctrl + F 打开的主窗口搜索栏](images/main-search.jpg)
+[![Ctrl + F 打开的主窗口搜索栏](images/main-search.png)](images/main-search.png)
 
 标签也可以筛选连接。列表列宽可拖动调整并保存；主窗口菜单中的“视图”用于切换列表、卡片等显示方式。
 
@@ -17,13 +17,13 @@ xRemote 提供主窗口搜索和全局快捷启动器。前者用于筛选当前
 
 应用运行时，默认按 `Alt + M` 打开启动器。输入关键词，用上下方向键选择结果，按 `Enter` 发起连接，按 `Esc` 关闭启动器。
 
-![启动器中的示例连接和协议标识](images/launcher.jpg)
+[![启动器中的示例连接和协议标识](images/launcher.png)](images/launcher.png)
 
 启动器显示名称、目标及协议，启用相关选项时也显示账号。名称相近时，先核对目标和账号再连接。
 
 在“设置 → 常规 → 启动器”可启用启动器、修改快捷键和控制账号信息显示。如果默认快捷键与其他程序冲突，改用没有占用的组合。
 
-![常规设置下的启动器选项与快捷键](images/launcher-settings.jpg)
+[![常规设置下的启动器选项与快捷键](images/launcher-settings.png)](images/launcher-settings.png)
 
 <a id="quick-connect"></a>
 ## 快速连接

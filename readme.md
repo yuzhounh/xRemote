@@ -21,12 +21,12 @@ xRemote 是基于 [1Remote](https://github.com/1Remote/1Remote) 定制的 Window
 
 <p align="center">
   <strong>浅色主题 · 列表视图</strong><br>
-  <img src="assets/screenshots/main-window-light.jpg" width="958" alt="xRemote 浅色主题主界面，展示连接列表与在线状态">
+  <img src="assets/screenshots/main-window-light.png" width="958" alt="xRemote 浅色主题主界面，展示连接列表与在线状态">
 </p>
 
 <p align="center">
   <strong>深色主题 · 卡片视图</strong><br>
-  <img src="assets/screenshots/main-window.jpg" width="958" alt="xRemote 深色主题主界面，展示设备卡片与在线状态">
+  <img src="assets/screenshots/main-window.png" width="958" alt="xRemote 深色主题主界面，展示设备卡片与在线状态">
 </p>
 
 ## 相对 1Remote 的主要改进

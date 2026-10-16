@@ -12,20 +12,20 @@
 - **批量编辑**：核对将应用到多条连接的字段，再执行保存。
 - **关闭窗口**：如果出现尚未保存的修改提示，可以选择保存、放弃修改或继续编辑。自动保存已完成的改动不会因为关闭窗口而撤销。
 
-![已有连接的编辑窗口，底部显示保存状态](images/connection-edit.jpg)
+[![已有连接的编辑窗口，底部显示保存状态](images/connection-edit.png)](images/connection-edit.png)
 
-![关闭未保存草稿时的选择](images/connection-unsaved.jpg)
+[![关闭未保存草稿时的选择](images/connection-unsaved.png)](images/connection-unsaved.png)
 
 无效输入不会用于覆盖上一次有效保存值。若提示保存失败，保留窗口并处理错误；不要把窗口关闭或状态提示消失当成已经写入成功。
 
 <a id="protocol-change"></a>
 ## 切换协议需要确认
 
-编辑已有连接时，点击其他协议标签会先进入预览。顶部显示当前协议和正在查看的协议；预览期间的改动暂不应用到原连接。
+编辑已有连接时，点击其他协议标签会先进入预览。底部显示当前协议和正在查看的协议；预览期间的改动暂不应用到原连接。
 
 确实要转换时，点击“变更为 …”并按提示确认；只想查看字段时，点击“返回当前协议”。转换后核对端口、账号和协议专有字段。
 
-![从 RDP 查看 SSH 时，顶部显示预览与变更按钮](images/connection-protocol-preview.jpg)
+[![从 RDP 查看 SSH 时，底部显示预览与变更按钮](images/connection-protocol-preview.png)](images/connection-protocol-preview.png)
 
 ## 名称、标签和备用连接
 
@@ -63,7 +63,7 @@ audiomode:i:0
 
 RemoteApp 在远程电脑上运行指定应用。填写远程设备的地址、端口和凭据，然后向下填写“程序名称”和“服务端路径”。服务端路径是**远程电脑上的程序路径**，不是本机路径。
 
-![RemoteApp 的程序名称、服务端路径及额外指令](images/connection-remoteapp.jpg)
+[![RemoteApp 的程序名称、服务端路径及额外指令](images/connection-remoteapp.png)](images/connection-remoteapp.png)
 
 目标服务器需要事先配置并授权 RemoteApp；只在 xRemote 填写路径不会完成服务器配置。出现“程序不在已授权程序列表中”等提示时，应检查服务端的发布和授权设置。声音及其他 RDP 选项按实际需求填写。
 
@@ -72,6 +72,6 @@ RemoteApp 在远程电脑上运行指定应用。填写远程设备的地址、�
 
 APP 用于带参数启动本机程序或命令。填写本机程序路径，按需添加命令行参数。参数的名称、类型、取值和引用方式以参数编辑窗口为准。
 
-![APP 的程序路径、集成选项和添加参数入口](images/connection-app.jpg)
+[![APP 的程序路径、集成选项和添加参数入口](images/connection-app.png)](images/connection-app.png)
 
 程序需要自行支持相应命令行。选择“集成”前先确认它能够嵌入 xRemote；不兼容时使用独立窗口。要为已有 SSH、SFTP、VNC 等协议统一更换连接程序，请看 [外部运行器](external-runners.md)。

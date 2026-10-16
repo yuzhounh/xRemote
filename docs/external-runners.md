@@ -23,7 +23,7 @@ RDP 的系统客户端选项在连接编辑窗口中，见 [系统远程桌面�
 3. 如需默认使用 WinSCP，在顶部的“默认连接程序”选择它。
 4. 返回连接列表，用一条你有权限访问的 SFTP 连接检查效果。
 
-![SFTP 下展开的 WinSCP 配置](images/runner-winscp.jpg)
+[![SFTP 下展开的 WinSCP 配置](images/runner-winscp.png)](images/runner-winscp.png)
 
 程序内置的密码方式参数示例为：
 
@@ -44,7 +44,7 @@ sftp://%1RM_USERNAME%@%1RM_HOSTNAME%:%1RM_PORT% /privatekey=%1RM_PRIVATE_KEY_PAT
 
 点击参数输入区右侧的圆圈 **i**，查看该协议当前可用变量。圆圈 **？** 打开本文的配置说明。
 
-![应用内参数说明窗口](images/runner-macros.jpg)
+[![应用内参数说明窗口](images/runner-macros.png)](images/runner-macros.png)
 
 常见变量包括：
 

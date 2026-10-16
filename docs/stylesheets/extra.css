@@ -1,0 +1,27 @@
+:root {
+  --md-primary-fg-color: #5650a4;
+  --md-primary-fg-color--dark: #454087;
+  --md-accent-fg-color: #6d5bd0;
+}
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #34304f;
+  --md-accent-fg-color: #b5a6ff;
+}
+.md-grid { max-width: 76rem; }
+.md-typeset { font-size: .82rem; line-height: 1.85; }
+.md-typeset h1, .md-typeset h2, .md-typeset h3 { font-weight: 600; }
+.md-typeset img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 1.4rem auto;
+  border-radius: .35rem;
+  box-shadow: 0 2px 12px #00000012;
+}
+.md-header__button, .md-top { min-width: 40px; min-height: 40px; }
+.md-nav__link { min-height: 40px; align-content: center; }
+.md-typeset code { word-break: break-word; }
+@media (max-width: 76.234375em) {
+  .md-typeset { font-size: .8rem; }
+}
