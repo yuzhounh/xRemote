@@ -75,7 +75,7 @@ namespace _1RM.Service
                 catch (Exception e)
                 {
                     UnifyTracing.Error(e);
-                    MessageBoxHelper.ErrorAlert(e.Message + "\r\n while Run mstsc.exe");
+                    MessageBoxHelper.ErrorAlert(UiText.Get("Shell.MstscFailed", e.Message));
                 }
             }
         }
@@ -289,11 +289,11 @@ namespace _1RM.Service
                             configured.UserName = pb.UserName;
                             configured.AskPasswordWhenConnect = false;
                             var saved = _appData.UpdateServer(configured);
-                            if (!saved.IsSuccess) MessageBoxHelper.Warning("密码已保存在本机，但连接设置未能更新，下次可能仍需输入。请检查数据源写入权限。");
+                            if (!saved.IsSuccess) MessageBoxHelper.Warning(UiText.Get("Shell.PasswordProfile"));
                         }
                         catch (Exception ex) when (ex is System.IO.IOException or UnauthorizedAccessException or System.Security.Cryptography.CryptographicException or Newtonsoft.Json.JsonException)
                         {
-                            MessageBoxHelper.Warning("无法在本机记住密码；本次仍会继续连接。请检查本机配置目录权限。");
+                            MessageBoxHelper.Warning(UiText.Get("Shell.PasswordLocal"));
                         }
                     }
                     pwdDlg.PrivateKey = "";
@@ -324,7 +324,7 @@ namespace _1RM.Service
                 int code = protocolClone.RunScriptBeforeConnect();
                 if (0 != code)
                 {
-                    MessageBoxHelper.ErrorAlert($"Script ExitCode = {code}, connection abort!");
+                    MessageBoxHelper.ErrorAlert(UiText.Get("Shell.ScriptExit", code));
                     return "";
                 }
             }

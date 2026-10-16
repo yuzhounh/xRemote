@@ -29,6 +29,7 @@ namespace _1RM.View
             _configurationService = configurationService;
             this.DataContext = Vm;
             BindThemeMenu(PopupMenu, ThemePresetMenu, IoC.Get<Settings.Theme.ThemeSettingViewModel>());
+            PopupMenu.Opened += (_, _) => Controls.CompactMenuBehavior.SynchronizeWidths(MainMenuItems);
             Title = Assert.APP_DISPLAY_NAME;
             // restore the window size from 
             this.Width = localityService.MainWindowWidth;
@@ -267,7 +268,7 @@ namespace _1RM.View
             System.Windows.Controls.Grid.SetRow(ConnectionSearchBar, inCaption ? 0 : 1);
             ConnectionSearchBar.VerticalAlignment = inCaption ? VerticalAlignment.Center : VerticalAlignment.Top;
             ConnectionSearchBar.Margin = inCaption ? new Thickness(0, 4, 0, 4) : new Thickness(0, 8, 0, 0);
-            ConnectionSearchBar.Width = Math.Max(240, Math.Min(360, inCaption ? available : ActualWidth - 32));
+            ConnectionSearchBar.Width = Math.Max(240, Math.Min(420, inCaption ? available : ActualWidth - 32));
         }
 
         private void SearchConnections_OnClick(object sender, RoutedEventArgs e)

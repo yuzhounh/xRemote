@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Controls;
 using System.Windows.Input;
 using _1RM.Resources.Icons;
@@ -9,6 +9,7 @@ namespace _1RM.View.Editor
     {
         public ServerEditorPageView()
         {
+            InitializeComponent();
             this.Loaded += (sender, args) =>
             {
                 if (this.DataContext is ServerEditorPageViewModel vm)
@@ -16,7 +17,6 @@ namespace _1RM.View.Editor
                     // add mode
                     if (vm.Server.IsTmpSession())
                     {
-                        ButtonSave.Content = IoC.Translate("Add");
                         if (vm.Server.IconImg == null
                             && ServerIcons.Instance.IconsBase64.Count > 0)
                         {
@@ -37,10 +37,6 @@ namespace _1RM.View.Editor
             e.Handled = true;
         }
 
-        private void ButtonShowNote_OnMouseEnter(object sender, MouseEventArgs e)
-        {
-            PopupNote.IsOpen = false;
-            PopupNote.IsOpen = true;
-        }
+
     }
 }

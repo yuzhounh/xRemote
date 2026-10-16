@@ -1,0 +1,40 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="clr-namespace:_1RM.Controls">
+    <Style x:Key="CompactMainMenuItemStyle" TargetType="MenuItem">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="controls:CompactMenuBehavior.Enabled" Value="True" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
+        <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+        <Setter Property="FontSize" Value="{DynamicResource GlobalFontSizeBody}" />
+        <Setter Property="MinHeight" Value="28" />
+        <Setter Property="Padding" Value="10,6,8,6" />
+        <Setter Property="ItemContainerStyle" Value="{StaticResource MenuItemPrimaryStyle}" />
+        <Setter Property="Template"><Setter.Value>
+            <ControlTemplate TargetType="MenuItem">
+                <Border x:Name="Surface" CornerRadius="4" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Padding="{TemplateBinding Padding}">
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" VerticalAlignment="Center" />
+                        <TextBlock x:Name="Shortcut" Grid.Column="1" Text="{TemplateBinding InputGestureText}" Margin="16,0,0,0" VerticalAlignment="Center" />
+                        <Path x:Name="Arrow" Grid.Column="2" Data="M0,0 L0,7 L4,3.5 Z" Fill="{TemplateBinding Foreground}" Width="4" Height="7" Margin="14,0,0,0" VerticalAlignment="Center" />
+                        <Popup x:Name="PART_Popup" Placement="Right" PlacementTarget="{Binding ElementName=Surface}" AllowsTransparency="True" Focusable="False"
+                               IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                            <Border Background="{DynamicResource MenuSurfaceBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="1" CornerRadius="8" Padding="4">
+                                <ItemsPresenter x:Name="ItemsPresenter" Grid.IsSharedSizeScope="True" KeyboardNavigation.DirectionalNavigation="Cycle" KeyboardNavigation.TabNavigation="Cycle" />
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="HasItems" Value="False"><Setter TargetName="Arrow" Property="Visibility" Value="Collapsed" /></Trigger>
+                    <Trigger Property="InputGestureText" Value=""><Setter TargetName="Shortcut" Property="Visibility" Value="Collapsed" /></Trigger>
+                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Surface" Property="Background" Value="{DynamicResource MenuHoverBrush}" /></Trigger>
+                    <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Surface" Property="Background" Value="{DynamicResource MenuHoverBrush}" /></Trigger>
+                    <Trigger Property="IsSubmenuOpen" Value="True"><Setter TargetName="Surface" Property="Background" Value="{DynamicResource MenuHoverBrush}" /></Trigger>
+                    <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Surface" Property="Opacity" Value="0.5" /></Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value></Setter>
+    </Style>
+</ResourceDictionary>

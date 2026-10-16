@@ -23,6 +23,7 @@ namespace _1RM.View.Settings.General
 
 
         public Dictionary<string, string> Languages => _languageService.LanguageCode2Name;
+        public Launcher.LauncherSettingViewModel LauncherSettings => IoC.Get<Launcher.LauncherSettingViewModel>();
         public string Language
         {
             get => _configurationService.General.CurrentLanguageCode;

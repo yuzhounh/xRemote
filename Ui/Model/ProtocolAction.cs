@@ -5,7 +5,8 @@ namespace _1RM.Model
 {
     public class ProtocolAction : NotifyPropertyChangedBase
     {
-        public string ActionName { get; }
+        private readonly Func<string> _actionName;
+        public string ActionName => _actionName();
 
         private readonly Action _action;
 
@@ -14,9 +15,13 @@ namespace _1RM.Model
             _action?.Invoke();
         }
 
-        public ProtocolAction(string actionName, Action action)
+        public ProtocolAction(string actionName, Action action) : this(() => actionName, action)
         {
-            ActionName = actionName;
+        }
+
+        public ProtocolAction(Func<string> actionName, Action action)
+        {
+            _actionName = actionName;
             _action = action;
         }
     }

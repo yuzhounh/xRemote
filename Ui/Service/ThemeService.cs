@@ -180,10 +180,26 @@ namespace _1RM.Service
             var background = ColorAndBrushHelper.HexColorToMediaColor(theme.BackgroundColor);
             bool darkMenu = (background.R * 0.299 + background.G * 0.587 + background.B * 0.114) < 128;
             bool stockLight = theme.ThemeName == "Light";
-            SetKey(rd, "MenuSurfaceBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? theme.PrimaryMidColor : theme.PrimaryDarkColor));
-            SetKey(rd, "MenuHoverColor", ColorAndBrushHelper.HexColorToMediaColor(stockLight ? "#E8E8E8" : theme.PrimaryLightColor));
-            SetKey(rd, "MenuHoverBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#E8E8E8" : theme.PrimaryLightColor));
-            SetKey(rd, "MenuBorderBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#D9D9D9" : "#707A8C"));
+            var bodyText = ColorAndBrushHelper.HexColorToMediaColor(theme.BackgroundTextColor);
+            SolidColorBrush MutedText(double strength) => new SolidColorBrush(Color.FromRgb(
+                (byte)Math.Round(bodyText.R * strength + background.R * (1 - strength)),
+                (byte)Math.Round(bodyText.G * strength + background.G * (1 - strength)),
+                (byte)Math.Round(bodyText.B * strength + background.B * (1 - strength))));
+            SetKey(rd, "SecondaryTextBrush", MutedText(0.80));
+            SetKey(rd, "PlaceholderTextBrush", MutedText(0.68));
+            // Text uses a lighter semantic color on dark surfaces; control accent colors stay unchanged.
+            SetKey(rd, "ValidationErrorBrush", ColorAndBrushHelper.ColorToMediaBrush(darkMenu ? "#FF8A80" : "#B22222"));
+            SetKey(rd, "ReadableAccentTextBrush", ColorAndBrushHelper.ColorToMediaBrush(darkMenu ? theme.AccentLightColor : theme.AccentMidColor));
+            // Match LightNote's neutral scrollbar palette independently of the accent color.
+            SetKey(rd, "ScrollBarThumbBrush", ColorAndBrushHelper.ColorToMediaBrush(darkMenu ? "#2F343A" : "#EEF0F2"));
+            SetKey(rd, "ScrollBarThumbHoverBrush", ColorAndBrushHelper.ColorToMediaBrush(darkMenu ? "#3F454D" : "#DDE1E5"));
+            SetKey(rd, "ScrollBarThumbDragBrush", ColorAndBrushHelper.ColorToMediaBrush(darkMenu ? "#525963" : "#C4CAD1"));
+            bool stockDark = theme.ThemeName == "Dark";
+            var menuHover = stockLight ? "#E8E8E8" : stockDark ? "#3B3B3B" : theme.PrimaryLightColor;
+            SetKey(rd, "MenuSurfaceBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? theme.PrimaryMidColor : stockDark ? "#2B2B2B" : theme.PrimaryDarkColor));
+            SetKey(rd, "MenuHoverColor", ColorAndBrushHelper.HexColorToMediaColor(menuHover));
+            SetKey(rd, "MenuHoverBrush", ColorAndBrushHelper.ColorToMediaBrush(menuHover));
+            SetKey(rd, "MenuBorderBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#D9D9D9" : stockDark ? "#454545" : "#707A8C"));
             SetKey(rd, "LauncherSurfaceBrush", ColorAndBrushHelper.ColorToMediaBrush(theme.PrimaryMidColor));
             SetKey(rd, "LauncherSecondaryBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#686868" : theme.PrimaryTextColor));
             SetKey(rd, "LauncherSelectedBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#FFFFFF" : theme.PrimaryLightColor));
@@ -197,11 +213,18 @@ namespace _1RM.Service
             SetKey(rd, "MenuDividerBrush", ColorAndBrushHelper.ColorToMediaBrush(darkMenu ? "#454850" : (stockLight ? "#D9D9D9" : "#D3E3FD")));
             SetKey(rd, "DefaultBorderColor", ColorAndBrushHelper.HexColorToMediaColor(stockLight ? "#B8B8B8" : "#707A8C"));
             SetKey(rd, "DefaultBorderBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#B8B8B8" : "#707A8C"));
-            SetKey(rd, "ProtocolSettingsSurfaceBrush", stockLight
-                ? ColorAndBrushHelper.ColorToMediaBrush(theme.PrimaryMidColor)
+            SetKey(rd, "ProtocolSettingsSurfaceBrush", stockLight || stockDark
+                ? ColorAndBrushHelper.ColorToMediaBrush(theme.BackgroundColor)
                 : new SolidColorBrush(ColorAndBrushHelper.HexColorToMediaColor(theme.BackgroundTextColor)) { Opacity = .25 });
+            SetKey(rd, "ProtocolCardSurfaceBrush", ColorAndBrushHelper.ColorToMediaBrush(stockDark ? "#252525" : theme.BackgroundColor));
+            SetKey(rd, "ProtocolCardBorderThickness", new Thickness(stockDark ? 1 : 0));
+            SetKey(rd, "ProtocolNavSelectedBrush", ColorAndBrushHelper.ColorToMediaBrush(stockDark ? "#2A2A2A" : (stockLight ? "#F0F0F0" : theme.PrimaryLightColor)));
+            SetKey(rd, "ProtocolNavHoverBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#F7F7F7" : "#12FFFFFF"));
             SetKey(rd, "ProtocolCardHeaderBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? theme.BackgroundColor : theme.PrimaryMidColor));
             SetKey(rd, "ProtocolCardDividerBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#E5E5E5" : theme.PrimaryDarkColor));
+            SetKey(rd, "ProtocolCardBorderBrush", ColorAndBrushHelper.ColorToMediaBrush(stockDark ? "#353535" : (stockLight ? "#E2E2E2" : theme.PrimaryLightColor)));
+            SetKey(rd, "SettingsNavSelectedBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#F0F0F0" : theme.PrimaryLightColor));
+            SetKey(rd, "SettingsNavHoverBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#F7F7F7" : "#12FFFFFF"));
             SetKey(rd, "PrimaryLightColor", ColorAndBrushHelper.HexColorToMediaColor(theme.PrimaryLightColor));
             SetKey(rd, "PrimaryDarkColor", ColorAndBrushHelper.HexColorToMediaColor(theme.PrimaryDarkColor));
             SetKey(rd, "PrimaryTextColor", ColorAndBrushHelper.HexColorToMediaColor(theme.PrimaryTextColor));

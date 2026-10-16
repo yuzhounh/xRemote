@@ -1,29 +1,32 @@
-﻿<UserControl x:Class="_1RM.View.Settings.Theme.ThemeSettingView"
+<UserControl x:Class="_1RM.View.Settings.Theme.ThemeSettingView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:_1RM.View.Settings.Theme"
              xmlns:colorPickerWpf="clr-namespace:ColorPickerWPF;assembly=Shawn.Utils.Wpf"
              xmlns:controls="clr-namespace:_1RM.Controls"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DataContext="{d:DesignInstance local:ThemeSettingViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <UserControl.Resources><ResourceDictionary><ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/1Remote;component/Resources/Theme/SettingsForm.xaml" />
+    </ResourceDictionary.MergedDictionaries></ResourceDictionary></UserControl.Resources>
+    <Grid Background="{DynamicResource BackgroundBrush}">
         <ScrollViewer>
 
         <StackPanel>
 
-            <TextBlock Text="{DynamicResource Theme}" Style="{StaticResource BlockTitleColumn}" />
+            <TextBlock Text="{DynamicResource Settings.Appearance}" Style="{StaticResource SettingsFormPageTitleStyle}" />
 
             <Grid Style="{StaticResource GridOneRow}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="Column1"></ColumnDefinition>
-                    <ColumnDefinition MinWidth="280" SharedSizeGroup="ThemeColumn2"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"></ColumnDefinition>
+                    <ColumnDefinition Style="{StaticResource SettingsFormLabelColumnStyle}"/>
+                    <ColumnDefinition Style="{StaticResource SettingsFormInputColumnStyle}"/>
+                    <ColumnDefinition Style="{StaticResource SettingsFormActionColumnStyle}"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="{DynamicResource Theme}"></TextBlock>
+                <TextBlock Style="{StaticResource SettingsFormLabelStyle}" Text="{DynamicResource Theme}"></TextBlock>
 
                 <ComboBox Grid.Column="1"
                           ItemsSource="{Binding ThemeList}"
@@ -31,13 +34,12 @@
                     <ComboBox.ItemTemplate><DataTemplate><controls:LocalizedOptionText Value="{Binding}" ResourcePrefix="ThemePreset." /></DataTemplate></ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <Button Grid.Column="2" HorizontalAlignment="Left" Margin="5 0 0 0" Style="{StaticResource ButtonPrimaryStyle}" Content="{DynamicResource Reset}" Command="{Binding CmdResetTheme}"></Button>
+                <Button Grid.Column="2" HorizontalAlignment="Left" Margin="8 0 0 0" Style="{StaticResource FormActionButtonStyle}" Content="{DynamicResource Reset}" Command="{Binding CmdResetTheme}"></Button>
             </Grid>
 
 
-            <TextBlock Text="{DynamicResource Custom}" Style="{StaticResource BlockTitleColumn}" />
-
-            <Grid Width="450" HorizontalAlignment="Left">
+            <Expander x:Name="CustomColorsExpander" IsExpanded="False" Style="{StaticResource SettingsColorExpanderStyle}">
+            <Grid HorizontalAlignment="Left">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"></RowDefinition>
                     <RowDefinition Height="40"></RowDefinition>
@@ -45,12 +47,12 @@
                     <RowDefinition Height="40"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="Column1"></ColumnDefinition>
-                    <ColumnDefinition Width="50"></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Style="{StaticResource SettingsFormLabelColumnStyle}"/>
+                    <ColumnDefinition Width="0"></ColumnDefinition>
+                    <ColumnDefinition Width="70"></ColumnDefinition>
+                    <ColumnDefinition Width="70"></ColumnDefinition>
+                    <ColumnDefinition Width="70"></ColumnDefinition>
+                    <ColumnDefinition Width="70"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.Resources>
                     <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBase}">
@@ -70,26 +72,27 @@
                 <TextBlock Grid.Row="0" Grid.Column="4" Text="{DynamicResource Darker}"></TextBlock>
                 <TextBlock Grid.Row="0" Grid.Column="5" Text="{DynamicResource Font}"></TextBlock>
 
-                <TextBlock Style="{StaticResource TextBlockTitleColumn}" Grid.Row="1" Grid.Column="0" Text="{DynamicResource Color1}"></TextBlock>
+                <TextBlock Style="{StaticResource SettingsFormLabelStyle}" Grid.Row="1" Grid.Column="0" Text="{DynamicResource Color1}"></TextBlock>
                 <colorPickerWpf:ColorPickRowPopup Grid.Row="1" Grid.Column="2" HexColor="{Binding PrimaryMidColor}" />
                 <colorPickerWpf:ColorPickRowPopup Grid.Row="1" Grid.Column="3" HexColor="{Binding PrimaryLightColor}" />
                 <colorPickerWpf:ColorPickRowPopup Grid.Row="1" Grid.Column="4" HexColor="{Binding PrimaryDarkColor}" />
                 <colorPickerWpf:ColorPickRowPopup Grid.Row="1" Grid.Column="5" HexColor="{Binding PrimaryTextColor}" />
 
-                <TextBlock Style="{StaticResource TextBlockTitleColumn}" Grid.Row="2" Grid.Column="0" Text="{DynamicResource Color2}"></TextBlock>
+                <TextBlock Style="{StaticResource SettingsFormLabelStyle}" Grid.Row="2" Grid.Column="0" Text="{DynamicResource Color2}"></TextBlock>
                 <colorPickerWpf:ColorPickRowPopup Grid.Row="2" Grid.Column="2" HexColor="{Binding AccentMidColor}" />
                 <colorPickerWpf:ColorPickRowPopup Grid.Row="2" Grid.Column="3" HexColor="{Binding AccentLightColor}" />
                 <colorPickerWpf:ColorPickRowPopup Grid.Row="2" Grid.Column="4" HexColor="{Binding AccentDarkColor}" />
                 <colorPickerWpf:ColorPickRowPopup Grid.Row="2" Grid.Column="5" HexColor="{Binding AccentTextColor}" />
 
-                <TextBlock Style="{StaticResource TextBlockTitleColumn}" Grid.Row="3" Grid.Column="0" Text="{DynamicResource Background}"></TextBlock>
+                <TextBlock Style="{StaticResource SettingsFormLabelStyle}" Grid.Row="3" Grid.Column="0" Text="{DynamicResource Background}"></TextBlock>
                 <colorPickerWpf:ColorPickRowPopup Grid.Row="3" Grid.Column="2" HexColor="{Binding BackgroundColor}" />
                 <colorPickerWpf:ColorPickRowPopup Grid.Row="3" Grid.Column="5" HexColor="{Binding BackgroundTextColor}" />
             </Grid>
+            </Expander>
 
 
 
-            <TextBlock Text="{DynamicResource Settings.Font}" Style="{StaticResource BlockTitleColumn}" />
+            <TextBlock Text="{DynamicResource Settings.Font}" Style="{StaticResource SettingsFormHeadingStyle}" />
 
             <Grid Style="{StaticResource GridOneRow}">
                 <Grid.Resources>
@@ -102,13 +105,13 @@
                     </Style>
                 </Grid.Resources>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="Column1"></ColumnDefinition>
-                    <ColumnDefinition MinWidth="280" MaxWidth="500" SharedSizeGroup="GeneralColumn2"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"></ColumnDefinition>
+                    <ColumnDefinition Style="{StaticResource SettingsFormLabelColumnStyle}"/>
+                    <ColumnDefinition Style="{StaticResource SettingsFormInputColumnStyle}"/>
+                    <ColumnDefinition Style="{StaticResource SettingsFormActionColumnStyle}"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="{DynamicResource Settings.FontFamily}" FontFamily="Microsoft YaHei"></TextBlock>
+                <TextBlock Style="{StaticResource SettingsFormLabelStyle}" Text="{DynamicResource Settings.FontFamily}" FontFamily="Microsoft YaHei"></TextBlock>
 
-                <ComboBox Grid.Column="1" MinWidth="200" HorizontalAlignment="Left"
+                <ComboBox Grid.Column="1" HorizontalAlignment="Stretch"
                           IsEditable="True" IsTextSearchEnabled="True"
                           FontFamily="Microsoft YaHei"
                           ItemsSource="{Binding FontFamilies}"
@@ -129,15 +132,15 @@
                 </Grid.Resources>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="Column1"></ColumnDefinition>
-                    <ColumnDefinition MinWidth="280" MaxWidth="500" SharedSizeGroup="GeneralColumn2"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"></ColumnDefinition>
+                    <ColumnDefinition Style="{StaticResource SettingsFormLabelColumnStyle}"/>
+                    <ColumnDefinition Style="{StaticResource SettingsFormInputColumnStyle}"/>
+                    <ColumnDefinition Style="{StaticResource SettingsFormActionColumnStyle}"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Style="{StaticResource TextBlockTitleColumn}" Text="{DynamicResource Settings.FontSize}" FontFamily="Microsoft YaHei"></TextBlock>
+                <TextBlock Style="{StaticResource SettingsFormLabelStyle}" Text="{DynamicResource Settings.FontSize}" FontFamily="Microsoft YaHei"></TextBlock>
 
-                <ComboBox Grid.Column="1" MinWidth="200" HorizontalAlignment="Left" 
+                <ComboBox Grid.Column="1" HorizontalAlignment="Stretch"
                           IsEditable="False"
-                          SelectedItem="{Binding FontSize}" 
+                          SelectedItem="{Binding FontSize}"
                           ItemsSource="{Binding FontSizeOptions}"
                           FontFamily="Microsoft YaHei">
                     <ComboBox.ItemTemplate><DataTemplate><controls:LocalizedOptionText Value="{Binding Name}" ResourcePrefix="Settings.FontSize." /></DataTemplate></ComboBox.ItemTemplate>

@@ -223,7 +223,7 @@ namespace _1RM.View.ServerView.Tree
             catch (System.Exception ex)
             {
                 SimpleLogHelper.Warning($"Error during drag and drop: {ex.Message}");
-                MessageBoxHelper.ErrorAlert($"Error moving item: {ex.Message}");
+                MessageBoxHelper.ErrorAlert(_1RM.Service.UiText.Get("Shell.MoveFailed", ex.Message));
             }
             finally
             {

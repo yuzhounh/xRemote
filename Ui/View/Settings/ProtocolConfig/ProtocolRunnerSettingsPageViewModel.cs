@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using _1RM.Controls;
 using _1RM.Model.Protocol;
 using _1RM.Model.ProtocolRunner;
@@ -169,7 +170,9 @@ namespace _1RM.View.Settings.ProtocolConfig
                 return _cmdShowProtocolHelp ??= new RelayCommand((o) =>
                 {
                     var c = _protocolConfigurationService.ProtocolConfigs[_selectedProtocol];
-                    MessageBoxHelper.Info(c.GetAllDescriptions);
+                    var owner = Application.Current.Windows.OfType<Window>().FirstOrDefault(window => window.IsActive)
+                                ?? Application.Current.MainWindow;
+                    new ProtocolHelpWindowView(c) { Owner = owner }.ShowDialog();
                 });
             }
         }

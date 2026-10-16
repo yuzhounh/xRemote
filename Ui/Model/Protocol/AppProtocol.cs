@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using _1RM.Model.Protocol.Base;
@@ -207,7 +207,7 @@ namespace _1RM.Model.Protocol
                         {
                             if (string.IsNullOrWhiteSpace(ExePath))
                             {
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.ProgramRequired");
                             }
                             break;
                         }

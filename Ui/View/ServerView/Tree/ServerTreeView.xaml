@@ -5,6 +5,7 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                 xmlns:local="clr-namespace:_1RM.View.ServerView.Tree"
                 xmlns:controls="clr-namespace:Shawn.Utils.Wpf.Controls;assembly=Shawn.Utils.Wpf"
+                xmlns:appControls="clr-namespace:_1RM.Controls"
                 xmlns:attachProperty="clr-namespace:Shawn.Utils.WpfResources.Theme.AttachProperty;assembly=Shawn.Utils.WpfResources"
                 xmlns:s="https://github.com/canton7/Stylet"
                 xmlns:model="clr-namespace:_1RM.Model"
@@ -99,7 +100,7 @@
                                         <MenuItem Header="{DynamicResource 'Create desktop shortcut'}" 
                                                   Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.Tag.CmdCreateDesktopShortcut}" 
                                                   CommandParameter="{Binding}"/>
-                                        <MenuItem Header="{DynamicResource Delete}" 
+                                        <MenuItem Header="{DynamicResource Delete}"
                                                   Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.Tag.CmdTagDelete}" 
                                                   CommandParameter="{Binding}"/>
                                     </ContextMenu>
@@ -326,7 +327,7 @@
 
 
                                         <Separator/>
-                                        <MenuItem Header="Delete" 
+                                        <MenuItem Header="{DynamicResource Delete}"
                                                   IsEnabled="{Binding IsRootFolder, Converter={StaticResource ConverterBoolInverse}}"
                                                   Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.Tag.CmdDeleteNode}"
                                                   CommandParameter="{Binding}">
@@ -536,13 +537,7 @@
 
         <!-- tags list -->
         <Grid VerticalAlignment="Top">
-            <Border BorderThickness="0 0 0 1" BorderBrush="{DynamicResource AccentMidBrush}" Background="{DynamicResource PrimaryTextBrush}" Height="20">
-                <Border.Effect>
-                    <DropShadowEffect ShadowDepth="3" Direction="270"  Opacity="0.6" Color="Black"></DropShadowEffect>
-                </Border.Effect>
-            </Border>
-
-            <Border BorderThickness="0 0 0 2" BorderBrush="{DynamicResource AccentMidBrush}" Background="{DynamicResource PrimaryMidBrush}">
+            <appControls:PixelHeaderBorder Background="{DynamicResource PrimaryMidBrush}">
                 <Grid MinHeight="20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -809,7 +804,7 @@
                         </Border>
                     </Popup>
                 </Grid>
-            </Border>
+            </appControls:PixelHeaderBorder>
         </Grid>
     </Grid>
 </serverView:ServerViewBase>

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="_1RM.View.Editor.Forms.Argument.ArgumentListItemButtons"
+<UserControl x:Class="_1RM.View.Editor.Forms.Argument.ArgumentListItemButtons"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -19,7 +19,7 @@
         <Button Margin="2 0"
                 Command="{Binding Path=DataContext.CmdMoveArgumentUp, RelativeSource={RelativeSource AncestorType={x:Type editor:ServerEditorPageView}}}" 
                 Visibility="{Binding Path=DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType={x:Type editor:ServerEditorPageView}}, Converter={StaticResource ConverterBool2Visible}}" 
-                CommandParameter="{Binding}">
+                CommandParameter="{Binding}" ToolTip="{DynamicResource Editor.ArgumentUpHint}">
             <Grid Height="15" Width="15">
                 <Path Data="{StaticResource GeometryArrowUp}"
                       Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
@@ -31,7 +31,7 @@
         <Button Margin="2 0"
                 Command="{Binding Path=DataContext.CmdMoveArgumentDown, RelativeSource={RelativeSource AncestorType={x:Type editor:ServerEditorPageView}}}" 
                 Visibility="{Binding Path=DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType={x:Type editor:ServerEditorPageView}}, Converter={StaticResource ConverterBool2Visible}}" 
-                CommandParameter="{Binding}">
+                CommandParameter="{Binding}" ToolTip="{DynamicResource Editor.ArgumentDownHint}">
             <Grid Height="15" Width="15">
                 <Path Data="{StaticResource GeometryArrowDown}"
                       Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
@@ -42,7 +42,7 @@
         <Button Margin="2 0"
                 Visibility="{Binding Path=DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType={x:Type editor:ServerEditorPageView}}, Converter={StaticResource ConverterBool2Visible}}" 
                 Command="{Binding Path=DataContext.CmdEditArgument, RelativeSource={RelativeSource AncestorType={x:Type editor:ServerEditorPageView}}}" 
-                CommandParameter="{Binding}">
+                CommandParameter="{Binding}" ToolTip="{DynamicResource Editor.ArgumentEditHint}">
             <Button.Style>
                 <Style TargetType="Button" BasedOn="{StaticResource ButtonAccentStyle}">
                     <Style.Triggers>
@@ -62,7 +62,7 @@
         <Button Margin="2 0"
                 Command="{Binding Path=DataContext.CmdDeleteArgument, RelativeSource={RelativeSource AncestorType={x:Type editor:ServerEditorPageView}}}" 
                 Visibility="{Binding Path=DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType={x:Type editor:ServerEditorPageView}}, Converter={StaticResource ConverterBool2Visible}}" 
-                CommandParameter="{Binding}">
+                CommandParameter="{Binding}" ToolTip="{DynamicResource Editor.ArgumentDeleteHint}">
             <Grid Height="15" Width="15">
                 <Path Data="{StaticResource GeometryDelete}"
                       Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"

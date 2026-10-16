@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -322,12 +322,12 @@ public class AppArgument : NotifyPropertyChangedBase, ICloneable, IDataErrorInfo
         name = name.Trim();
         if (string.IsNullOrWhiteSpace(name))
         {
-            return new Tuple<bool, string>(false, $"`{IoC.Translate(LanguageService.NAME)}` {IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY)}");
+            return new Tuple<bool, string>(false, UiText.Get("Validation.ArgumentNameRequired"));
         }
 
         if (existedNames.Any(x => string.Equals(x, name, StringComparison.CurrentCultureIgnoreCase)) == true)
         {
-            return new Tuple<bool, string>(false, IoC.Translate(LanguageService.XXX_IS_ALREADY_EXISTED, name));
+            return new Tuple<bool, string>(false, UiText.Get("Validation.NameExists", name));
         }
 
         return new Tuple<bool, string>(true, "");
@@ -342,7 +342,7 @@ public class AppArgument : NotifyPropertyChangedBase, ICloneable, IDataErrorInfo
         if (string.IsNullOrEmpty(value) && type != AppArgumentType.Selection)
         {
             if (!isNullable && type != AppArgumentType.Const)
-                return new Tuple<bool, string>(false, IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY));
+                return new Tuple<bool, string>(false, UiText.Get("Validation.ValueRequired"));
             else
                 return new Tuple<bool, string>(true, "");
         }
@@ -351,11 +351,11 @@ public class AppArgument : NotifyPropertyChangedBase, ICloneable, IDataErrorInfo
             switch (type)
             {
                 case AppArgumentType.File when !File.Exists(value):
-                    return new Tuple<bool, string>(false, IoC.Translate("Not existed"));
+                    return new Tuple<bool, string>(false, UiText.Get("Validation.FileMissing"));
                 case AppArgumentType.Float when !double.TryParse(value, out _):
-                    return new Tuple<bool, string>(false, IoC.Translate("Not a number"));
+                    return new Tuple<bool, string>(false, UiText.Get("Validation.Number"));
                 case AppArgumentType.Int when !long.TryParse(value, out _):
-                    return new Tuple<bool, string>(false, IoC.Translate("Not a number"));
+                    return new Tuple<bool, string>(false, UiText.Get("Validation.Integer"));
             }
         }
         return new Tuple<bool, string>(true, "");
@@ -375,7 +375,7 @@ public class AppArgument : NotifyPropertyChangedBase, ICloneable, IDataErrorInfo
                         var t = CheckValue(Value, IsNullable, Type);
                         if (t.Item1 == false)
                         {
-                            return string.IsNullOrEmpty(t.Item2) ? "error" : t.Item2;
+                            return string.IsNullOrEmpty(t.Item2) ? UiText.Get("Validation.InvalidValue") : t.Item2;
                         }
                         break;
                     }

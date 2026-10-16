@@ -12,7 +12,7 @@ using Stylet;
 
 namespace _1RM.Service;
 
-/// <summary>Checks only TCP reachability; never authenticates or creates an RDP session.</summary>
+/// <summary>Checks reachability and optional authenticated management status; never creates an RDP session.</summary>
 public sealed class ConnectionStatusService : IDisposable
 {
     private readonly GlobalData _data;
@@ -58,7 +58,7 @@ public sealed class ConnectionStatusService : IDisposable
                 var address = endpoint.Address;
                 if (string.IsNullOrWhiteSpace(address) || !int.TryParse(endpoint.Port, out var port) || port is < 1 or > 65535)
                 {
-                    await Execute.OnUIThreadAsync(() => row.SetConnectionStatus(false, "目标地址或端口未配置"));
+                    await Execute.OnUIThreadAsync(() => row.SetConnectionStatus(false, "Shell.MissingEndpoint"));
                     return;
                 }
                 await slots.WaitAsync(token);
@@ -66,14 +66,25 @@ public sealed class ConnectionStatusService : IDisposable
                 {
                     var watch = Stopwatch.StartNew();
                     var online = await ProbeAsync(address, port, token).ConfigureAwait(false);
-                    var detail = online ? $"目标端口可达 · {watch.ElapsedMilliseconds} ms" : "目标端口暂时不可达；可能是网络、服务或设备状态变化";
-                    var hint = $"{address}:{port}\n{detail}\n检测时间：{DateTime.Now:HH:mm:ss} · 每 30 秒刷新";
+                    var latency = watch.ElapsedMilliseconds;
+                    var hintKey = online ? "Shell.ReachableHint" : "Shell.UnreachableHint";
+                    var observedAt = DateTime.Now.ToString("HH:mm:ss");
+                    XRemote.Control.ControlStatus? remote = null;
+                    if (endpoint is _1RM.Model.Protocol.RDP)
+                    {
+                        try { if (DeviceControlClient.Find(address) != null) remote = await DeviceControlClient.Status(address, token).ConfigureAwait(false); }
+                        catch (OperationCanceledException) when (token.IsCancellationRequested) { throw; }
+                        catch { /* Unavailable management is unknown, never idle. */ }
+                    }
                     await Execute.OnUIThreadAsync(() =>
                     {
                         // Ignore stale results when a profile was replaced/edited during a probe.
                         if (_data.VmItemList.Contains(row) && ReferenceEquals(row.Server, endpoint)
                             && endpoint.Address == address && endpoint.Port == port.ToString())
-                            row.SetConnectionStatus(online, hint);
+                        {
+                            row.SetRemoteSessionStatus(remote);
+                            row.SetConnectionStatus(online, hintKey, address, port, latency, observedAt);
+                        }
                     });
                 }
                 finally { slots.Release(); }

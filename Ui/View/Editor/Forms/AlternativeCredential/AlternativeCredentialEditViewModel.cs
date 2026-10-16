@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -275,41 +275,41 @@ namespace _1RM.View.Editor.Forms.AlternativeCredential
                     case nameof(Name):
                         {
                             if (string.IsNullOrWhiteSpace(Name))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.NameRequired");
                             if (_existedNames?.Any(x => string.Equals(x, Name.Trim(), StringComparison.CurrentCultureIgnoreCase)) == true)
-                                return IoC.Translate(LanguageService.XXX_IS_ALREADY_EXISTED, Name.Trim());
+                                return UiText.Get("Validation.NameExists", Name.Trim());
                             if (Name.Length > 100)
-                                return "too long";
+                                return UiText.Get("Validation.NameTooLong", 100);
                             break;
                         }
                     case nameof(Address):
                         {
                             if (ShowHost && RequireHost && string.IsNullOrWhiteSpace(Address))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.AddressRequired");
                             break;
                         }
                     case nameof(Port):
                         {
                             if (!string.IsNullOrWhiteSpace(Port) && (int.TryParse(Port, out var p) == false || p < 0 || p > 65535))
-                                return "1 - 65535";
+                                return UiText.Get("Validation.PortRange");
                             break;
                         }
                     case nameof(UserName):
                         {
                             if (ShowUsername && RequireUserName && string.IsNullOrWhiteSpace(UserName))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.UserRequired");
                             break;
                         }
                     case nameof(Password):
                         {
                             if (ShowPassword && RequirePassword && !IsUsePrivateKey && string.IsNullOrWhiteSpace(Password))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.PasswordRequired");
                             break;
                         }
                     case nameof(PrivateKeyPath):
                         {
                             if (ShowPrivateKeyInput && RequirePrivateKey && IsUsePrivateKey && string.IsNullOrWhiteSpace(PrivateKeyPath))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.PrivateKeyRequired");
                             break;
                         }
                 }

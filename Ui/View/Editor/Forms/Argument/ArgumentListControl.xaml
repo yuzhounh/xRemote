@@ -1,17 +1,4 @@
-﻿<UserControl x:Class="_1RM.View.Editor.Forms.Argument.ArgumentListControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:protocol="clr-namespace:_1RM.Model.Protocol"
-             xmlns:controls="clr-namespace:_1RM.Controls"
-             xmlns:editor="clr-namespace:_1RM.View.Editor"
-             xmlns:argument="clr-namespace:_1RM.View.Editor.Forms.Argument"
-             xmlns:system="clr-namespace:System;assembly=System.Runtime"
-             xmlns:forms="clr-namespace:_1RM.View.Editor.Forms"
-             mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance forms:LocalAppFormViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800">
+<?xml version="1.0" ?><UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:protocol="clr-namespace:_1RM.Model.Protocol" xmlns:controls="clr-namespace:_1RM.Controls" xmlns:editor="clr-namespace:_1RM.View.Editor" xmlns:argument="clr-namespace:_1RM.View.Editor.Forms.Argument" xmlns:system="clr-namespace:System;assembly=System.Runtime" xmlns:forms="clr-namespace:_1RM.View.Editor.Forms" x:Class="_1RM.View.Editor.Forms.Argument.ArgumentListControl" mc:Ignorable="d" d:DataContext="{d:DesignInstance forms:LocalAppFormViewModel}" d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <system:Double x:Key="AppArgumentHeight">30</system:Double>
         <Thickness x:Key="AppArgumentMargin">0 0 0 10</Thickness>
@@ -21,243 +8,132 @@
         <system:Double x:Key="WidthPreview">300</system:Double>
 
         <Style TargetType="TextBlock" x:Key="TextDemo" BasedOn="{StaticResource TextBlockBase}">
-            <Setter Property="Opacity" Value="0.5"></Setter>
-            <Setter Property="FontSize" Value="10"></Setter>
-            <Setter Property="Width" Value="{StaticResource WidthPreview}"></Setter>
-            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="Foreground" Value="{DynamicResource SecondaryTextBrush}"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Width" Value="{StaticResource WidthPreview}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
-        <argument:ConverterStringIs1 x:Key="ConverterStringIs1"></argument:ConverterStringIs1>
+        <argument:ConverterStringIs1 x:Key="ConverterStringIs1"/>
 
         <DataTemplate x:Key="ArgumentConst" DataType="protocol:AppArgument">
-            <StackPanel Orientation="Horizontal" Height="{StaticResource AppArgumentHeight}" Margin="{StaticResource AppArgumentMargin}">
-                <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" Width="{StaticResource WidthName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <TextBlock Text="{Binding Key}" ToolTip="{Binding Key}" Width="{StaticResource WidthKey}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <TextBlock Text="{Binding Value}" ToolTip="{Binding Value}" Width="{StaticResource WidthValue}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <argument:ArgumentListItemButtons Margin="0 0 10 0"></argument:ArgumentListItemButtons>
-                <TextBlock Text="{Binding DemoArgumentString}" Style="{StaticResource TextDemo}"></TextBlock>
-            </StackPanel>
+            <Grid Margin="{StaticResource AppArgumentMargin}" Width="420"><Grid.ColumnDefinitions><ColumnDefinition Width="80"/><ColumnDefinition Width="64"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" Grid.Column="0"/>
+                <TextBlock Text="{Binding Key}" ToolTip="{Binding Key}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" Grid.Column="1"/>
+                <TextBlock Text="{Binding Value}" ToolTip="{Binding Value}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" Grid.Column="2"/>
+                <argument:ArgumentListItemButtons Margin="0" Grid.Column="3"/>
+
+            </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="ArgumentNormal" DataType="protocol:AppArgument">
-            <StackPanel Orientation="Horizontal" Height="{StaticResource AppArgumentHeight}" Margin="{StaticResource AppArgumentMargin}">
-                <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" Width="{StaticResource WidthName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <TextBlock Text="{Binding Key}" ToolTip="{Binding Key}" Width="{StaticResource WidthKey}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <controls:AutoCompleteComboBox Width="{StaticResource WidthValue}" Margin="0 0 10 0"
-                                               ToolTip="{Binding HintDescription}"
-                                               Tag="{Binding HintDescription}"
-                                               Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}" 
-                                               Validation.ErrorTemplate="{StaticResource ErrorTemplate}"
-                                               Selections="{Binding SelectionKeys, Mode=OneWay}"
-                />
-                <argument:ArgumentListItemButtons Margin="0 0 10 0"></argument:ArgumentListItemButtons>
-                <TextBlock Text="{Binding DemoArgumentString}" Style="{StaticResource TextDemo}"></TextBlock>
-            </StackPanel>
+            <Grid Margin="{StaticResource AppArgumentMargin}" Width="420"><Grid.ColumnDefinitions><ColumnDefinition Width="80"/><ColumnDefinition Width="64"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" Grid.Column="0"/>
+                <TextBlock Text="{Binding Key}" ToolTip="{Binding Key}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" Grid.Column="1"/>
+                <controls:AutoCompleteComboBox Margin="0,0,8,0" ToolTip="{Binding HintDescription}" Tag="{Binding HintDescription}" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}" Validation.ErrorTemplate="{StaticResource ErrorTemplate}" Selections="{Binding SelectionKeys, Mode=OneWay}" Grid.Column="2"/>
+                <argument:ArgumentListItemButtons Margin="0" Grid.Column="3"/>
+
+            </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="ArgumentSelection" DataType="protocol:AppArgument">
-            <StackPanel Orientation="Horizontal" Height="{StaticResource AppArgumentHeight}" Margin="{StaticResource AppArgumentMargin}">
-                <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" Width="{StaticResource WidthName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <TextBlock Text="{Binding Key}" ToolTip="{Binding Key}" Width="{StaticResource WidthKey}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <ComboBox Width="{StaticResource WidthValue}" 
-                          ToolTip="{Binding HintDescription}"
-                          Tag="{Binding HintDescription}"
-                          Margin="0 0 10 0"
-                          SelectedValue="{Binding Value, ValidatesOnExceptions=True}" 
-                          SelectedValuePath="Key"
-                          DisplayMemberPath="Value"
-                          ItemsSource="{Binding Selections}"></ComboBox>
-                <argument:ArgumentListItemButtons Margin="0 0 10 0"></argument:ArgumentListItemButtons>
-                <TextBlock Text="{Binding DemoArgumentString}" Style="{StaticResource TextDemo}"></TextBlock>
-            </StackPanel>
+            <Grid Margin="{StaticResource AppArgumentMargin}" Width="420"><Grid.ColumnDefinitions><ColumnDefinition Width="80"/><ColumnDefinition Width="64"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" Grid.Column="0"/>
+                <TextBlock Text="{Binding Key}" ToolTip="{Binding Key}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" Grid.Column="1"/>
+                <ComboBox ToolTip="{Binding HintDescription}" Tag="{Binding HintDescription}" Margin="0,0,8,0" SelectedValue="{Binding Value, ValidatesOnExceptions=True}" SelectedValuePath="Key" DisplayMemberPath="Value" ItemsSource="{Binding Selections}" Grid.Column="2"/>
+                <argument:ArgumentListItemButtons Margin="0" Grid.Column="3"/>
+
+            </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="ArgumentFlag" DataType="protocol:AppArgument">
-            <StackPanel Orientation="Horizontal" Height="{StaticResource AppArgumentHeight}" Margin="{StaticResource AppArgumentMargin}">
-                <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" Width="{StaticResource WidthName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <TextBlock Text="{Binding Key}" ToolTip="{Binding Key}" Width="{StaticResource WidthKey}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <CheckBox Width="{StaticResource WidthValue}" Margin="0 0 10 0"
-                          IsChecked="{Binding Value, Converter={StaticResource ConverterStringIs1}}" 
-                          Content="{Binding HintDescription}"
-                          ToolTip="{Binding HintDescription}"
-                          Tag="{Binding HintDescription}"></CheckBox>
-                <argument:ArgumentListItemButtons Margin="0 0 10 0"></argument:ArgumentListItemButtons>
-                <TextBlock Text="{Binding DemoArgumentString}" Style="{StaticResource TextDemo}"></TextBlock>
-            </StackPanel>
+            <Grid Margin="{StaticResource AppArgumentMargin}" Width="420"><Grid.ColumnDefinitions><ColumnDefinition Width="80"/><ColumnDefinition Width="64"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" Grid.Column="0"/>
+                <TextBlock Text="{Binding Key}" ToolTip="{Binding Key}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" Grid.Column="1"/>
+                <CheckBox Margin="0,0,8,0" IsChecked="{Binding Value, Converter={StaticResource ConverterStringIs1}}" Content="{Binding HintDescription}" ToolTip="{Binding HintDescription}" Tag="{Binding HintDescription}" Grid.Column="2"/>
+                <argument:ArgumentListItemButtons Margin="0" Grid.Column="3"/>
+
+            </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="ArgumentFile" DataType="protocol:AppArgument">
-            <StackPanel Orientation="Horizontal" Height="{StaticResource AppArgumentHeight}" Margin="{StaticResource AppArgumentMargin}">
-                <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" Width="{StaticResource WidthName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <TextBlock Text="{Binding Key}" ToolTip="{Binding Key}" Width="{StaticResource WidthKey}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <Grid Width="{StaticResource WidthValue}" Margin="0 0 10 0">
+            <Grid Margin="{StaticResource AppArgumentMargin}" Width="420"><Grid.ColumnDefinitions><ColumnDefinition Width="80"/><ColumnDefinition Width="64"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" Grid.Column="0"/>
+                <TextBlock Text="{Binding Key}" ToolTip="{Binding Key}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" Grid.Column="1"/>
+                <Grid Margin="0,0,8,0" Grid.Column="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="30"></ColumnDefinition>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Height="28" 
-                             Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}" 
-                             Validation.ErrorTemplate="{StaticResource ErrorTemplate}"
-                             ToolTip="{Binding HintDescription}"
-                             Tag="{Binding HintDescription}"/>
-                    <Button Height="28" Grid.Column="1" Style="{StaticResource ButtonPrimaryStyle}" 
-                            Content="{DynamicResource Select}" 
-                            Command="{Binding CmdSelectArgumentFile}"></Button>
+                    <TextBox Height="30" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}" Validation.ErrorTemplate="{StaticResource ErrorTemplate}" ToolTip="{Binding HintDescription}" Tag="{Binding HintDescription}"/>
+                    <Button Grid.Column="1" Style="{StaticResource FormActionButtonStyle}" Content="{DynamicResource Select}" Command="{Binding CmdSelectArgumentFile}"/>
                 </Grid>
-                <argument:ArgumentListItemButtons Margin="0 0 10 0"></argument:ArgumentListItemButtons>
-                <TextBlock Text="{Binding DemoArgumentString}" Style="{StaticResource TextDemo}"></TextBlock>
-            </StackPanel>
+                <argument:ArgumentListItemButtons Margin="0" Grid.Column="3"/>
+
+            </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="ArgumentSecret" DataType="protocol:AppArgument">
-            <StackPanel Orientation="Horizontal" Height="{StaticResource AppArgumentHeight}" Margin="{StaticResource AppArgumentMargin}">
-                <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" Width="{StaticResource WidthName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <TextBlock Text="{Binding Key}" ToolTip="{Binding Key}" Width="{StaticResource WidthKey}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <controls:PasswordInput Width="{StaticResource WidthValue}" Margin="0 0 10 0" Height="28" 
-                                        Password="{Binding Value, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}"
-                                        Validation.ErrorTemplate="{StaticResource ErrorTemplate}"
-                                        ToolTip="{Binding HintDescription}"
-                                        Tag="{Binding HintDescription}"/>
-                <argument:ArgumentListItemButtons></argument:ArgumentListItemButtons>
-                <TextBlock Text="{Binding DemoArgumentString}" Style="{StaticResource TextDemo}"></TextBlock>
-            </StackPanel>
+            <Grid Margin="{StaticResource AppArgumentMargin}" Width="420"><Grid.ColumnDefinitions><ColumnDefinition Width="80"/><ColumnDefinition Width="64"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" Grid.Column="0"/>
+                <TextBlock Text="{Binding Key}" ToolTip="{Binding Key}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" Grid.Column="1"/>
+                <controls:PasswordInput Margin="0,0,8,0" Height="30" Password="{Binding Value, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}" Validation.ErrorTemplate="{StaticResource ErrorTemplate}" ToolTip="{Binding HintDescription}" Tag="{Binding HintDescription}" Grid.Column="2"/>
+                <argument:ArgumentListItemButtons Grid.Column="3" Margin="0"/>
+
+            </Grid>
         </DataTemplate>
 
         <Style TargetType="{x:Type ContentPresenter}" x:Key="ContainerStyle" d:DataContext="{d:DesignInstance protocol:AppArgument}">
-            <Setter Property="ContentTemplate" Value="{StaticResource ArgumentNormal}" />
+            <Setter Property="ContentTemplate" Value="{StaticResource ArgumentNormal}"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Type}" Value="{x:Static protocol:AppArgumentType.File}">
-                    <Setter Property="ContentTemplate" Value="{StaticResource ArgumentFile}" />
+                    <Setter Property="ContentTemplate" Value="{StaticResource ArgumentFile}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Type}" Value="{x:Static protocol:AppArgumentType.Secret}">
-                    <Setter Property="ContentTemplate" Value="{StaticResource ArgumentSecret}" />
+                    <Setter Property="ContentTemplate" Value="{StaticResource ArgumentSecret}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Type}" Value="{x:Static protocol:AppArgumentType.Flag}">
-                    <Setter Property="ContentTemplate" Value="{StaticResource ArgumentFlag}" />
+                    <Setter Property="ContentTemplate" Value="{StaticResource ArgumentFlag}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Type}" Value="{x:Static protocol:AppArgumentType.Selection}">
-                    <Setter Property="ContentTemplate" Value="{StaticResource ArgumentSelection}" />
+                    <Setter Property="ContentTemplate" Value="{StaticResource ArgumentSelection}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Type}" Value="{x:Static protocol:AppArgumentType.Const}">
-                    <Setter Property="ContentTemplate" Value="{StaticResource ArgumentConst}" />
+                    <Setter Property="ContentTemplate" Value="{StaticResource ArgumentConst}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <StackPanel>
-
-
-        <StackPanel Orientation="Horizontal" Margin="0 20 0 10">
-
-            <TextBlock Style="{StaticResource EditorGroupTextBlockTitle}" Margin="80 0 0 0" Text="{DynamicResource 'Cmd parameter'}"></TextBlock>
-
-            <Button Command="{Binding Path=DataContext.CmdToggleEditMode, RelativeSource={RelativeSource AncestorType={x:Type editor:ServerEditorPageView}}}"
-                    Style="{StaticResource ButtonPrimaryStyle}"
-                    Visibility="{Binding New.ArgumentList.Count, Converter={StaticResource ConverterEqual2Collapsed}, ConverterParameter=0}"
-                    ToolTip="{DynamicResource 'Edit'}" 
-                    Margin="10 0 5 0">
-                <Grid Height="15" Width="15">
-                    <Path Data="{StaticResource GeometryEdit}"
-                          Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
-                          Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
-                          StrokeThickness="1" Stretch="Uniform" />
-                </Grid>
-            </Button>
-
-
-            <Button Command="{Binding Path=DataContext.CmdEditArgument, RelativeSource={RelativeSource AncestorType={x:Type editor:ServerEditorPageView}}}"
-                    Style="{StaticResource ButtonPrimaryStyle}"
-                    ToolTip="{DynamicResource 'Add'}" 
-                    Margin="5 0 5 0">
-                <Grid Height="15" Width="15">
-                    <Path Data="{StaticResource GeometryCross}"
-                          Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
-                          Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
-                          StrokeThickness="2" Stretch="Uniform" />
-                </Grid>
-            </Button>
-
+    <StackPanel xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <Grid Width="576" HorizontalAlignment="Left" Margin="0,24,0,12">
+        <Grid.ColumnDefinitions><ColumnDefinition Width="156"/><ColumnDefinition Width="420"/></Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button Content="{DynamicResource Editor.AddArgument}" Style="{StaticResource FormActionButtonStyle}" Command="{Binding DataContext.CmdEditArgument, RelativeSource={RelativeSource AncestorType={x:Type editor:ServerEditorPageView}}}"/>
+            <Button Content="{DynamicResource Edit}" Margin="8,0,0,0" Style="{StaticResource FormActionButtonStyle}" Visibility="{Binding New.ArgumentList.Count, Converter={StaticResource ConverterEqual2Collapsed}, ConverterParameter=0}" Command="{Binding DataContext.CmdToggleEditMode, RelativeSource={RelativeSource AncestorType={x:Type editor:ServerEditorPageView}}}"/>
         </StackPanel>
-
-
-        <Grid Style="{StaticResource EditorRowGrid}" 
-              Visibility="{Binding New.ArgumentList.Count, Converter={StaticResource ConverterEqual2Collapsed}, ConverterParameter=0}" 
-              Margin="0 0 0 50">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="{DynamicResource Preview}"></TextBlock>
-                <Grid Style="{StaticResource EditorRowGridInput}" VerticalAlignment="Center" Width="Auto" Height="Auto">
-                    <TextBox IsReadOnly="True" 
-                             Opacity="0.5"
-                             Text="{Binding Demo, Mode=OneWay}"
-                             MaxWidth="500" AcceptsReturn="True"
-                             VerticalAlignment="Center" 
-                             BorderBrush="Transparent"
-                             BorderThickness="0"
-                             TextWrapping="Wrap">
-                    </TextBox>
-                </Grid>
-                <Button Style="{StaticResource ButtonPrimaryStyle}" 
-                        Margin="5 0 0 0"
-                        ToolTip="{DynamicResource 'Test'}" 
-                        Command="{Binding CmdTest}">
-                    <Grid Height="15" Width="15">
-                        <Path Data="{StaticResource GeometryPlay}"
-                              Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
-                              Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
-                              StrokeThickness="2" Stretch="Uniform" />
-                    </Grid>
-                </Button>
-            </StackPanel>
+        <TextBlock Style="{StaticResource EditorGroupTextBlockTitle}" Margin="0" VerticalAlignment="Center" Text="{DynamicResource 'Cmd parameter'}"/>
+    </Grid>
+    <TextBlock Text="{DynamicResource Editor.EmptyArguments}" Opacity="0.65" Margin="156,0,0,16">
+        <TextBlock.Style><Style TargetType="TextBlock" BasedOn="{StaticResource EditorDescriptionText}"><Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers><DataTrigger Binding="{Binding New.ArgumentList.Count}" Value="0"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers>
+        </Style></TextBlock.Style>
+    </TextBlock>
+    <StackPanel Margin="156,0,0,0" HorizontalAlignment="Left" Width="420" Visibility="{Binding New.ArgumentList.Count, Converter={StaticResource ConverterEqual2Collapsed}, ConverterParameter=0}">
+        <Grid Margin="0,0,0,8"><Grid.ColumnDefinitions><ColumnDefinition Width="80"/><ColumnDefinition Width="64"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+            <TextBlock Text="{DynamicResource Name}" FontWeight="SemiBold"/>
+            <TextBlock Grid.Column="1" Text="{DynamicResource Prefix}" FontWeight="SemiBold"/>
+            <TextBlock Grid.Column="2" Text="{DynamicResource Editor.Value}" FontWeight="SemiBold"/>
         </Grid>
-
-
-        <StackPanel Margin="180 0 0 0">
-
-            <StackPanel Orientation="Horizontal" Height="{StaticResource AppArgumentHeight}" Margin="{StaticResource AppArgumentMargin}">
-                <TextBlock Text="{DynamicResource Name}" FontWeight="Bold" FontSize="{DynamicResource GlobalFontSizeSubtitle}" Width="{StaticResource WidthName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <TextBlock Text="{DynamicResource Prefix}" FontWeight="Bold" FontSize="{DynamicResource GlobalFontSizeSubtitle}" Width="{StaticResource WidthKey}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <TextBlock Text="Value" FontWeight="Bold" FontSize="{DynamicResource GlobalFontSizeSubtitle}" Width="{StaticResource WidthValue}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 30 0"/>
-                <TextBlock Text="{DynamicResource Preview}" FontWeight="Bold" FontSize="{DynamicResource GlobalFontSizeSubtitle}" Width="{StaticResource WidthPreview}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0 0 10 0"/>
-            </StackPanel>
-
-            <ItemsControl HorizontalAlignment="Stretch" 
-                          HorizontalContentAlignment="Stretch"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          ItemsSource="{Binding New.ArgumentList}" 
-                          ItemContainerStyle="{StaticResource ContainerStyle}"></ItemsControl>
-        </StackPanel>
-
-
-        <Grid Style="{StaticResource EditorRowGrid}" 
-              Margin="0 50 0 30"
-              Visibility="{Binding New.ArgumentList.Count, Converter={StaticResource ConverterEqual2Collapsed}, ConverterParameter=0}"
-              >
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="{DynamicResource Preview}"></TextBlock>
-                <Grid Style="{StaticResource EditorRowGridInput}" VerticalAlignment="Center" Width="Auto" Height="Auto">
-                    <TextBox IsReadOnly="True" 
-                             Opacity="0.5"
-                             Text="{Binding Demo, Mode=OneWay}"
-                             MaxWidth="500" AcceptsReturn="True"
-                             VerticalAlignment="Center" 
-                             BorderBrush="Transparent"
-                             BorderThickness="0"
-                             TextWrapping="Wrap">
-                    </TextBox>
-                </Grid>
-                <Button Style="{StaticResource ButtonPrimaryStyle}" 
-                        Margin="5 0 0 0"
-                        ToolTip="{DynamicResource 'Test'}" 
-                        Command="{Binding CmdTest}">
-                    <Grid Height="15" Width="15">
-                        <Path Data="{StaticResource GeometryPlay}"
-                              Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
-                              Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
-                              StrokeThickness="2" Stretch="Uniform" />
-                    </Grid>
-                </Button>
-            </StackPanel>
-        </Grid>
-
+        <ItemsControl ItemsSource="{Binding New.ArgumentList}" ItemContainerStyle="{StaticResource ContainerStyle}"/>
     </StackPanel>
+    <Grid Style="{StaticResource EditorRowGrid}" Margin="0,16,0,16" Visibility="{Binding New.ArgumentList.Count, Converter={StaticResource ConverterEqual2Collapsed}, ConverterParameter=0}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="{DynamicResource Preview}"/>
+            <Grid Style="{StaticResource EditorRowGridInput}"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <TextBox Text="{Binding Demo, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" MaxHeight="120" VerticalScrollBarVisibility="Auto"/>
+                <Button Grid.Column="1" Content="{DynamicResource Editor.TryProgram}" ToolTip="{DynamicResource Editor.TryProgramHint}" Margin="8,0,0,0" VerticalAlignment="Top" Style="{StaticResource FormActionButtonStyle}" Command="{Binding CmdTest}"/>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</StackPanel>
 </UserControl>

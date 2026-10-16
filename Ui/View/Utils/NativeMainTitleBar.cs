@@ -21,6 +21,7 @@ internal sealed class NativeMainTitleBar
     private readonly FrameworkElement _title;
     private readonly FrameworkElement _menu;
     private readonly Action _close;
+    private readonly bool _interceptToolWindowClose;
     private readonly FrameworkElement? _search;
     private readonly Func<AppWindowTitleBar, double, double, RectInt32[]>? _captionLayout;
     private RectInt32[]? _lastDragRectangles;
@@ -29,13 +30,14 @@ internal sealed class NativeMainTitleBar
     private bool _forwardingClose;
 
     internal NativeMainTitleBar(Window window, RowDefinition? row, FrameworkElement title,
-        FrameworkElement menu, Action close, FrameworkElement? search = null)
+        FrameworkElement menu, Action close, FrameworkElement? search = null, bool interceptToolWindowClose = false)
     {
         _window = window;
         _row = row;
         _title = title;
         _menu = menu;
         _close = close;
+        _interceptToolWindowClose = interceptToolWindowClose;
         _search = search;
         _backgroundDescriptor = DependencyPropertyDescriptor.FromProperty(Control.BackgroundProperty, typeof(Window));
         window.SourceInitialized += Initialize;
@@ -151,9 +153,9 @@ internal sealed class NativeMainTitleBar
         SetBrush("NativeCaptionHoverBrush", hover);
         SetBrush("NativeCaptionPressedBrush", pressed);
         var bar = _appWindow.TitleBar;
-        var transparent = new Windows.UI.Color { A = 0 };
-        bar.ButtonBackgroundColor = transparent;
-        bar.ButtonInactiveBackgroundColor = transparent;
+        // A transparent caption can expose the HWND's black clear color in WPF tool windows.
+        bar.ButtonBackgroundColor = NativeColor(background);
+        bar.ButtonInactiveBackgroundColor = NativeColor(background);
         bar.ButtonForegroundColor = NativeColor(foreground);
         bar.ButtonInactiveForegroundColor = NativeColor(inactive);
         bar.ButtonHoverForegroundColor = NativeColor(foreground);
@@ -182,7 +184,7 @@ internal sealed class NativeMainTitleBar
 
     private void OnClosing(AppWindow sender, AppWindowClosingEventArgs args)
     {
-        if (_forwardingClose || !_window.ShowInTaskbar) return;
+        if (_forwardingClose || (!_window.ShowInTaskbar && !_interceptToolWindowClose)) return;
         args.Cancel = true;
         _window.Dispatcher.BeginInvoke(new Action(() =>
         {

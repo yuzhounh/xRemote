@@ -97,7 +97,7 @@ namespace _1RM.Service
             {
                 SimpleLogHelper.Fatal(t.Exception!);
                 Execute.OnUIThread(() =>
-                    MessageBoxHelper.ErrorAlert($"Connect failed: {t.Exception!.GetBaseException().Message}"));
+                    MessageBoxHelper.ErrorAlert(UiText.Get("Shell.ConnectFailed", t.Exception!.GetBaseException().Message)));
             }, TaskContinuationOptions.OnlyOnFaulted);
         }
 
@@ -120,7 +120,7 @@ namespace _1RM.Service
             {
                 SimpleLogHelper.Fatal(t.Exception!);
                 Execute.OnUIThread(() =>
-                    MessageBoxHelper.ErrorAlert($"Connect failed: {t.Exception!.GetBaseException().Message}"));
+                    MessageBoxHelper.ErrorAlert(UiText.Get("Shell.ConnectFailed", t.Exception!.GetBaseException().Message)));
             }, TaskContinuationOptions.OnlyOnFaulted);
         }
 

@@ -177,7 +177,7 @@ namespace _1RM.View.Host.ProtocolHosts
             GridMessageBox.Visibility = Visibility.Visible;
             TbMessageTitle.Visibility = Visibility.Collapsed;
             BtnReconn.Visibility = Visibility.Visible;
-            TbMessage.Text = "Connection lost...";
+            _1RM.Service.UiText.Bind(TbMessage, TextBlock.TextProperty, "Shell.ConnectionLost");
             if (_invokeOnClosedWhenDisconnected)
                 base.OnClosed?.Invoke(base.ConnectionId);
         }

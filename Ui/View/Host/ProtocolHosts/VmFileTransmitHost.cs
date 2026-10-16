@@ -239,7 +239,7 @@ namespace _1RM.View.Host.ProtocolHosts
                         else
                         {
                             messageLevel = IoMessageLevelError;
-                            errorMessage = $"ls {path}: Not exists";
+                            errorMessage = _1RM.Service.UiText.Get("Shell.FileMissing", path);
                         }
                     }
                     catch (Exception e)
@@ -302,7 +302,7 @@ namespace _1RM.View.Host.ProtocolHosts
                     {
                         GridLoadingVisibility = Visibility.Collapsed;
                         IoMessageLevel = IoMessageLevelError;
-                        IoMessage = $"ShowFolder error: {ex.Message}";
+                        IoMessage = _1RM.Service.UiText.Get("Shell.FolderError", ex.Message);
                     });
                 }
                 //SimpleLogHelper.Debug($"ShowFolder({path}, {mode}) END");
@@ -323,12 +323,12 @@ namespace _1RM.View.Host.ProtocolHosts
                     {
                         await Trans.Delete(selected);
                         IoMessageLevel = IoMessageLevelNormal;
-                        IoMessage = $"Delete {selected}";
+                        IoMessage = _1RM.Service.UiText.Get("Shell.FileDelete", selected);
                     }
                     catch (Exception e)
                     {
                         IoMessageLevel = IoMessageLevelError;
-                        IoMessage = $"Delete {selected}: " + e.Message;
+                        IoMessage = _1RM.Service.UiText.Get("Shell.FileDelete", selected) + ": " + e.Message;
                     }
                 }
             }
@@ -385,7 +385,7 @@ namespace _1RM.View.Host.ProtocolHosts
                 {
                     var dateTimeFormatMenu = new System.Windows.Controls.MenuItem 
                     { 
-                        Header = IoC.Translate("file_transmit_host_datetime_format") 
+                        Header = IoC.Translate("Shell.TimeFormat")
                     };
                     
                     var currentFormat = configService.General.FileTransmitDateTimeFormat;
@@ -573,12 +573,12 @@ namespace _1RM.View.Host.ProtocolHosts
                                     {
                                         await Trans.CreateDirectory(newPath);
                                         IoMessageLevel = IoMessageLevelNormal;
-                                        IoMessage = $"Create folder {newPath}";
+                                        IoMessage = _1RM.Service.UiText.Get("Shell.FolderCreate", newPath);
                                     }
                                     catch (Exception e)
                                     {
                                         IoMessageLevel = IoMessageLevelError;
-                                        IoMessage = $"Create folder {newPath}: " + e.Message;
+                                        IoMessage = _1RM.Service.UiText.Get("Shell.FolderCreate", newPath) + ": " + e.Message;
                                     }
                                 }
                             }
@@ -589,12 +589,12 @@ namespace _1RM.View.Host.ProtocolHosts
                                 {
                                     await Trans.RenameFile(item.FullName, newPath);
                                     IoMessageLevel = IoMessageLevelNormal;
-                                    IoMessage = $"Move {item.FullName} => {newPath}";
+                                    IoMessage = _1RM.Service.UiText.Get("Shell.FileMove", item.FullName, newPath);
                                 }
                                 catch (Exception e)
                                 {
                                     IoMessageLevel = IoMessageLevelError;
-                                    IoMessage = $"Move {item.FullName} => {newPath}: " + e.Message;
+                                    IoMessage = _1RM.Service.UiText.Get("Shell.FileMove", item.FullName, newPath) + ": " + e.Message;
                                 }
                             }
                         }
@@ -879,7 +879,7 @@ namespace _1RM.View.Host.ProtocolHosts
                     if (string.IsNullOrEmpty(destinationDirectoryPath) || !Directory.Exists(destinationDirectoryPath))
                     {
                         var path = SelectFileHelper.SaveFile(
-                            title: IoC.Translate("file_transmit_host_message_files_DownloadToLastDir_to"),
+                            title: IoC.Translate("file_transmit_host_message_files_download_to"),
                             selectedFileName: IoC.Get<ILanguageService>().Translate("file_transmit_host_message_files_download_to_dir"),
                             initialDirectory: null
                         );

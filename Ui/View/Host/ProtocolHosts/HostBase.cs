@@ -108,18 +108,19 @@ namespace _1RM.View.Host.ProtocolHosts
             {
 	            var subMenu = new System.Windows.Controls.MenuItem()
 	            {
-		            Header = IoC.Translate("Custom"),
+		            Header = "",
 	            };
 
 
 	            {
 		            var cb = new CheckBox
 		            {
-			            Content = IoC.Translate("Show XXX button", IoC.Translate("Reconnect") ?? ""),
+
 			            IsHitTestVisible = false,
 		            };
 
-		            var binding = new Binding("TabHeaderShowReConnectButton")
+		            _1RM.Service.UiText.BindComputed(cb, CheckBox.ContentProperty, () => _1RM.Service.UiText.Get("Show XXX button", _1RM.Service.UiText.Get("Reconnect")));
+                var binding = new Binding("TabHeaderShowReConnectButton")
 		            {
 			            Source = SettingsPage,
 			            Mode = BindingMode.TwoWay,
@@ -136,11 +137,12 @@ namespace _1RM.View.Host.ProtocolHosts
 	            {
 		            var cb = new CheckBox
 		            {
-			            Content = IoC.Translate("Show XXX button", IoC.Translate("Close") ?? ""),
+
 			            IsHitTestVisible = false,
 		            };
 
-		            var binding = new Binding("TabHeaderShowCloseButton")
+		            _1RM.Service.UiText.BindComputed(cb, CheckBox.ContentProperty, () => _1RM.Service.UiText.Get("Show XXX button", _1RM.Service.UiText.Get("Close")));
+                var binding = new Binding("TabHeaderShowCloseButton")
 		            {
 			            Source = SettingsPage,
 			            Mode = BindingMode.TwoWay,
@@ -158,11 +160,12 @@ namespace _1RM.View.Host.ProtocolHosts
 	            {
 		            var cb = new CheckBox
 		            {
-			            Content = IoC.Translate("Show XXX button", "Icon"),
+
 			            IsHitTestVisible = false,
 		            };
 
-		            var binding = new Binding("TabHeaderShowIconButton")
+		            _1RM.Service.UiText.BindComputed(cb, CheckBox.ContentProperty, () => _1RM.Service.UiText.Get("Show XXX button", _1RM.Service.UiText.Get("Icon")));
+                var binding = new Binding("TabHeaderShowIconButton")
 		            {
 			            Source = SettingsPage,
 			            Mode = BindingMode.TwoWay,
@@ -176,7 +179,8 @@ namespace _1RM.View.Host.ProtocolHosts
 		            });
 	            }
 
-				MenuItems.Add(subMenu);
+				subMenu.SetResourceReference(MenuItem.HeaderProperty, "Custom");
+                MenuItems.Add(subMenu);
 			}
 
 			MenuItems.Add(new Separator());
@@ -186,8 +190,9 @@ namespace _1RM.View.Host.ProtocolHosts
             {
                 var tb = new TextBlock()
                 {
-                    Text = action.ActionName,
+                    Text = "",
                 };
+                _1RM.Service.UiText.BindComputed(tb, TextBlock.TextProperty, () => action.ActionName);
                 MenuItems.Add(new System.Windows.Controls.MenuItem()
                 {
                     Header = tb,

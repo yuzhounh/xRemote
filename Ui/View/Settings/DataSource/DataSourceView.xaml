@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="_1RM.View.Settings.DataSource.DataSourceView"
+<UserControl x:Class="_1RM.View.Settings.DataSource.DataSourceView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:uiText="clr-namespace:_1RM.Controls"
@@ -12,8 +12,14 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:DataSourceViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Margin="10">
-        <DataGrid AutoGenerateColumns="False"
+    <UserControl.Resources><ResourceDictionary><ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/1Remote;component/Resources/Theme/SettingsForm.xaml" />
+    </ResourceDictionary.MergedDictionaries></ResourceDictionary></UserControl.Resources>
+    <Grid Background="{DynamicResource BackgroundBrush}">
+        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+        <Grid.ColumnDefinitions><ColumnDefinition Style="{StaticResource SettingsFormLabelColumnStyle}" /><ColumnDefinition Style="{StaticResource SettingsFormInputColumnStyle}" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Text="{DynamicResource Settings.DataSources}" Style="{StaticResource SettingsFormHeadingStyle}" />
+        <DataGrid x:Name="SourcesGrid" Grid.Row="1" Grid.ColumnSpan="3" Margin="0,0,24,0" BorderThickness="0" HeadersVisibility="None" AutoGenerateColumns="False"
                   HorizontalAlignment="Stretch" 
                   HorizontalContentAlignment="Stretch" 
                   CanUserSortColumns="False"
@@ -23,6 +29,9 @@
                   ColumnWidth="*"
                   IsReadOnly="True"
                   ItemsSource="{Binding SourceConfigs}" >
+            <DataGrid.CellStyle><Style TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellBaseStyle}">
+                <Setter Property="Padding" Value="0" /><Setter Property="Margin" Value="0" />
+            </Style></DataGrid.CellStyle>
             <DataGrid.ColumnHeaderStyle>
                 <Style TargetType="{x:Type DataGridColumnHeader}">
                     <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -43,11 +52,11 @@
                 </Style>
             </DataGrid.ColumnHeaderStyle>
             <DataGrid.Columns>
-                <DataGridTemplateColumn Width="Auto" Header="">
+                <DataGridTemplateColumn Width="130" Header="">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <!--Show database status-->
-                            <Button Margin="0 0 0 0"
+                            <Button Margin="20 0 0 0" HorizontalAlignment="Left" Width="28"
                                     Background="Transparent"
                                     attachProperty:VisionElement.BackgroundAccent="Transparent"
                                     attachProperty:VisionElement.BackgroundOnMouseDown="Transparent"
@@ -116,10 +125,16 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Width="Auto" Header="{DynamicResource Name}">
+                <DataGridTemplateColumn Width="Auto" MinWidth="0" DisplayIndex="2" Header="">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <StackPanel.Style><Style TargetType="StackPanel"><Style.Triggers>
+                                    <MultiDataTrigger><MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Items.Count, RelativeSource={RelativeSource AncestorType=DataGrid}}" Value="1" />
+                                        <Condition Binding="{Binding DataSourceName}" Value="{x:Static dataSource:DataSourceService.LOCAL_DATA_SOURCE_NAME}" />
+                                    </MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Collapsed" /></MultiDataTrigger>
+                                </Style.Triggers></Style></StackPanel.Style>
                                 <uiText:LocalizedOptionText Value="{Binding DataSourceName}" ResourcePrefix="DataSourceName." />
                                 <TextBlock Text="{DynamicResource Settings.ReadOnly}" Visibility="{Binding IsWritable, Converter={StaticResource ConverterBool2VisibleInv}}"></TextBlock>
                                 <Grid Width="20"></Grid>
@@ -129,12 +144,11 @@
                 </DataGridTemplateColumn>
 
 
-                <DataGridTemplateColumn Width="Auto" Header="">
+                <DataGridTemplateColumn Width="Auto" MinWidth="80" DisplayIndex="1" Header="">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding DatabaseType}"></TextBlock>
-                                <Grid Width="20"></Grid>
+                                <uiText:LocalizedOptionText Value="{Binding DatabaseType}" ResourcePrefix="DatabaseType." />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -146,6 +160,13 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <StackPanel.Style><Style TargetType="StackPanel">
+                                    <Setter Property="Opacity" Value="0" /><Setter Property="IsHitTestVisible" Value="False" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True"><Setter Property="Opacity" Value="1" /><Setter Property="IsHitTestVisible" Value="True" /></DataTrigger>
+                                        <DataTrigger Binding="{Binding IsKeyboardFocusWithin, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True"><Setter Property="Opacity" Value="1" /><Setter Property="IsHitTestVisible" Value="True" /></DataTrigger>
+                                    </Style.Triggers>
+                                </Style></StackPanel.Style>
                                 <Button Content="{DynamicResource Edit}"
                                         Margin="5"
                                         Command="{Binding Path=DataContext.CmdEdit, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
@@ -173,7 +194,7 @@
         </DataGrid>
 
 
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Height="35" HorizontalAlignment="Right">
+        <StackPanel x:Name="SourceAddActions" Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" MinHeight="40" HorizontalAlignment="Left">
 
             <!--SET DATA CHECK PERIOD-->
             <!--<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5 0">
@@ -185,28 +206,10 @@
 
             <!--ADD DATA SOURCE BUTTON-->
             <Menu Background="Transparent" VerticalAlignment="Center">
-                <MenuItem Header="{DynamicResource Add}" 
-                          Height="30" 
-                          Width="100">
-                    <MenuItem.Style>
-                        <Style TargetType="MenuItem" BasedOn="{StaticResource MenuItemBaseStyle}">
-                            <Setter Property="Foreground" Value="{DynamicResource BackgroundTextBrush}"/>
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
-                                </Trigger>
-                                <Trigger Property="IsSubmenuOpen" Value="True">
-                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </MenuItem.Style>
+                <MenuItem Header="{DynamicResource Add}" Style="{StaticResource SettingsAddMenuItemStyle}">
                     <MenuItem.Icon>
-                        <Path Height="12" UseLayoutRounding="True" 
-                              Data="{StaticResource GeometryCross}" 
-                              Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MenuItem}, Path=Foreground}" 
-                              Stretch="Uniform"/>
+                        <Path Width="12" Height="12" Data="{StaticResource FormAddGeometry}"
+                              Stroke="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MenuItem}, Path=Foreground}" StrokeThickness="1.5" />
                     </MenuItem.Icon>
 
                     <!--<MenuItem Header="SQLite" Command="{Binding CmdAdd}" CommandParameter="SQLite">
@@ -219,12 +222,8 @@
                         <MenuItem.Header>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="MySQL"></TextBlock>
-                                <TextBlock VerticalAlignment="Center" Margin="2 0">
-                                    <Hyperlink NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/data-and-credentials.md#online-database" TextDecorations="{x:Null}"
-                                               controls:HyperlinkHelper.IsOpenExternal="True">
-                                        (?)
-                                    </Hyperlink>
-                                </TextBlock>
+                                <uiText:ProtocolHelpButton Style="{StaticResource ProtocolHelpButtonStyle}" Margin="2,0"
+                                                           NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/data-and-credentials.md#online-database" />
                             </StackPanel>
                         </MenuItem.Header>
                         <MenuItem.Icon>
@@ -236,12 +235,8 @@
                         <MenuItem.Header>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="PostgreSQL"></TextBlock>
-                                <TextBlock VerticalAlignment="Center" Margin="2 0">
-                                    <Hyperlink NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/data-and-credentials.md#online-database" TextDecorations="{x:Null}"
-                                               controls:HyperlinkHelper.IsOpenExternal="True">
-                                        (?)
-                                    </Hyperlink>
-                                </TextBlock>
+                                <uiText:ProtocolHelpButton Style="{StaticResource ProtocolHelpButtonStyle}" Margin="2,0"
+                                                           NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/data-and-credentials.md#online-database" />
                             </StackPanel>
                         </MenuItem.Header>
                         <MenuItem.Icon>
@@ -253,12 +248,8 @@
                 </MenuItem>
             </Menu>
 
-            <TextBlock VerticalAlignment="Center" Margin="2 0">
-                <Hyperlink NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/data-and-credentials.md#team-sharing" TextDecorations="{x:Null}"
-                           controls:HyperlinkHelper.IsOpenExternal="True">
-                    (?)
-                </Hyperlink>
-            </TextBlock>
+            <uiText:ProtocolHelpButton Style="{StaticResource ProtocolHelpButtonStyle}" Margin="2,0"
+                                       NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/data-and-credentials.md#team-sharing" />
         </StackPanel>
     </Grid>
 </UserControl>

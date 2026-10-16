@@ -297,8 +297,11 @@
               VerticalAlignment="Bottom" 
               Height="20" >
         </Grid>
-        <Border x:Name="CardConnectionStatus" Height="18" CornerRadius="9" Padding="3,1"
-                Margin="8" HorizontalAlignment="Right" VerticalAlignment="Top" Panel.ZIndex="5"
+        <Button Command="{Binding CmdManageRemoteSessions}" HorizontalAlignment="Right" VerticalAlignment="Top"
+                Panel.ZIndex="5" Padding="0" BorderThickness="0" Background="Transparent" MinHeight="40"
+                Visibility="{Binding ConnectionStatusVisibility}" ToolTip="{Binding ConnectionStatusHint}">
+            <Button.Template><ControlTemplate TargetType="Button"><ContentPresenter /></ControlTemplate></Button.Template>
+        <Border x:Name="CardConnectionStatus" Height="18" CornerRadius="9" Padding="3,1" Margin="8"
                 Background="{DynamicResource PrimaryMidBrush}"
                 Visibility="{Binding ConnectionStatusVisibility}" ToolTip="{Binding ConnectionStatusHint}">
             <StackPanel Orientation="Horizontal">
@@ -308,5 +311,6 @@
                            Foreground="{DynamicResource PrimaryTextBrush}" />
             </StackPanel>
         </Border>
+        </Button>
     </Grid>
 </UserControl>

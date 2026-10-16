@@ -202,7 +202,7 @@ namespace _1RM.View.ServerView
                     var ss = VmServerList.Where(x => x.IsSelected == true && x.IsEditable).ToList();
                     if (ss.Count == 0)
                     {
-                        MessageBoxHelper.ErrorAlert("Can not delete since they are all not writable.");
+                        MessageBoxHelper.ErrorAlert(_1RM.Service.UiText.Get("Shell.DeleteReadOnly"));
                         return;
                     }
                     if (true == MessageBoxHelper.Confirm(IoC.Translate("confirm_to_delete_selected"), ownerViewModel: IoC.Get<MainWindowViewModel>()))
@@ -328,7 +328,7 @@ namespace _1RM.View.ServerView
             }
             if (source?.IsWritable != true)
             {
-                MessageBoxHelper.ErrorAlert($"Can not add server to DataSource ({source?.DataSourceName ?? "null"}) since it is not writable.");
+                MessageBoxHelper.ErrorAlert(_1RM.Service.UiText.Get("Shell.DataReadOnlyAdd", source?.DataSourceName ?? ""));
                 return new Tuple<DataSourceBase?, string?>(null, null);
             }
             // select file with filter
@@ -349,7 +349,7 @@ namespace _1RM.View.ServerView
             }
             if (source?.IsWritable != true)
             {
-                MessageBoxHelper.ErrorAlert($"Can not add server to DataSource ({source?.DataSourceName ?? "null"}) since it is not writable.");
+                MessageBoxHelper.ErrorAlert(_1RM.Service.UiText.Get("Shell.DataReadOnlyAdd", source?.DataSourceName ?? ""));
                 return new Tuple<DataSourceBase?, string?>(null, null);
             }
 

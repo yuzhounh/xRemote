@@ -175,15 +175,15 @@ namespace _1RM.View.Host.ProtocolHosts
                         }
 
                     case disconnectReasonLocalNotError:
-                        // Maybe the user has cancelled the RdpClient's attempt to reconnect.
-                        // In this case, we will attempt to reconnect in order to switch to an alternate host.
                     default:
-                        // A communication breakdown occurred by unplugging, invalidating, going to sleep or crashing, etc.
+                        // A local cancellation or connection failure reached this path.
                         SimpleLogHelper.Warning($"RDP({_rdpSettings.DisplayName}) exit with error code {e.discReason}({reason}) ex:{excode}");
-                        // We try reconnecting.
+                        // User/server disconnect decisions must not start a new connection.
                         RdpHost.Visibility = Visibility.Collapsed;
                         GridMessageBox.Visibility = Visibility.Visible;
-                        if (_flagHasEverConnected // a rdp session with never successful connection should not retry (in the case error code = 4 ex:exDiscReasonNoInfo)
+                        if (RdpReconnectPolicy.CanRetryAutomatically(e.discReason, (int)excode)
+                            && !DeviceControlClient.RequiresManualReconnect(_rdpSettings.Address)
+                            && _flagHasEverConnected // Never retry a connection that has not succeeded.
                             && _retryCount < MAX_RETRY_COUNT)
                         {
                             // Continue to retry.
@@ -196,7 +196,7 @@ namespace _1RM.View.Host.ProtocolHosts
                         }
                         else
                         {
-                            // The number of retries has reached its limit. Display an error.
+                            // A deliberate disconnect or exhausted retry budget needs a manual connection.
                             _retryCount = 0;  // Reset for next time.
                             TbMessageTitle.Visibility = Visibility.Collapsed;
                             BtnReconn.Visibility = Visibility.Visible;

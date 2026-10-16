@@ -1,4 +1,4 @@
-﻿using _1RM.Model;
+using _1RM.Model;
 using _1RM.Service;
 using _1RM.Service.DataSource;
 using _1RM.Service.DataSource.DAO;
@@ -223,6 +223,7 @@ namespace _1RM.View
             _appData = appData;
             SourceService = sourceService;
             ConfigurationService = configurationService;
+            GlobalEventHelper.OnLanguageChanged += RefreshConnectionSearchSummary;
             CurrentView = IoC.Get<ConfigurationService>().General.ServerViewStatus;
         }
 
@@ -249,12 +250,11 @@ namespace _1RM.View
                         {
                             preset.TagNames = tagNames ?? new List<string>();
                         }
-                        EditorViewModel = ServerEditorPageViewModel.Add(_appData, source, preset);
-                        ShowMe();
+                        OpenEditor(ServerEditorPageViewModel.Add(_appData, source, preset));
                     }
                     else
                     {
-                        MessageBoxHelper.ErrorAlert($"Debug: Can not add server to DataSource ({source?.DataSourceName ?? "null"}) since it is not writable.");
+                        MessageBoxHelper.ErrorAlert(_1RM.Service.UiText.Get("Shell.DataReadOnlyAdd", source?.DataSourceName ?? ""));
                     }
                 }
                 catch (Exception e)
@@ -277,12 +277,11 @@ namespace _1RM.View
                     }
                     if (source.IsWritable == true)
                     {
-                        EditorViewModel = ServerEditorPageViewModel.Duplicate(_appData, source, server);
-                        ShowMe();
+                        OpenEditor(ServerEditorPageViewModel.Duplicate(_appData, source, server));
                     }
                     else
                     {
-                        MessageBoxHelper.ErrorAlert($"Can not add server to DataSource ({source?.DataSourceName ?? "null"}) since it is not writable.");
+                        MessageBoxHelper.ErrorAlert(_1RM.Service.UiText.Get("Shell.DataReadOnlyAdd", source?.DataSourceName ?? ""));
                     }
                 }
                 catch (Exception e)
@@ -300,31 +299,29 @@ namespace _1RM.View
                 var server = _appData.VmItemList.FirstOrDefault(x => x.Id == serverToEdit.Id && x.DataSource == serverToEdit.DataSource)?.Server;
                 if (server is not { DataSource: { IsWritable: true } })
                 {
-                    MessageBoxHelper.ErrorAlert("Can not edit server since it is not writable.");
+                    MessageBoxHelper.ErrorAlert(_1RM.Service.UiText.Get("Shell.EditReadOnly"));
                 }
                 else
                 {
-                    EditorViewModel = ServerEditorPageViewModel.Edit(_appData, server);
-                    ShowMe();
+                    OpenEditor(ServerEditorPageViewModel.Edit(_appData, server));
                 }
             };
 
             GlobalEventHelper.OnRequestGoToServerMultipleEditPage += (servers, isInAnimationShow) =>
             {
                 var serverBases = servers.Where(x => x.DataSource is { IsWritable: true, Status: EnumDatabaseStatus.OK }).ToArray();
-                EditorViewModel = null;
-                EditorViewModel = serverBases.Length switch
+                var editor = serverBases.Length switch
                 {
                     > 1 => ServerEditorPageViewModel.BuckEdit(_appData, serverBases),
                     1 => ServerEditorPageViewModel.Edit(_appData, serverBases.First()),
-                    _ => EditorViewModel
+                    _ => null
                 };
-                if (EditorViewModel == null)
+                if (editor == null)
                 {
-                    MessageBoxHelper.ErrorAlert("Can not edit multiple servers since they are all not writable.");
+                    MessageBoxHelper.ErrorAlert(_1RM.Service.UiText.Get("Shell.EditReadOnly"));
                     return;
                 }
-                ShowMe();
+                OpenEditor(editor);
             };
 #if FOR_MICROSOFT_STORE_ONLY
             SetSelfStartingHelper.SetSelfStartByStartupTask(Assert.APP_NAME, null);
@@ -360,6 +357,39 @@ namespace _1RM.View
         }
 
 
+        private ServerEditorWindowView? _editorWindow;
+        private readonly System.Threading.SemaphoreSlim _editorSwitchGate = new(1, 1);
+        private void OpenEditor(ServerEditorPageViewModel editor)
+        {
+            Execute.OnUIThread(async () =>
+            {
+                await _editorSwitchGate.WaitAsync();
+                try
+                {
+                    if (App.ExitingFlag) return;
+                    ShowMe();
+                    if (_editorWindow is { } existing)
+                    {
+                        if (existing.WindowState == WindowState.Minimized) existing.WindowState = WindowState.Normal;
+                        existing.Activate();
+                        if (existing.EditorModel?.HasSameTarget(editor) == true) return;
+                        if (!await existing.RequestSwitchCloseAsync()) return;
+                    }
+                    if (App.ExitingFlag) return;
+                    var window = new ServerEditorWindowView(editor) { Owner = this.View as Window };
+                    _editorWindow = window;
+                    window.Closed += (_, _) => { if (_editorWindow == window) _editorWindow = null; };
+                    window.Show();
+                }
+                catch (Exception exception)
+                {
+                    SimpleLogHelper.Error(exception);
+                    MessageBoxHelper.ErrorAlert(exception.Message);
+                }
+                finally { _editorSwitchGate.Release(); }
+            });
+        }
+
         public void ShowList(bool clearSelection)
         {
             if (this.View is not MainWindowView { IsClosing: false } window) return;
@@ -378,6 +408,7 @@ namespace _1RM.View
 
         #region CMD
 
+        private SettingsWindowView? _settingsWindow;
         private RelayCommand? _cmdGoSysOptionsPage;
         public RelayCommand CmdGoSysOptionsPage
         {
@@ -385,11 +416,24 @@ namespace _1RM.View
             {
                 return _cmdGoSysOptionsPage ??= new RelayCommand((o) =>
                 {
-                    ShowSetting = true;
-                    EditorViewModel = null;
+                    if (this.View is not MainWindowView owner) return;
+                    owner.PopupMenu.IsOpen = false;
+                    if (_settingsWindow is { } existing)
+                    {
+                        if (existing.WindowState == WindowState.Minimized) existing.WindowState = WindowState.Normal;
+                        existing.Activate();
+                        return;
+                    }
                     IoC.Get<GeneralSettingViewModel>().AppStartAutomatically = SetSelfStartingHelper.IsSelfStart(Assert.APP_NAME);
-                    if (this.View is MainWindowView v)
-                        v.PopupMenu.IsOpen = false;
+                    var window = new SettingsWindowView(SettingViewModel) { Owner = owner };
+                    _settingsWindow = window;
+                    _appData.StopTick();
+                    window.Closed += (_, _) =>
+                    {
+                        _settingsWindow = null;
+                        _appData.StartTick();
+                    };
+                    window.Show();
                 }, o => IsShownList);
             }
         }
@@ -499,6 +543,7 @@ namespace _1RM.View
                         break;
                     case EnumMainWindowPage.SettingsGeneral:
                     case EnumMainWindowPage.SettingsData:
+                    case EnumMainWindowPage.SettingsCredentialVault:
                     case EnumMainWindowPage.SettingsRunners:
                     case EnumMainWindowPage.SettingsLauncher:
                     case EnumMainWindowPage.SettingsTheme:
@@ -581,7 +626,7 @@ namespace _1RM.View
 
         private readonly DebounceDispatcher _debounceDispatcher = new();
         private string _mainFilterString = "";
-        public string ConnectionSearchSummary => $"{ActiveServerViewModel?.IsServerVisible.Count(x => x.Value) ?? 0} 项";
+        public string ConnectionSearchSummary => UiText.Get("Shell.SearchCount", ActiveServerViewModel?.IsServerVisible.Count(x => x.Value) ?? 0);
         public void RefreshConnectionSearchSummary() => RaisePropertyChanged(nameof(ConnectionSearchSummary));
         public string MainFilterString
         {

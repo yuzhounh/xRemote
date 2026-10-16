@@ -113,14 +113,14 @@ namespace _1RM.View.Utils
             Action? onButtonClicked = null)
         {
             this.Text = messageBoxText;
-            this.DisplayName = $"{Assert.APP_DISPLAY_NAME} - {caption}";
+            this.DisplayName = string.IsNullOrWhiteSpace(caption) ? UiText.Get("Info") : caption;
             this.Icon = icon;
             var buttonList = new BindableCollection<LabelledValue<MessageBoxResult>>();
             this.ButtonList = buttonList;
             foreach (var val in ButtonToResults[buttons])
             {
                 if (buttonLabels == null || !buttonLabels.TryGetValue(val, out var label))
-                    label = ButtonLabels[val];
+                    label = _1RM.Service.UiText.Get(ButtonLabels[val]);
 
                 var lbv = new LabelledValue<MessageBoxResult>(label, val);
                 buttonList.Add(lbv);

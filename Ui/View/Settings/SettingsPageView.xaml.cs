@@ -1,26 +1,15 @@
-﻿using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Windows;
-using System.Windows.Input;
-using _1RM.Model;
-using _1RM.Service;
-using _1RM.Utils;
-using Shawn.Utils;
-using Shawn.Utils.Interface;
-using Shawn.Utils.Wpf;
-using Shawn.Utils.Wpf.FileSystem;
-using KeyEventArgs = System.Windows.Input.KeyEventArgs;
-using MessageBox = System.Windows.MessageBox;
-using UserControl = System.Windows.Controls.UserControl;
+using System.Windows.Controls;
+using System.Windows.Data;
 
-namespace _1RM.View.Settings
+namespace _1RM.View.Settings;
+
+public partial class SettingsPageView : UserControl
 {
-    public partial class SettingsPageView : UserControl
+    public SettingsPageView() => InitializeComponent();
+
+    internal void ReleaseContent()
     {
-        public SettingsPageView()
-        {
-            InitializeComponent();
-        }
+        BindingOperations.ClearBinding(PageContent, Stylet.Xaml.View.ModelProperty);
+        PageContent.Content = null;
     }
 }

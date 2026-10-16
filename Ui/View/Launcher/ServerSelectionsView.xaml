@@ -81,7 +81,7 @@
                                 </ContentControl.Resources>
                             </ContentControl>
                         </StackPanel>
-                        <Button Grid.Column="2" Width="28" Height="28" Margin="8,0,0,0" Background="Transparent" ToolTip="按 ← 显示或隐藏备注"
+                        <Button Grid.Column="2" Width="28" Height="28" Margin="8,0,0,0" Background="Transparent" ToolTip="{DynamicResource Shell.ToggleNote}"
                             Visibility="{Binding Server.Note, Converter={StaticResource ConverterNoteToVisibility}}"
                             Tag="{Binding Server.Id}" PreviewMouseDown="ButtonShowNote_OnClick"
                             Command="{Binding RelativeSource={RelativeSource AncestorType=view:LauncherWindowView}, Path=DataContext.ServerSelectionsViewModel.CmdShowNoteField}"

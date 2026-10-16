@@ -106,15 +106,13 @@ public static class MaskLayerController
         if (layerContainer != null)
             layerId = MaskLayerController.ShowProcessingRing(assignLayerContainer: layerContainer);
 
-        viewModel.ShowWindow(IoC.Get<MainWindowViewModel>());
-        if (layerContainer != null && doNotHideMaskIfReturnTrue != true)
+        viewModel.Closed += (sender, args) =>
         {
-            viewModel.Closed += (sender, args) =>
-            {
+            if (layerContainer != null && doNotHideMaskIfReturnTrue != true)
                 MaskLayerController.HideMask(layerId, layerContainer);
-                if (viewModel.DialogResult == true)
-                    onCloseWithTrue?.Invoke();
-            };
-        }
+            if (viewModel.DialogResult == true)
+                onCloseWithTrue?.Invoke();
+        };
+        viewModel.ShowWindow(IoC.Get<MainWindowViewModel>());
     }
 }

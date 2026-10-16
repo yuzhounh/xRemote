@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using _1RM.Model;
@@ -42,37 +43,25 @@ namespace _1RM.View.Settings
             set => SetAndNotifyIfChanged(ref _selectedViewModel, value);
         }
 
+        private readonly DataAndCredentialsViewModel _dataAndCredentials = new();
+
         public void ShowPage(EnumMainWindowPage page)
         {
-            if (page == EnumMainWindowPage.ListView
-                || page == EnumMainWindowPage.About
-                || CurrentPage == page)
-                return;
-
-            CurrentPage = page;
+            page = page switch
+            {
+                EnumMainWindowPage.SettingsLauncher => EnumMainWindowPage.SettingsGeneral,
+                EnumMainWindowPage.SettingsCredentialVault => EnumMainWindowPage.SettingsData,
+                _ => page
+            };
             switch (page)
             {
-                case EnumMainWindowPage.SettingsGeneral:
-                    SelectedViewModel = GeneralSettingViewModel;
-                    break;
-                case EnumMainWindowPage.SettingsData:
-                    SelectedViewModel = IoC.Get<DataSourceViewModel>();
-                    break;
-                case EnumMainWindowPage.SettingsCredentialVault:
-                    SelectedViewModel = IoC.Get<CredentialVaultViewModel>();
-                    break;
-                case EnumMainWindowPage.SettingsLauncher:
-                    SelectedViewModel = IoC.Get<LauncherSettingViewModel>();
-                    break;
-                case EnumMainWindowPage.SettingsTheme:
-                    SelectedViewModel = IoC.Get<ThemeSettingViewModel>();
-                    break;
-                case EnumMainWindowPage.SettingsRunners:
-                    SelectedViewModel = IoC.Get<ProtocolRunnerSettingsPageViewModel>();
-                    break;
-                default:
-                    return;
+                case EnumMainWindowPage.SettingsGeneral: SelectedViewModel = GeneralSettingViewModel; break;
+                case EnumMainWindowPage.SettingsData: SelectedViewModel = _dataAndCredentials; break;
+                case EnumMainWindowPage.SettingsTheme: SelectedViewModel = IoC.Get<ThemeSettingViewModel>(); break;
+                case EnumMainWindowPage.SettingsRunners: SelectedViewModel = IoC.Get<ProtocolRunnerSettingsPageViewModel>(); break;
+                default: return;
             }
+            CurrentPage = page;
         }
 
         private EnumMainWindowPage _currentPage = EnumMainWindowPage.SettingsGeneral;
@@ -129,54 +118,31 @@ namespace _1RM.View.Settings
             }
         }
 
-        private RelayCommand? _cmdSaveAndGoBack;
-        public RelayCommand CmdSaveAndGoBack
+        public event Action? CloseRequested;
+        private RelayCommand? _cmdClose;
+        public RelayCommand CmdClose => _cmdClose ??= new RelayCommand(_ => CloseRequested?.Invoke());
+
+        public bool TryFinishEditing()
         {
-            get
+            var result = _dataSourceService.LocalDataSource?.Database_SelfCheck() ?? DatabaseStatus.New(EnumDatabaseStatus.AccessDenied);
+            if (result.Status != EnumDatabaseStatus.OK)
             {
-                return _cmdSaveAndGoBack ??= new RelayCommand((o) =>
-                {
-                    // check if Db is ok
-                    var res = _dataSourceService.LocalDataSource?.Database_SelfCheck() ?? DatabaseStatus.New(EnumDatabaseStatus.AccessDenied);
-                    if (res.Status != EnumDatabaseStatus.OK)
-                    {
-                        ShowPage(EnumMainWindowPage.SettingsData);
-                        MessageBoxHelper.ErrorAlert(res.GetErrorMessage);
-                        return;
-                    }
-
-                    // do not check additional sources here, because team database may not be connected when one leaves working place.
-                    //foreach (var additionalSource in _dataSourceService.AdditionalSources)
-                    //{
-                    //    var status = additionalSource.Value.Database_SelfCheck();
-                    //    if (status.Status != EnumDatabaseStatus.OK)
-                    //    {
-                    //        ShowPage(EnumMainWindowPage.SettingsData);
-                    //        MessageBoxHelper.ErrorAlert(status.GetErrorMessage);
-                    //        return;
-                    //    }
-                    //}
-
-                    if (_configurationService.Launcher.LauncherEnabled != IoC.TryGet<LauncherWindowViewModel>()?.SetHotKey(_configurationService.Launcher.LauncherEnabled, _configurationService.Launcher.HotKeyModifiers, _configurationService.Launcher.HotKeyKey))
-                    {
-                        ShowPage(EnumMainWindowPage.SettingsLauncher);
-                        MessageBoxHelper.ErrorAlert(IoC.Translate("hotkey_registered_fail"));
-                        return;
-                    }
-
-                    Task.Factory.StartNew(() =>
-                    {
-                        _configurationService.Save();
-                        IoC.Get<ProtocolConfigurationService>().Save();
-                    });
-
-                    IoC.Get<MainWindowViewModel>().ShowList(false);
-                    _selectedViewModel = null;
-                });
+                ShowPage(EnumMainWindowPage.SettingsData);
+                MessageBoxHelper.ErrorAlert(result.GetErrorMessage);
+                return false;
             }
+            var launcher = _configurationService.Launcher;
+            if (IoC.TryGet<LauncherWindowViewModel>() is { } launcherWindow &&
+                launcher.LauncherEnabled != launcherWindow.SetHotKey(launcher.LauncherEnabled, launcher.HotKeyModifiers, launcher.HotKeyKey))
+            {
+                ShowPage(EnumMainWindowPage.SettingsGeneral);
+                MessageBoxHelper.ErrorAlert(IoC.Translate("hotkey_registered_fail"));
+                return false;
+            }
+            _configurationService.Save();
+            IoC.Get<ProtocolConfigurationService>().Save();
+            return true;
         }
-
-
 
         private RelayCommand? _cmdShowPage;
         public RelayCommand CmdShowPage

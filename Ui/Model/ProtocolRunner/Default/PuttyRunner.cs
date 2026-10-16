@@ -99,7 +99,7 @@ namespace _1RM.Model.ProtocolRunner.Default
         public int PuttyFontSize
         {
             get => _puttyFontSize;
-            set => SetAndNotifyIfChanged(ref _puttyFontSize, value);
+            set => SetAndNotifyIfChanged(ref _puttyFontSize, _1RM.Controls.PositiveFontSizeRule.Normalize(value));
         }
 
         public int GetPuttyFontSize()
@@ -496,7 +496,7 @@ exec $SHELL # to keep putty alive
                 }
             }
 
-            puttyOption.Set(EnumConfigKey.FontHeight, puttyRunner.PuttyFontSize);
+            puttyOption.Set(EnumConfigKey.FontHeight, puttyRunner.GetPuttyFontSize());
             puttyOption.Set(EnumConfigKey.Font, puttyRunner.PuttyFontSource);
             puttyOption.SaveToConfig();
         }

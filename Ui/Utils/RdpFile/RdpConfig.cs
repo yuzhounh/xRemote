@@ -202,6 +202,7 @@ namespace _1RM.Utils.RdpFile
 
         [RdpConfName("autoreconnection enabled:i:")]
         public int AutoReconnectionEnabled { get; set; } = 1;
+        public bool ForceDisableAutoReconnect { get; set; }
 
         /// <summary>
         /// Defines the server authentication level settings.
@@ -410,6 +411,13 @@ namespace _1RM.Utils.RdpFile
                         break;
                     }
                 }
+            }
+
+            if (ForceDisableAutoReconnect)
+            {
+                foreach (var key in settings.Keys.Where(k => string.Equals(k, "autoreconnection enabled:i:", StringComparison.OrdinalIgnoreCase)).ToArray())
+                    settings.Remove(key);
+                settings["autoreconnection enabled:i:"] = "0";
             }
 
             // if `selectedmonitors` is set, then force set the `screen mode id` to 2 and `use multimon:i:` to 1

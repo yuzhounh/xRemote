@@ -1,0 +1,19 @@
+<Window x:Class="_1RM.View.Settings.SettingsWindowView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:branding="clr-namespace:_1RM.Controls"
+        Width="1040" Height="760" MinWidth="900" MinHeight="560"
+        WindowStartupLocation="CenterOwner" WindowStyle="SingleBorderWindow"
+        Background="{DynamicResource PrimaryMidBrush}" Title="{DynamicResource Settings.WindowTitle}">
+    <Window.Template><ControlTemplate TargetType="Window"><AdornerDecorator><ContentPresenter /></AdornerDecorator></ControlTemplate></Window.Template>
+    <Grid Background="{DynamicResource PrimaryMidBrush}">
+        <Grid.RowDefinitions><RowDefinition x:Name="CaptionRow" Height="48" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+        <Grid x:Name="CaptionArea" Background="{DynamicResource PrimaryMidBrush}">
+            <branding:WindowCaptionTitle Text="{DynamicResource Settings.WindowTitle}" />
+        </Grid>
+        <Border x:Name="CaptionReserve" Width="0" HorizontalAlignment="Right" />
+        <ScrollViewer x:Name="SettingsViewport" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+            <ContentControl x:Name="SettingsBody" Width="880" Background="{DynamicResource BackgroundBrush}" />
+        </ScrollViewer>
+    </Grid>
+</Window>

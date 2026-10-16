@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -467,7 +467,7 @@ namespace _1RM.Model.Protocol.Base
                         {
                             if (string.IsNullOrWhiteSpace(DisplayName))
                             {
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.ConnectionNameRequired");
                             }
                             break;
                         }

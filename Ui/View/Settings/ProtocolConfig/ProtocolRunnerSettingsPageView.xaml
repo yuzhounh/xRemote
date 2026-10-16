@@ -11,7 +11,7 @@
              xmlns:controls="clr-namespace:Shawn.Utils.Wpf.Controls;assembly=Shawn.Utils.Wpf"
              d:DataContext="{d:DesignInstance protocolConfig:ProtocolRunnerSettingsPageViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" uiText:EditorValidation.Enabled="True">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -25,7 +25,7 @@
             <Style x:Key="ListBoxForProtocols" TargetType="ListBox">
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                <Setter Property="Background" Value="{DynamicResource PrimaryMidBrush}" />
+                <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
                 <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
                 <Setter Property="FontSize" Value="{DynamicResource GlobalFontSizeBody}" />
@@ -42,9 +42,9 @@
                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         </Border>
                                         <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Row" Property="Background" Value="{DynamicResource LauncherHoverBrush}" /></Trigger>
+                                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Row" Property="Background" Value="{DynamicResource ProtocolNavHoverBrush}" /></Trigger>
                                             <Trigger Property="IsSelected" Value="True">
-                                                <Setter TargetName="Row" Property="Background" Value="{DynamicResource BackgroundBrush}" />
+                                                <Setter TargetName="Row" Property="Background" Value="{DynamicResource ProtocolNavSelectedBrush}" />
                                                 <Setter TargetName="Row" Property="BorderBrush" Value="{DynamicResource AccentMidBrush}" />
                                             </Trigger>
                                         </ControlTemplate.Triggers>
@@ -58,6 +58,7 @@
 
             <Style x:Key="ListBoxRunners" TargetType="{x:Type ListBox}">
                 <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="AlternationCount" Value="2147483647" />
                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
                 <Setter Property="Background" Value="Transparent" />
@@ -67,10 +68,25 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ListBoxItem">
-                                        <Grid Margin="0">
-                                            <Border x:Name="GridContainer"></Border>
-                                            <ContentPresenter x:Name="ContentPresenter"/>
-                                        </Grid>
+                                        <StackPanel Margin="0">
+                                            <Border x:Name="SectionSeparator" Height="1" Margin="0,8,0,2" HorizontalAlignment="Center"
+                                                Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ProtocolCardWidthConverter}}"
+                                                Background="{DynamicResource ProtocolCardDividerBrush}" />
+                                            <uiText:RunnerSettingsExpander Runner="{Binding}"
+                                                SelectedRunner="{Binding DataContext.SelectedRunner, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                                Style="{StaticResource RunnerSettingsExpanderStyle}">
+                                                <uiText:RunnerSettingsExpander.Header>
+                                                    <uiText:LocalizedOptionText Value="{Binding Name}" ResourcePrefix="RunnerName."
+                                                        FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=Expander}}"
+                                                        FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=Expander}}"
+                                                        Foreground="{DynamicResource BackgroundTextBrush}" />
+                                                </uiText:RunnerSettingsExpander.Header>
+                                                <ContentPresenter x:Name="ContentPresenter" HorizontalAlignment="Stretch" />
+                                            </uiText:RunnerSettingsExpander>
+                                        </StackPanel>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="ItemsControl.AlternationIndex" Value="0"><Setter TargetName="SectionSeparator" Property="Visibility" Value="Collapsed" /></Trigger>
+                                        </ControlTemplate.Triggers>
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
@@ -90,19 +106,11 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Border Name="Border1" Grid.Row="0" Grid.RowSpan="2" 
-                            Background="{DynamicResource BackgroundBrush}"
-                            CornerRadius="10" BorderThickness="0">
+                    <Border Name="Border1" Grid.Row="0" Grid.RowSpan="2"
+                            Style="{StaticResource ProtocolCardSurfaceStyle}">
                     </Border>
-                    <Grid Grid.Row="0" Background="{DynamicResource ProtocolCardHeaderBrush}">
-            <Border VerticalAlignment="Bottom" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource ProtocolCardDividerBrush}" IsHitTestVisible="False" />
-                        <uiText:LocalizedOptionText ResourcePrefix="RunnerName." HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   Foreground="{DynamicResource PrimaryTextBrush}" 
-                                   FontSize="{DynamicResource HeadFontSize}" 
-                                   Value="{Binding Name}" Margin="5" />
-                    </Grid>
                     <Grid Grid.Row="1" MinHeight="50">
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{DynamicResource Settings.NoExtraOptions}" />
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{DynamicResource BackgroundTextBrush}" Text="{DynamicResource Settings.NoExtraOptions}" />
                     </Grid>
                 </Grid>
             </DataTemplate>
@@ -137,18 +145,13 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid Background="{DynamicResource BackgroundBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <Grid MinWidth="130" Background="{DynamicResource PrimaryMidBrush}">
-            <Border BorderThickness="0" Background="{DynamicResource BackgroundBrush}">
-                <Border.Effect>
-                    <DropShadowEffect Direction="0" Opacity="0.5" ShadowDepth="3"></DropShadowEffect>
-                </Border.Effect>
-            </Border>
+        <Grid MinWidth="130" Background="{DynamicResource BackgroundBrush}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
@@ -163,70 +166,59 @@
         </Grid>
 
         <Grid Grid.Column="1" ClipToBounds="True">
-            <Grid>
+            <Grid x:Name="RunnerArea">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <ListBox Grid.Row="2" ScrollViewer.CanContentScroll="False"
+                <ListBox x:Name="RunnersList" Grid.Row="2" ScrollViewer.CanContentScroll="False"
                          Style="{StaticResource ListBoxRunners}" Grid.IsSharedSizeScope="True"
                          ItemsSource="{Binding Runners}" Background="{DynamicResource ProtocolSettingsSurfaceBrush}" />
 
-                <Border Grid.Row="0" Grid.RowSpan="2" BorderThickness="0" Background="{DynamicResource BackgroundBrush}">
-                    <Border.Effect>
-                        <DropShadowEffect Direction="270" Opacity="0.5" ShadowDepth="3"></DropShadowEffect>
-                    </Border.Effect>
-                </Border>
+                <uiText:PixelHeaderBorder Grid.Row="0" Grid.RowSpan="2" Background="{DynamicResource BackgroundBrush}" />
 
 
-                <Grid Grid.Row="1" Margin="10 3" Height="35">
+                <Grid x:Name="DefaultRunnerRow" Grid.Row="1" Width="580" HorizontalAlignment="Left" Margin="15,3,0,3" MinHeight="40">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Style="{StaticResource ProtocolActionColumnStyle}" />
                     </Grid.ColumnDefinitions>
+                    <TextBlock Text="{DynamicResource Settings.DefaultRunner}" Style="{StaticResource TextBlockTitleColumn}" />
 
-                    <StackPanel Orientation="Horizontal" Margin="5">
-                        <TextBlock Text="{Binding SelectedProtocol}" Margin="3" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
-                        <TextBlock Text="{DynamicResource Default}" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
-                        <TextBlock Text="{DynamicResource Settings.Runner}" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
-                    </StackPanel>
-
-                    <ComboBox Grid.Column="1" 
+                    <ComboBox x:Name="DefaultRunnerSelector" Grid.Column="1"
                               ItemsSource="{Binding Runners, UpdateSourceTrigger=PropertyChanged}"
                               SelectedItem="{Binding SelectedRunner, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ComboBox.ItemTemplate><DataTemplate><uiText:LocalizedOptionText Value="{Binding Name}" ResourcePrefix="RunnerName." /></DataTemplate></ComboBox.ItemTemplate>
                     </ComboBox>
 
 
-                    <Button Grid.Column="2" Width="auto" Height="30" 
-                            Margin="10 0 0 0"
+                    <StackPanel Grid.Column="2" Style="{StaticResource ProtocolActionRailStyle}">
+                        <uiText:ProtocolHelpButton NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/external-runners.md#configuration" Style="{StaticResource ProtocolHelpButtonStyle}"/>
+                    <Button
+                            Margin="0"
                             Background="Transparent"
                             attachProperty:VisionElement.BackgroundAccent="Transparent"
                             attachProperty:VisionElement.BackgroundOnMouseDown="Transparent"
-                            Style="{StaticResource ButtonBarBackgroundStyle}"
-                            HorizontalAlignment="Right"
+                            Style="{StaticResource FormInlineAddButtonStyle}"
+                            HorizontalAlignment="Left"
+                            ToolTip="{DynamicResource Settings.AddRunnerHint}" AutomationProperties.Name="{DynamicResource Settings.AddRunnerHint}"
                             Command="{Binding CmdAddRunner}"
                             >
-                        <StackPanel Orientation="Horizontal">
-                            <Grid Height="20" Width="20">
+                            <Grid Height="16" Width="16">
                                 <Path Data="M 41.888 18.304 L 41.888 23.584 L 23.584 23.584 L 23.584 41.888 L 18.304 41.888 L 18.304 23.584 L 0 23.584 L 0 18.304 L 18.304 18.304 L 18.304 0 L 23.584 0 L 23.584 18.304 Z"
                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
                                   Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
                                   StrokeThickness="2" Stretch="Uniform" />
                             </Grid>
-                            <TextBlock VerticalAlignment="Center" Margin="2 0">
-                                <Hyperlink NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/external-runners.md#configuration" TextDecorations="{x:Null}"
-                                           controls:HyperlinkHelper.IsOpenExternal="True">
-                                    (?)
-                                </Hyperlink>
-                            </TextBlock>
-                        </StackPanel>
                     </Button>
+                    </StackPanel>
                 </Grid>
             </Grid>
         </Grid>
+        <Border Grid.Column="1" Width="1" HorizontalAlignment="Left"
+                Background="{DynamicResource ProtocolCardDividerBrush}" IsHitTestVisible="False" />
     </Grid>
 </UserControl>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -205,41 +205,41 @@ namespace _1RM.View.Settings.DataSource
                     case nameof(Name):
                         {
                             if (string.IsNullOrWhiteSpace(_name))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.SourceNameRequired");
                             if (_dataSourceViewModel.SourceConfigs.Any(x => x != _orgMysqlConfig && string.Equals(x.DataSourceName.Trim(), _name.Trim(), StringComparison.CurrentCultureIgnoreCase)))
-                                return IoC.Translate(LanguageService.XXX_IS_ALREADY_EXISTED, _name);
+                                return UiText.Get("Validation.SourceNameExists", _name);
                             break;
                         }
                     case nameof(Host):
                         {
                             if (string.IsNullOrWhiteSpace(Host))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.DatabaseHostRequired");
                             break;
                         }
                     case nameof(Port):
                         {
                             if (string.IsNullOrWhiteSpace(Port))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.PortRequired");
                             if (int.TryParse(_port, out var p) == false || p < 0 || p > 65535)
-                                return "1 - 65535";
+                                return UiText.Get("Validation.PortRange");
                             break;
                         }
                     case nameof(DatabaseName):
                         {
                             if (string.IsNullOrWhiteSpace(DatabaseName))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.DatabaseNameRequired");
                             break;
                         }
                     case nameof(UserName):
                         {
                             if (string.IsNullOrWhiteSpace(UserName))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.UserRequired");
                             break;
                         }
                     case nameof(Password):
                         {
                             if (string.IsNullOrWhiteSpace(Password))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.PasswordRequired");
                             break;
                         }
                 }

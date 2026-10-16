@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -62,7 +62,7 @@ namespace _1RM.View.Editor.Forms
         {
             if (DataContext is SshFormViewModel vm)
             {
-                var path = SelectFileHelper.OpenFile(filter: "KiTTY Session|*.*");
+                var path = SelectFileHelper.OpenFile(filter: _1RM.Service.UiText.Get("Editor.SessionFileFilter"));
                 if (path == null) return;
                 if (File.Exists(path) && KittyConfig.Read(path)?.Count > 0)
                 {
@@ -71,7 +71,7 @@ namespace _1RM.View.Editor.Forms
                 else
                 {
                     vm.New.ExternalKittySessionConfigPath = "";
-                    MessageBoxHelper.Warning("Invalid KiTTY session config file.");
+                    MessageBoxHelper.Warning(_1RM.Service.UiText.Get("Validation.SessionFileInvalid"));
                 }
             }
         }

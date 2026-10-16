@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using Newtonsoft.Json;
@@ -522,7 +522,7 @@ namespace _1RM.Model.Protocol
                 int count = separators.Count(separator => s.IndexOf(separator, StringComparison.OrdinalIgnoreCase) >= 0);
                 if (count != 1)
                 {
-                    results.Add(new Tuple<string, string, string>(s, "", $"{s}: format error"));
+                    results.Add(new Tuple<string, string, string>(s, "", UiText.Get("Validation.InstructionFormat", s)));
                 }
                 else
                 {
@@ -532,21 +532,21 @@ namespace _1RM.Model.Protocol
                         var ss = s.Split(new[]{ separator }, StringSplitOptions.RemoveEmptyEntries);
                         if (ss.Length != 2)
                         {
-                            results.Add(new Tuple<string, string, string>(ss[0].Trim(), "", $"{s}: format error"));
+                            results.Add(new Tuple<string, string, string>(ss[0].Trim(), "", UiText.Get("Validation.InstructionFormat", s)));
                         }
                         else
                         {
                             var key = ss[0].Trim();
                             if (results.Any(x => x.Item1 == key))
                             {
-                                results.Add(new Tuple<string, string, string>(key, "", $"{key}: duplicate key"));
+                                results.Add(new Tuple<string, string, string>(key, "", UiText.Get("Validation.InstructionDuplicate", key)));
                                 break;
                             }
                             var value = ss[1].Trim();
                             switch (separator)
                             {
                                 case ":i:":
-                                    results.Add(new Tuple<string, string, string>(key, value, int.TryParse(value, out var i) ? "" : $"{key}: value is not int"));
+                                    results.Add(new Tuple<string, string, string>(key, value, int.TryParse(value, out var i) ? "" : UiText.Get("Validation.InstructionInteger", key)));
                                     break;
                                 case ":s:":
                                     results.Add(new Tuple<string, string, string>(key, value, ""));
@@ -555,7 +555,7 @@ namespace _1RM.Model.Protocol
                                     results.Add(new Tuple<string, string, string>(key, value, ""));
                                     break;
                                 default:
-                                    results.Add(new Tuple<string, string, string>(key, value, $"{key}: `{separator}` is not supported"));
+                                    results.Add(new Tuple<string, string, string>(key, value, UiText.Get("Validation.InstructionType", key, separator)));
                                     break;
                             }
                         }
@@ -869,7 +869,8 @@ namespace _1RM.Model.Protocol
             if (this.EnableAudioCapture == true)
                 rdpConfig.AudioCaptureMode = 1;
 
-            rdpConfig.AutoReconnectionEnabled = 1;
+            rdpConfig.ForceDisableAutoReconnect = _1RM.Service.DeviceControlClient.RequiresManualReconnect(Address);
+            rdpConfig.AutoReconnectionEnabled = rdpConfig.ForceDisableAutoReconnect ? 0 : 1;
 
             switch (GatewayMode)
             {

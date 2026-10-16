@@ -48,7 +48,7 @@ namespace _1RM.Service.DataSource.Model
                 ReconnectTime = Status != EnumDatabaseStatus.OK ?
                     DateTime.Now.AddSeconds(IoC.TryGet<ConfigurationService>()?.DatabaseReconnectPeriod ?? 60 * 5)
                     : DateTime.MinValue;
-                StatusInfo = Status == EnumDatabaseStatus.OK ? $"{CachedProtocols.Count} servers" : Status.GetErrorInfo();
+                StatusInfo = Status == EnumDatabaseStatus.OK ? UiText.Get("Settings.SourceConnectionCount", CachedProtocols.Count) : Status.GetErrorInfo();
             }
         }
 

@@ -226,8 +226,8 @@
                               Height="20"
                               attachProperty:VisionElement.ForegroundAccent="{DynamicResource AccentTextBrush}"
                               attachProperty:VisionElement.BackgroundAccent="{DynamicResource AccentMidBrush}">
-                        <ComboBoxItem Content="Save to current folder(Portable)"></ComboBoxItem>
-                        <ComboBoxItem Content="Save to AppData"></ComboBoxItem>
+                        <ComboBoxItem Content="{DynamicResource Shell.PortableLocation}"></ComboBoxItem>
+                        <ComboBoxItem Content="{DynamicResource Shell.AppDataLocation}"></ComboBoxItem>
                     </ComboBox>-->
                 </Grid>
             </StackPanel>

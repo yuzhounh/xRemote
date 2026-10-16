@@ -6,6 +6,7 @@ using _1RM.Controls.NoteDisplay;
 using _1RM.Model;
 using _1RM.Model.Protocol;
 using _1RM.Model.Protocol.Base;
+using _1RM.Service;
 using _1RM.Service.DataSource;
 using _1RM.Service.DataSource.Model;
 using _1RM.Service.Locality;
@@ -94,24 +95,49 @@ namespace _1RM.View
         }
 
         private ProtocolBase _server;
-        private string _connectionStatusText = "检测中";
+        private string _connectionStatusText = "Shell.Checking";
         private string _connectionStatusColor = "#FBBF24";
-        private string _connectionStatusHint = "正在检测目标端口是否可达";
+        private string _connectionStatusHint = "Shell.CheckingHint";
+        private object[] _connectionHintArguments = Array.Empty<object>();
         private bool? _connectionOnline;
-        public string ConnectionStatusText => _connectionStatusText;
+        private string _remoteState = "Shell.Unknown";
+        private bool _hasRemoteStatus;
+        private XRemote.Control.ControlStatus? _remoteStatus;
+        private bool _remoteInUse;
+        public string ConnectionStatusText => UiText.Get(_connectionStatusText);
         public string ConnectionStatusColor => _connectionStatusColor;
         public string CardConnectionStatusColor => _connectionOnline == false ? "#F87171" : _connectionStatusColor;
-        public string CardConnectionStatusText => _connectionOnline == true ? "在线" : _connectionOnline == false ? "离线" : "检测中";
-        public string ConnectionStatusHint => _connectionStatusHint;
+        public string CardConnectionStatusText => _connectionOnline == false ? UiText.Get("Shell.Offline") : ConnectionStatusText;
+        public string ConnectionStatusHint => UiText.Get(_connectionStatusHint, _connectionHintArguments) + "\n" +
+            (_remoteStatus == null ? UiText.Get("Shell.UnknownDetail") :
+                UiText.Get("Shell.SessionSummary", UiText.Get(_remoteState), _remoteStatus.ObservedAt.ToLocalTime().ToString("HH:mm:ss")) + "\n" +
+                string.Join("\n", _remoteStatus.Sessions.Select(s => $"{s.Session.User} · {UiText.Get(s.Session.IsRemoteActive ? "Shell.Remote" : s.Session.State == 4 ? "Remote.Disconnected" : "Shell.LocalOther")} · {s.Session.Client}")));
+        internal void SetRemoteSessionStatus(XRemote.Control.ControlStatus? status)
+        {
+            var active = status?.Sessions.Where(s => s.Session.IsRemoteActive).ToArray();
+            _remoteStatus = status;
+            _hasRemoteStatus = status != null;
+            _remoteState = Server is not RDP ? "Shell.Online" : status == null ? "Shell.Unknown" : active!.Length > 0 ? "Shell.Remote" :
+                status.Sessions.Any(s => s.Session.Protocol == 0 && s.Session.State == 0 && s.Session.Locked == false) ? "Shell.Local" : "Shell.Idle";
+            _remoteInUse = _remoteState is "Shell.Remote" or "Shell.Local";
+        }
         public System.Windows.Visibility ConnectionStatusVisibility => Server is ProtocolBaseWithAddressPort
             ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
 
-        internal void SetConnectionStatus(bool? online, string hint)
+        internal void SetConnectionStatus(bool? online, string hint, params object[] hintArguments)
         {
             _connectionOnline = online;
-            _connectionStatusText = online == true ? "在线" : online == false ? "不可达" : "检测中";
+            _connectionStatusText = online == true
+                ? _hasRemoteStatus && _remoteInUse ? _remoteState : "Shell.Online"
+                : online == false ? "Shell.Unreachable" : "Shell.Checking";
             _connectionStatusColor = online == true ? "#34D399" : online == false ? "#9CA3AF" : "#FBBF24";
             _connectionStatusHint = hint;
+            _connectionHintArguments = hintArguments;
+            RefreshLanguage();
+        }
+
+        internal void RefreshLanguage()
+        {
             RaisePropertyChanged(nameof(ConnectionStatusText));
             RaisePropertyChanged(nameof(ConnectionStatusColor));
             RaisePropertyChanged(nameof(CardConnectionStatusColor));
@@ -128,7 +154,8 @@ namespace _1RM.View
                 if (_server != value)
                 {
                     _server = value;
-                    SetConnectionStatus(null, "正在检测目标端口是否可达");
+                    SetRemoteSessionStatus(null);
+                    SetConnectionStatus(null, "Shell.CheckingHint");
                     _server.Tags = _server.Tags.Select(x => x.ToLower()).ToList();
 
                     if (ConverterNoteToVisibility.IsVisible(_server.Note))
@@ -245,6 +272,12 @@ namespace _1RM.View
 
 
         #region CMD
+        private RelayCommand? _cmdManageRemoteSessions;
+        public RelayCommand CmdManageRemoteSessions => _cmdManageRemoteSessions ??= new RelayCommand(_ =>
+        {
+            if (Server is ProtocolBaseWithAddressPort endpoint)
+                new RemoteSessionsWindow(endpoint.Address, Server.DisplayName).Show();
+        });
 
         private RelayCommand? _cmdConnServer;
         public RelayCommand? CmdConnServer

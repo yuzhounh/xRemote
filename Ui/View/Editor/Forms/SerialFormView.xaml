@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="_1RM.View.Editor.Forms.SerialFormView"
+<UserControl x:Class="_1RM.View.Editor.Forms.SerialFormView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,18 +15,16 @@
 
             <Grid Style="{StaticResource EditorRowGrid}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="Serial port"></TextBlock>
-                    <Grid Style="{StaticResource EditorRowGridInput}" Width="100">
-                        <controls:AutoCompleteComboBox Text="{Binding New.SerialPort, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}"
-                                                       Width="100"
-                                                       Tag="e.g. COM1"
-                                                       Selections="{Binding New.SerialPorts, Mode=OneTime}"/>
-                    </Grid>
-                    <TextBlock Style="{StaticResource EditorRowGridTitleFollowing}" Width="70" Text="Speed(bps)"></TextBlock>
+                    <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="{DynamicResource Editor.SerialPort}"></TextBlock>
                     <Grid Style="{StaticResource EditorRowGridInput}">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="124" /></Grid.ColumnDefinitions>
+                        <controls:AutoCompleteComboBox Text="{Binding New.SerialPort, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}"
+                                                       Tag="{DynamicResource Editor.SerialExample}"
+                                                       Selections="{Binding New.SerialPorts, Mode=OneTime}"/>
+                        <TextBlock Grid.Column="1" Margin="12,0" Style="{StaticResource TextBlockBase}" VerticalAlignment="Center" Text="{DynamicResource Editor.BitRate}" />
                         <controls:AutoCompleteComboBox Text="{Binding New.BitRate, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}"
-                                                       MinWidth="100" HorizontalAlignment="Left"
-                                                       Tag="e.g. 9600"
+                                                       Grid.Column="2" MinWidth="100"
+                                                       Tag="{DynamicResource Editor.BitRateExample}"
                                                        Selections="{Binding New.BitRates, Mode=OneTime}"/>
                     </Grid>
                 </StackPanel>
@@ -40,7 +38,7 @@
                     <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="{DynamicResource server_editor_advantage_ssh_startup_auto_command}"></TextBlock>
                     <Grid Style="{StaticResource EditorRowGridInput}">
                         <TextBox Text="{Binding New.StartupAutoCommand, UpdateSourceTrigger=PropertyChanged}"
-                                                                  Tag="e.g. cd /home/user/Desktop/"></TextBox>
+                                                                  Tag="{DynamicResource Editor.CommandExample}"></TextBox>
                     </Grid>
                 </StackPanel>
             </Grid>-->
@@ -50,7 +48,7 @@
 
             <Grid Style="{StaticResource EditorRowGrid}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="Data bits"></TextBlock>
+                    <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="{DynamicResource Editor.DataBits}"></TextBlock>
                     <Grid Style="{StaticResource EditorRowGridInput}">
                         <ComboBox SelectedItem="{Binding New.DataBits}" ItemsSource="{Binding New.DataBitsCollection}">
                         </ComboBox>
@@ -60,7 +58,7 @@
 
             <Grid Style="{StaticResource EditorRowGrid}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="Stop bits"></TextBlock>
+                    <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="{DynamicResource Editor.StopBits}"></TextBlock>
                     <Grid Style="{StaticResource EditorRowGridInput}">
                         <ComboBox SelectedItem="{Binding New.StopBits}" ItemsSource="{Binding New.StopBitsCollection}">
                         </ComboBox>
@@ -70,9 +68,9 @@
 
             <Grid Style="{StaticResource EditorRowGrid}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="Parity"></TextBlock>
+                    <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="{DynamicResource Editor.Parity}"></TextBlock>
                     <Grid Style="{StaticResource EditorRowGridInput}">
-                        <ComboBox SelectedItem="{Binding New.Parity}" ItemsSource="{Binding New.ParityCollection}">
+                        <ComboBox SelectedItem="{Binding New.Parity}" ItemsSource="{Binding New.ParityCollection}" controls:OriginalParameterHint.Value="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" ItemContainerStyle="{StaticResource TechnicalDropdownItemStyle}"><ComboBox.ItemTemplate><DataTemplate><controls:LocalizedOptionText Value="{Binding}" ResourcePrefix="Serial." /></DataTemplate></ComboBox.ItemTemplate>
                         </ComboBox>
                     </Grid>
                 </StackPanel>
@@ -80,9 +78,9 @@
 
             <Grid Style="{StaticResource EditorRowGrid}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="Flow control"></TextBlock>
+                    <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="{DynamicResource Editor.FlowControl}"></TextBlock>
                     <Grid Style="{StaticResource EditorRowGridInput}">
-                        <ComboBox SelectedItem="{Binding New.FlowControl}" ItemsSource="{Binding New.FlowControlCollection}">
+                        <ComboBox SelectedItem="{Binding New.FlowControl}" ItemsSource="{Binding New.FlowControlCollection}" controls:OriginalParameterHint.Value="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" ItemContainerStyle="{StaticResource TechnicalDropdownItemStyle}"><ComboBox.ItemTemplate><DataTemplate><controls:LocalizedOptionText Value="{Binding}" ResourcePrefix="SerialFlow." /></DataTemplate></ComboBox.ItemTemplate>
                         </ComboBox>
                     </Grid>
                 </StackPanel>
@@ -90,14 +88,14 @@
 
             <Grid Style="{StaticResource EditorRowGrid}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="KiTTY Session"></TextBlock>
+                    <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="{DynamicResource Editor.KittySession}"></TextBlock>
                     <Grid Style="{StaticResource EditorRowGridInput}">
                         <TextBox Text="{Binding New.ExternalKittySessionConfigPath, UpdateSourceTrigger=PropertyChanged}"
                                  ToolTip="{DynamicResource server_editor_advantage_ssh_startup_auto_kitty_session_tip}"
-                                 Tag="{DynamicResource server_editor_advantage_ssh_startup_auto_kitty_session_tip}"
+                                 Tag="{DynamicResource Editor.SessionPathPlaceholder}"
                         ></TextBox>
                     </Grid>
-                    <Button VerticalAlignment="Stretch" Style="{StaticResource ButtonPrimaryStyle}" Margin="5 0 0 0" Content="{DynamicResource Select}" Click="ButtonSelectSessionConfigFile_OnClick"></Button>
+                    <Button VerticalAlignment="Top" Style="{StaticResource FormActionButtonStyle}" Margin="8 0 0 0" Content="{DynamicResource Select}" Click="ButtonSelectSessionConfigFile_OnClick"></Button>
                 </StackPanel>
             </Grid>
         </StackPanel>

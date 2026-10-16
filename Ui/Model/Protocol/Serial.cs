@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Newtonsoft.Json;
 using _1RM.Model.Protocol.Base;
@@ -181,15 +181,15 @@ namespace _1RM.Model.Protocol
                     case nameof(SerialPort):
                         {
                             if (string.IsNullOrWhiteSpace(SerialPort))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.SerialPortRequired");
                             break;
                         }
                     case nameof(BitRate):
                         {
                             if (string.IsNullOrWhiteSpace(BitRate))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.BitRateRequired");
                             if (!long.TryParse(BitRate, out _) && BitRate != ServerEditorDifferentOptions)
-                                return IoC.Translate("Not a number");
+                                return UiText.Get("Validation.BitRateInteger");
                             break;
                         }
                     default:

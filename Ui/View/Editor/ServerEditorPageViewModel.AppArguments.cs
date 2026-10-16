@@ -144,11 +144,7 @@ namespace _1RM.View.Editor
                         }
                         arguments = arguments.Distinct().ToList();
                         var vm = new ArgumentEditViewModel(protocol, arguments, o as AppArgument);
-                        MaskLayerController.ShowWindowWithMask(vm);
-                        Task.Factory.StartNew(async void () =>
-                        {
-                            await vm.WaitDialogResult();
-                        });
+                        MaskLayerController.ShowWindowWithMask(vm, onCloseWithTrue: SaveConfirmedEditorChange);
                     }
                 }, o => Server is LocalApp);
             }

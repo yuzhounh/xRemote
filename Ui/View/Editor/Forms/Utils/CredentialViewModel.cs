@@ -123,8 +123,15 @@ public class CredentialViewModel : NotifyPropertyChangedBaseScreen
                 }
             }
             RaisePropertyChanged(nameof(SelectedCredentialName));
+            _isUsePrivateKey = New.UsePrivateKeyForConnect;
+            RaisePropertyChanged(nameof(IsUsePrivateKey));
+            RaisePropertyChanged(nameof(IsManualCredential));
+            RaisePropertyChanged(nameof(IsVaultCredential));
         }
     }
+
+    public bool IsManualCredential => SelectedCredential == null;
+    public bool IsVaultCredential => !IsManualCredential;
 
     public string SelectedCredentialName
     {
@@ -220,15 +227,19 @@ public class CredentialViewModel : NotifyPropertyChangedBaseScreen
     {
         get
         {
-            return _cmdUseManuallyCredential ??= new RelayCommand(async (o) =>
+            return _cmdUseManuallyCredential ??= new RelayCommand((o) =>
             {
+                if (IsManualCredential) return;
                 if (_manuallyCache != null)
                 {
                     _credentialNameCache = SelectedCredential?.Name ?? "";
                     SelectedCredential = null;
-                    _manuallyCache.Address = "";
-                    _manuallyCache.Port = "";
-                    New.SetCredential(_manuallyCache, true);
+                    New.UserName = _manuallyCache.UserName;
+                    New.Password = _manuallyCache.Password;
+                    New.PrivateKey = _manuallyCache.PrivateKeyPath;
+                    New.UsePrivateKeyForConnect = !string.IsNullOrEmpty(_manuallyCache.PrivateKeyPath);
+                    _isUsePrivateKey = New.UsePrivateKeyForConnect;
+                    RaisePropertyChanged(nameof(IsUsePrivateKey));
                 }
             });
         }
@@ -239,18 +250,20 @@ public class CredentialViewModel : NotifyPropertyChangedBaseScreen
     {
         get
         {
-            return _cmdUseCredentialsVault ??= new RelayCommand(async (o) =>
+            return _cmdUseCredentialsVault ??= new RelayCommand((o) =>
             {
+                if (IsVaultCredential) return;
+                _manuallyCache = New.GetCredential();
                 if (Credentials.Count == 0)
                 {
                     // if nothing in the vault, add first
+                    RaisePropertyChanged(nameof(IsManualCredential));
+                    RaisePropertyChanged(nameof(IsVaultCredential));
                     CmdAdd.Execute(o);
+                    return;
                 }
-                _manuallyCache = New.GetCredential();
                 if (Credentials.Count != 0)
                 {
-                    _manuallyCache = New.GetCredential();
-                    IsUsePrivateKey = !string.IsNullOrEmpty(SelectedCredential?.PrivateKeyPath);
                     SelectedCredential = Credentials.FirstOrDefault(x => x.Name == _credentialNameCache)
                                          ?? Credentials.FirstOrDefault(x => x.Name == New.ServerEditorDifferentOptions)
                                          ?? Credentials.FirstOrDefault();

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -111,7 +111,7 @@ namespace _1RM.View.Settings.DataSource
 
                     if (!IoPermissionHelper.HasWritePermissionOnFile(newPath))
                     {
-                        MessageBoxHelper.ErrorAlert(IoC.Translate("string_database_error_permission_denied"), ownerViewModel: this);
+                        MessageBoxHelper.ErrorAlert(IoC.Translate("Shell.DatabasePermission"), ownerViewModel: this);
                         return;
                     }
 
@@ -204,15 +204,15 @@ namespace _1RM.View.Settings.DataSource
                     case nameof(Name):
                         {
                             if (string.IsNullOrWhiteSpace(_name))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.SourceNameRequired");
                             if (_dataSourceViewModel.SourceConfigs.Any(x => x != OrgSqliteConfig && string.Equals(x.DataSourceName.Trim(), _name.Trim(), StringComparison.CurrentCultureIgnoreCase)))
-                                return IoC.Translate(LanguageService.XXX_IS_ALREADY_EXISTED, _name);
+                                return UiText.Get("Validation.SourceNameExists", _name);
                             break;
                         }
                     case nameof(Path):
                         {
                             if (string.IsNullOrWhiteSpace(Path))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.DatabaseFileRequired");
                             break;
                         }
                 }

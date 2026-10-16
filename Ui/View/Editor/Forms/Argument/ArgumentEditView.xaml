@@ -1,171 +1,142 @@
-﻿<styles:WindowChromeBase x:Class="_1RM.View.Editor.Forms.Argument.ArgumentEditView"
-                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-                         xmlns:styles="clr-namespace:Shawn.Utils.WpfResources.Theme.Styles;assembly=Shawn.Utils.WpfResources"
-                         xmlns:Argument="clr-namespace:_1RM.View.Editor.Forms.Argument"
-                         mc:Ignorable="d" 
-                         ShowInTaskbar="False"
-                         SizeToContent="WidthAndHeight" 
-                         WindowStyle="None"
-                         Background="Transparent"
-                         MaxWidth="1800"
-                         AllowsTransparency="True"
-                         d:DataContext="{d:DesignInstance Argument:ArgumentEditViewModel}">
+<?xml version="1.0" ?><dialogs:FormDialogWindowBase xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:styles="clr-namespace:Shawn.Utils.WpfResources.Theme.Styles;assembly=Shawn.Utils.WpfResources" xmlns:Argument="clr-namespace:_1RM.View.Editor.Forms.Argument" x:Class="_1RM.View.Editor.Forms.Argument.ArgumentEditView" mc:Ignorable="d" ShowInTaskbar="False" SizeToContent="WidthAndHeight" MaxWidth="1800" d:DataContext="{d:DesignInstance Argument:ArgumentEditViewModel}" xmlns:layout="clr-namespace:_1RM.Controls" layout:EditorValidation.Enabled="True" xmlns:dialogs="clr-namespace:_1RM.View.Utils" Title="{DynamicResource 'Cmd parameter'}">
     <Window.Resources>
         <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBase}">
-            <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"></Setter>
-            <Setter Property="VerticalAlignment" Value="Center"></Setter>
-            <Setter Property="HorizontalAlignment" Value="Right"></Setter>
-            <Setter Property="TextWrapping" Value="Wrap"></Setter>
-            <Setter Property="Margin" Value="15 0 0 0"></Setter>
-            <Setter Property="Width" Value="100"></Setter>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,0,12,0"/>
+            <Setter Property="TextAlignment" Value="Right"/>
+            <Setter Property="Width" Value="Auto"/>
         </Style>
         <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxAccentStyle}">
-            <Setter Property="Height" Value="26"></Setter>
+            <Setter Property="Height" Value="Auto"/>
         </Style>
         <Style TargetType="PasswordBox" BasedOn="{StaticResource PasswordBoxAccentStyle}">
-            <Setter Property="Height" Value="26"></Setter>
+            <Setter Property="Height" Value="Auto"/>
         </Style>
         <Style TargetType="CheckBox" BasedOn="{StaticResource CheckBoxAccentStyle}">
-            <Setter Property="Margin" Value="10 0 0 0"></Setter>
+            <Setter Property="Margin" Value="10 0 0 0"/>
         </Style>
         <Style x:Key="ErrorTip" TargetType="TextBlock" BasedOn="{StaticResource TextBlockBase}">
-            <Setter Property="TextWrapping" Value="WrapWithOverflow"></Setter>
-            <Setter Property="Margin" Value="0 3 0 0"></Setter>
-            <Setter Property="Foreground" Value="Red"></Setter>
+            <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+            <Setter Property="Margin" Value="0 3 0 0"/>
+            <Setter Property="Foreground" Value="Red"/>
         </Style>
     </Window.Resources>
+    <dialogs:FormDialogWindowBase.DialogActions>
+        <StackPanel Margin="0,8,0,20" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Command="{Binding CmdSave}" Content="{DynamicResource Save}" MinWidth="100" Margin="10,0" />
+            <Button Command="{Binding CmdCancel}" Content="{DynamicResource Cancel}" MinWidth="100" Margin="10,0" />
+        </StackPanel>
+    </dialogs:FormDialogWindowBase.DialogActions>
 
-    <Border Background="{DynamicResource PrimaryMidBrush}"
-            BorderBrush="{DynamicResource PrimaryLightBrush}"
-            BorderThickness="1" 
-            CornerRadius="{StaticResource DefaultCornerRadius}" 
-            ClipToBounds="True">
+    <Border Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource PrimaryLightBrush}" BorderThickness="0" CornerRadius="0" ClipToBounds="True">
         <Grid IsSharedSizeScope="True">
 
-            <StackPanel Margin="20 0">
-                <TextBlock Text="{DynamicResource 'Cmd parameter'}" Margin="15" FontSize="{DynamicResource GlobalFontSizeSubtitle}" Height="30" HorizontalAlignment="Left" Width="Auto"></TextBlock>
+            <StackPanel Margin="24,20,24,20">
+
 
                 <StackPanel>
 
                     <Grid Margin="0 0 0 20">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="A" ></ColumnDefinition>
-                            <ColumnDefinition Width="280" SharedSizeGroup="B"></ColumnDefinition>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="280" SharedSizeGroup="B"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" Text="{DynamicResource Type}"></TextBlock>
-                        <ComboBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding Type}" ItemsSource="{Binding ArgumentTypes}"/>
+                        <TextBlock Grid.Column="0" Text="{DynamicResource Type}"/>
+                        <ComboBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding Type}" ItemsSource="{Binding ArgumentTypes}" layout:OriginalParameterHint.Value="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" ItemContainerStyle="{StaticResource TechnicalDropdownItemStyle}"><ComboBox.ItemTemplate><DataTemplate><layout:LocalizedOptionText Value="{Binding}" ResourcePrefix="ArgumentType."/></DataTemplate></ComboBox.ItemTemplate></ComboBox>
                     </Grid>
 
                     <Grid Margin="0 0 0 20">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="A" ></ColumnDefinition>
-                            <ColumnDefinition Width="280" SharedSizeGroup="B"></ColumnDefinition>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="280" SharedSizeGroup="B"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource Name}"></TextBlock>
-                        <TextBox Grid.Column="1" Name="TbName" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}" 
-                                 Validation.ErrorTemplate="{StaticResource ErrorTemplate}"
-                        />
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource Name}"/>
+                        <TextBox Grid.Column="1" Name="TbName" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}" Validation.ErrorTemplate="{StaticResource ErrorTemplate}"/>
                     </Grid>
 
                     <Grid Margin="0 0 0 20">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="A" ></ColumnDefinition>
-                            <ColumnDefinition Width="280" SharedSizeGroup="B"></ColumnDefinition>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="280" SharedSizeGroup="B"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource Prefix}"></TextBlock>
-                        <TextBox Name="TbKey"  Grid.Column="1"
-                                 Text="{Binding Key, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}" 
-                                 Validation.ErrorTemplate="{StaticResource ErrorTemplate}"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource Prefix}"/>
+                        <TextBox Name="TbKey" Grid.Column="1" Text="{Binding Key, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}" Validation.ErrorTemplate="{StaticResource ErrorTemplate}"/>
                     </Grid>
 
                     <Grid Margin="0 0 0 20">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="A" ></ColumnDefinition>
-                            <ColumnDefinition Width="280" SharedSizeGroup="B"></ColumnDefinition>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="280" SharedSizeGroup="B"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox Grid.Column="1" IsChecked="{Binding New.AddBlankAfterKey}" Margin="0" Content="{DynamicResource 'append blank after prefix'}"></CheckBox>
+                        <CheckBox Grid.Column="1" IsChecked="{Binding New.AddBlankAfterKey}" Margin="0" Content="{DynamicResource 'append blank after prefix'}"/>
                     </Grid>
 
                     <Grid Margin="0 0 0 20" Visibility="{Binding IsNullableVisibility}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="A" ></ColumnDefinition>
-                            <ColumnDefinition Width="280" SharedSizeGroup="B"></ColumnDefinition>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="280" SharedSizeGroup="B"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox Grid.Column="1" IsChecked="{Binding New.AddBlankAfterValue}" Margin="0" Content="{DynamicResource 'append blank after value'}"></CheckBox>
+                        <CheckBox Grid.Column="1" IsChecked="{Binding New.AddBlankAfterValue}" Margin="0" Content="{DynamicResource 'append blank after value'}"/>
                     </Grid>
 
                     <Grid Margin="0 0 0 20" Visibility="{Binding IsNullableVisibility}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="A" ></ColumnDefinition>
-                            <ColumnDefinition Width="280" SharedSizeGroup="B"></ColumnDefinition>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="280" SharedSizeGroup="B"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"/>
                         </Grid.ColumnDefinitions>
 
                         <Grid Grid.Row="0" Grid.Column="1">
-                            <CheckBox IsChecked="{Binding New.IsNullable}" Content="{DynamicResource Nullable}" Margin="0"></CheckBox>
+                            <CheckBox IsChecked="{Binding New.IsNullable}" Content="{DynamicResource Nullable}" Margin="0"/>
                         </Grid>
                     </Grid>
 
                     <Grid Margin="0 0 0 20">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="A" ></ColumnDefinition>
-                            <ColumnDefinition Width="280" SharedSizeGroup="B"></ColumnDefinition>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="280" SharedSizeGroup="B"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource Description}"></TextBlock>
-                        <TextBox Grid.Column="1" Text="{Binding New.Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}" 
-                                 Validation.ErrorTemplate="{StaticResource ErrorTemplate}"
-                        />
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource Description}"/>
+                        <TextBox Grid.Column="1" Text="{Binding New.Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}" Validation.ErrorTemplate="{StaticResource ErrorTemplate}"/>
                     </Grid>
 
                     <Grid Margin="0 0 0 20" Visibility="{Binding IsConst, Converter={StaticResource ConverterBool2Visible}}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="A" ></ColumnDefinition>
-                            <ColumnDefinition Width="280" SharedSizeGroup="B"></ColumnDefinition>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="280" SharedSizeGroup="B"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource 'Const value'}"></TextBlock>
-                        <TextBox Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}" />
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource 'Const value'}"/>
+                        <TextBox Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}"/>
                     </Grid>
 
 
                     <Grid Visibility="{Binding SelectionsVisibility}" Margin="0 0 0 20">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="A" ></ColumnDefinition>
-                            <ColumnDefinition Width="280" SharedSizeGroup="B"></ColumnDefinition>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="280" SharedSizeGroup="B"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="C"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{DynamicResource Selections}"></TextBlock>
-                        <TextBox Grid.Column="1" 
-                                 Text="{Binding Selections, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}" 
-                                 Validation.ErrorTemplate="{StaticResource ErrorTemplate}"
-                                 Height="80"
-                                 AcceptsReturn="True"
-                                 VerticalContentAlignment="Top"
-                                 HorizontalScrollBarVisibility="Auto"
-                                 InputMethod.IsInputMethodEnabled="False" InputScope="Number"
-                                 Tag="{Binding SelectionsTag}"></TextBox>
+                        <TextBlock Grid.Column="0" Text="{DynamicResource Selections}"/>
+                        <TextBox Grid.Column="1" Text="{Binding Selections, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}" Validation.ErrorTemplate="{StaticResource ErrorTemplate}" Height="80" AcceptsReturn="True" VerticalContentAlignment="Top" HorizontalScrollBarVisibility="Auto" InputMethod.IsInputMethodEnabled="False" InputScope="Number" Tag="{Binding SelectionsTag}"/>
                     </Grid>
                 </StackPanel>
 
 
-                <StackPanel Margin="0 0 0 20" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Command="{Binding CmdSave}" Content="{DynamicResource Save}" MinWidth="100" Margin="10 0"></Button>
-                    <Button Command="{Binding CmdCancel}" Content="{DynamicResource Cancel}" MinWidth="100" Margin="10 0"></Button>
-                </StackPanel>
             </StackPanel>
         </Grid>
     </Border>
-</styles:WindowChromeBase>
+</dialogs:FormDialogWindowBase>

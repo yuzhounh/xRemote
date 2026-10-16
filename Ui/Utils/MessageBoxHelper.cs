@@ -43,7 +43,8 @@ namespace _1RM.Utils
                 || ownerViewModel != null && ownerViewAware == null     // 设定了 owner 且 owner 不是 IViewAware
                 || ownerViewModel == null && mainWindowViewModel?.View is Window { ShowInTaskbar: false }) // 未设定 owner 且 MainWindow is hidden
             {
-                var ret = MessageBoxResult.Yes == MessageBox.Show(content, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var ret = MessageBoxResult.Yes == ThemedMessageBox.Show(content, title, MessageBoxButton.YesNo, MessageBoxImage.Question,
+                    buttonLabels: new Dictionary<MessageBoxResult, string> { { MessageBoxResult.Yes, yesButtonText }, { MessageBoxResult.No, noButtonText } });
                 return ret;
             }
             else
@@ -145,7 +146,7 @@ namespace _1RM.Utils
                     || ownerViewModel == null && mainWindowViewModel?.View is Window { ShowInTaskbar: false } // 未设定 owner 且 MainWindow is hidden
                     || ownerViewModel == null && mainWindowViewModel == null)
                 {
-                    MessageBox.Show(content, title, MessageBoxButton.OK, icon);
+                    ThemedMessageBox.Show(content, title, MessageBoxButton.OK, icon);
                 }
                 else
                 {

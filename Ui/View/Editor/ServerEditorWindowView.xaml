@@ -1,0 +1,43 @@
+<Window x:Class="_1RM.View.Editor.ServerEditorWindowView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:branding="clr-namespace:_1RM.Controls"
+        Width="940" Height="780" MinWidth="840" MinHeight="600"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        Background="{DynamicResource PrimaryMidBrush}" Title="{Binding WindowTitle}">
+    <Window.Template><ControlTemplate TargetType="Window"><AdornerDecorator><ContentPresenter /></AdornerDecorator></ControlTemplate></Window.Template>
+    <Grid Background="{DynamicResource PrimaryMidBrush}">
+        <Grid.RowDefinitions><RowDefinition x:Name="CaptionRow" Height="48" /><RowDefinition Height="*" /><RowDefinition Height="64" /></Grid.RowDefinitions>
+        <Grid x:Name="CaptionArea" Background="{DynamicResource PrimaryMidBrush}">
+            <branding:WindowCaptionTitle Text="{Binding WindowTitle}" />
+        </Grid>
+        <Border x:Name="CaptionReserve" Width="0" HorizontalAlignment="Right" />
+        <ContentControl x:Name="EditorBody" Grid.Row="1" Background="{DynamicResource BackgroundBrush}">
+            <ContentControl.Style><Style TargetType="ContentControl"><Style.Triggers>
+                <MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding RequiresExplicitSave}" Value="True" /><Condition Binding="{Binding IsSaving}" Value="True" /></MultiDataTrigger.Conditions><Setter Property="IsEnabled" Value="False" /></MultiDataTrigger>
+                <DataTrigger Binding="{Binding IsConfirmingProtocolChange}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+            </Style.Triggers></Style></ContentControl.Style>
+        </ContentControl>
+        <Border x:Name="SaveStatusFooter" Grid.Row="2" Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="0,1,0,0" Padding="24,8">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <TextBlock x:Name="SaveStatusText" Text="{Binding FooterStatus}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
+                           VerticalAlignment="Center" Margin="0,0,12,0" ToolTip="{Binding FooterStatus}"
+                           Foreground="{DynamicResource LauncherSecondaryBrush}" FontSize="{DynamicResource GlobalFontSizeBody}" AutomationProperties.LiveSetting="Polite" />
+                <Border x:Name="ProtocolPreviewBanner" Grid.Column="1" VerticalAlignment="Center"
+                        Visibility="{Binding IsProtocolPreview, Converter={StaticResource ConverterBool2Visible}}">
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <Button Content="{Binding ReturnProtocolButtonText}" Click="ReturnToSavedProtocol_OnClick"
+                                Style="{StaticResource ButtonBarPrimaryStyle}" MinHeight="40" Padding="12,4" Margin="0,0,8,0" />
+                        <Button Grid.Column="1" Content="{Binding ProtocolChangeButtonText}" Click="ConfirmProtocolChange_OnClick"
+                                Style="{StaticResource ButtonPrimaryStyle}" MinHeight="40" Padding="12,4" />
+                        <Grid.Style><Style TargetType="Grid"><Style.Triggers>
+                            <DataTrigger Binding="{Binding IsConfirmingProtocolChange}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+                        </Style.Triggers></Style></Grid.Style>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

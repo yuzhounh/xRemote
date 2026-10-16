@@ -99,6 +99,7 @@ namespace _1RM
         public static bool ExitingFlag = false;
         public static void Close(int exitCode = 0)
         {
+            if (!ExitingFlag && View.Editor.ServerEditorWindowView.DeferApplicationClose(() => Close(exitCode))) return;
             // workaround
             Task.Factory.StartNew(() =>
             {

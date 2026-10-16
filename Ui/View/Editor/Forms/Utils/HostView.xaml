@@ -13,13 +13,12 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="{DynamicResource Hostname}"></TextBlock>
                 <Grid Style="{StaticResource EditorRowGridInput}">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="76" /></Grid.ColumnDefinitions>
                     <TextBox Text="{Binding New.Address, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}"
-                             Tag="e.g. 192.168.0.101"></TextBox>
-                </Grid>
-                <TextBlock Style="{StaticResource EditorRowGridTitleFollowing}" Width="60" Text="{DynamicResource Port}"></TextBlock>
-                <Grid Style="{StaticResource EditorRowGridInput}">
+                             Tag="{DynamicResource Editor.HostExample}"></TextBox>
+                    <TextBlock Grid.Column="1" Margin="12,0" Style="{StaticResource TextBlockBase}" VerticalAlignment="Center" Text="{DynamicResource Port}" />
                     <TextBox Text="{Binding New.Port, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=True}"
-                             MinWidth="50" HorizontalAlignment="Left"
+                             Grid.Column="2" MinWidth="50"
                              InputMethod.IsInputMethodEnabled="False"
                              InputScope="Number"></TextBox>
                 </Grid>

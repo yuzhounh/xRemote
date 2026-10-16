@@ -22,7 +22,7 @@ namespace _1RM.View.ErrorReport
     /// <summary>
     /// Interaction logic for ErrorReportWindow.xaml
     /// </summary>
-    public partial class ErrorReportWindow : WindowChromeBase
+    public partial class ErrorReportWindow : _1RM.View.Utils.DialogWindowBase
     {
         public ErrorReportWindow(Exception e)
         {
@@ -76,15 +76,7 @@ namespace _1RM.View.ErrorReport
 
         private void Init()
         {
-            WinGrid.PreviewMouseDown += WinTitleBar_OnPreviewMouseDown;
-            WinGrid.PreviewMouseMove += WinTitleBar_OnPreviewMouseMove;
-
             IconCopyDone.Opacity = IconSaveDone.Opacity = 0;
-
-            BtnClose.Click += (sender, args) =>
-            {
-                Close();
-            };
         }
 
         private void BuildEnvironment(ref StringBuilder sb)

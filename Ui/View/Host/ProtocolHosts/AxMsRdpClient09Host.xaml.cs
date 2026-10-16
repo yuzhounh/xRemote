@@ -755,6 +755,9 @@ namespace _1RM.View.Host.ProtocolHosts
                 RdpInitPerformance();
                 RdpInitGateway();
                 _rdpSettings.ApplyRdpControlAdditionalSettings(_rdpClient!);
+                // Managed connections never revive themselves after a remote owner ends them.
+                if (_1RM.Service.DeviceControlClient.RequiresManualReconnect(_rdpSettings.Address))
+                    _rdpClient!.AdvancedSettings5.EnableAutoReconnect = false;
                 Status = ProtocolHostStatus.Initialized;
             }
             catch (Exception e)

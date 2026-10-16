@@ -39,13 +39,14 @@ namespace _1RM.Controls
         protected static void OnDependencyPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             var target = (BindableAvalonEditor)obj;
-
-            if (target.Document != null)
+            var newValue = args.NewValue as string ?? "";
+            // Document edits (including Undo/Redo) already contain this text.
+            // Replacing it again would create an edit and discard the redo stack.
+            if (target.Document != null && target.Document.Text != newValue)
             {
                 var caretOffset = target.CaretOffset;
-                var newValue = args.NewValue ?? "";
-                target.Document.Text = (string)newValue;
-                target.CaretOffset = Math.Min(caretOffset, newValue?.ToString()?.Length ?? 0);
+                target.Document.Text = newValue;
+                target.CaretOffset = Math.Min(caretOffset, newValue.Length);
             }
         }
 
@@ -53,7 +54,8 @@ namespace _1RM.Controls
         {
             if (this.Document != null)
             {
-                Text = this.Document.Text;
+                SetCurrentValue(TextProperty, this.Document.Text);
+                RaisePropertyChanged(nameof(Text));
             }
 
             base.OnTextChanged(e);

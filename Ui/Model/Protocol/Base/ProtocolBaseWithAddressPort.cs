@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json;
 using System.ComponentModel;
@@ -152,7 +152,7 @@ namespace _1RM.Model.Protocol.Base
                         {
                             if (this.ShowAddressInput() && string.IsNullOrWhiteSpace(Address))
                             {
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.AddressRequired");
                             }
                             break;
                         }
@@ -161,9 +161,9 @@ namespace _1RM.Model.Protocol.Base
                             if (this.ShowPortInput())
                             {
                                 if (string.IsNullOrWhiteSpace(Port))
-                                    return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                    return UiText.Get("Validation.PortRequired");
                                 if (!long.TryParse(Port, out _) && Port != ServerEditorDifferentOptions)
-                                    return IoC.Translate("Not a number");
+                                    return UiText.Get("Validation.PortInteger");
                             }
                             break;
                         }

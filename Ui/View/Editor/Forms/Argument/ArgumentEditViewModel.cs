@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -151,8 +151,8 @@ namespace _1RM.View.Editor.Forms.Argument
         }
 
         public string SelectionsTag => Type == AppArgumentType.Selection
-            ? IoC.Translate("One option per line") + ". " + IoC.Translate("Use vertical lines to separate descriptions") + "\r\ne.g. \r\n1|Yes\r\n0|No"
-            : IoC.Translate("One option per line") + ". " + "\r\ne.g. \r\nApple\r\nBanana";
+            ? UiText.Get("Editor.SelectionListPlaceholder")
+            : UiText.Get("Editor.SuggestedValuesPlaceholder");
 
 
         private RelayCommand? _cmdSave;
@@ -290,7 +290,7 @@ namespace _1RM.View.Editor.Forms.Argument
                 }
                 else
                 {
-                    return new Tuple<bool, string>(false, $"`{IoC.Translate("Selections")}` {IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY)}");
+                    return new Tuple<bool, string>(false, UiText.Get("Validation.SelectionsRequired"));
                 }
             }
             return new Tuple<bool, string>(true, "");
@@ -327,7 +327,7 @@ namespace _1RM.View.Editor.Forms.Argument
                         {
                             if (Type == AppArgumentType.Flag && string.IsNullOrEmpty(Key))
                             {
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.ArgumentKeyRequired");
                             }
                             break;
                         }

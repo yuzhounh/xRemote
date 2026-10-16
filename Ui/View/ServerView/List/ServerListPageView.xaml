@@ -142,7 +142,7 @@
                 <Setter Property="Width" Value="8" />
                 <Setter Property="HorizontalAlignment" Value="Right" />
                 <Setter Property="Cursor" Value="SizeWE" />
-                <Setter Property="ToolTip" Value="拖动调整列宽，松开后自动保存" />
+                <Setter Property="ToolTip" Value="{DynamicResource Shell.ColumnResizeHint}" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Thumb">
@@ -452,12 +452,12 @@
                         <GridSplitter Grid.Column="4" VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="3" Background="Gray"
                                       Visibility="{Binding BriefNoteVisibility}" />
 
-                        <Button Grid.Column="1" HorizontalContentAlignment="Left" Margin="0 0 10 0"
+                        <Button Grid.Column="1" HorizontalContentAlignment="Left" Margin="0 0 10 0" Padding="0" BorderThickness="0"
                                 Style="{StaticResource ButtonBarPrimaryStyle}"
                                 attachProperty:VisionElement.BorderCornerRadius="{StaticResource DefaultCornerRadius}"
                                 Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource BackgroundTextBrush}"
-                                ToolTip="目标端口连通状态">
-                            <TextBlock Text="状态" Margin="18,5,5,5" HorizontalAlignment="Left"
+                                ToolTip="{DynamicResource Shell.PortStatus}">
+                            <TextBlock Text="{DynamicResource Shell.Status}" Margin="18,5,5,5" HorizontalAlignment="Left"
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
                         </Button>
 
@@ -528,7 +528,7 @@
                                                                     <!--drag this element to sort groups-->
                                                                     <Grid Background="Transparent"
                                                                           Cursor="SizeNS"
-                                                                          ToolTip="Drag to reorder groups"
+                                                                          ToolTip="{DynamicResource Shell.ReorderGroups}"
                                                                           PreviewMouseDown="ServerListExpanderIcon_OnPreviewMouseDown"
                                                                           PreviewMouseMove="ServerList_PreviewMouseMoveEvent">
                                                                         <Grid.Style>
@@ -839,13 +839,7 @@
 
         <!-- tags list -->
         <Grid VerticalAlignment="Top">
-            <Border BorderThickness="0 0 0 1" BorderBrush="{DynamicResource AccentMidBrush}" Background="{DynamicResource PrimaryTextBrush}" Height="20">
-                <Border.Effect>
-                    <DropShadowEffect ShadowDepth="3" Direction="270"  Opacity="0.6" Color="Black"></DropShadowEffect>
-                </Border.Effect>
-            </Border>
-
-            <Border BorderThickness="0 0 0 2" BorderBrush="{DynamicResource AccentMidBrush}" Background="{DynamicResource PrimaryMidBrush}">
+            <controls:PixelHeaderBorder Background="{DynamicResource PrimaryMidBrush}">
                 <Grid MinHeight="20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -1120,7 +1114,7 @@
                         </Border>
                     </Popup>
                 </Grid>
-            </Border>
+            </controls:PixelHeaderBorder>
         </Grid>
     </Grid>
 </serverView:ServerViewBase>

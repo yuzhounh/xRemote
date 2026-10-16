@@ -100,7 +100,7 @@ namespace _1RM.Service
                 // A language/recent-list change can originate inside the old menu's click handler.
                 if (previousMenu != null)
                     Application.Current.Dispatcher.BeginInvoke(new Action(previousMenu.Dispose));
-                var open = new ToolStripMenuItem($"打开 {Assert.APP_DISPLAY_NAME}");
+                var open = new ToolStripMenuItem(UiText.Get("Shell.OpenApp", Assert.APP_DISPLAY_NAME));
                 open.Click += (_, _) => IoC.Get<MainWindowViewModel>().ShowMe();
                 menu.Items.Add(open);
                 if (IoC.Get<ConfigurationService>().General.ShowRecentlySessionInTray)

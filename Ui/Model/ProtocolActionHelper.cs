@@ -27,7 +27,7 @@ public static class ProtocolActionHelper
                 if (IoC.Get<SessionControlService>().TabWindowCount > 0)
                 {
                     actions.Add(new ProtocolAction(
-                        actionName: IoC.Translate("Connect (New window)"),
+                        actionName: () => IoC.Translate("Connect (New window)"),
                         action: () => { GlobalEventHelper.OnRequestServerConnect?.Invoke(server, fromView: $"{nameof(LauncherWindowView)} - Action - New window", assignTabToken: DateTime.Now.Ticks.ToString()); }
                     ));
                 }
@@ -37,7 +37,7 @@ public static class ProtocolActionHelper
                     foreach (var credential in protocol.AlternateCredentials)
                     {
                         actions.Add(new ProtocolAction(
-                            actionName: IoC.Translate("Connect") + $" ({IoC.Translate("with alternative")} `{credential.Name}`)",
+                            actionName: () => IoC.Translate("Connect") + $" ({IoC.Translate("with alternative")} `{credential.Name}`)",
                             action: () => { GlobalEventHelper.OnRequestServerConnect?.Invoke(server, fromView: $"{nameof(LauncherWindowView)} - Action - AlternateCredentials", assignCredentialName: credential.Name); }
                         ));
                     }
@@ -48,12 +48,12 @@ public static class ProtocolActionHelper
                 if (protocolConfigurationService.ProtocolConfigs.ContainsKey(server.Protocol)
                     && protocolConfigurationService.ProtocolConfigs[server.Protocol].Runners.Count > 1)
                 {
-                    //actions.Add(new ProtocolAction(IoC.Translate("Connect") + $" (Internal)", () => { GlobalEventHelper.OnRequestServerConnect?.Invoke(server.Id, assignRunnerName: protocolConfigurationService.ProtocolConfigs[server.Protocol].Runners.First().Name, fromView: nameof(LauncherWindowView)); }));
+                    //actions.Add(new ProtocolAction(() => IoC.Translate("Connect") + $" (Internal)", () => { GlobalEventHelper.OnRequestServerConnect?.Invoke(server.Id, assignRunnerName: protocolConfigurationService.ProtocolConfigs[server.Protocol].Runners.First().Name, fromView: nameof(LauncherWindowView)); }));
                     foreach (var runner in protocolConfigurationService.ProtocolConfigs[server.Protocol].Runners)
                     {
                         if (runner is InternalDefaultRunner) continue;
                         if (runner is ExternalRunner { IsExeExisted: false }) continue;
-                        actions.Add(new ProtocolAction(IoC.Translate("Connect") + $" (via {runner.Name})", () =>
+                        actions.Add(new ProtocolAction(() => UiText.Get("Shell.ConnectVia", runner.Name), () =>
                         {
                             GlobalEventHelper.OnRequestServerConnect?.Invoke(server, fromView: $"{nameof(LauncherWindowView)} - Action - {runner.Name}", assignRunnerName: runner.Name);
                         }));
@@ -63,17 +63,17 @@ public static class ProtocolActionHelper
 
             if (writable)
             {
-                actions.Add(new ProtocolAction(IoC.Translate("Edit"), () =>
+                actions.Add(new ProtocolAction(() => IoC.Translate("Edit"), () =>
                 {
                     GlobalEventHelper.OnRequestGoToServerEditPage?.Invoke(server: server, showAnimation: false);
                 }));
-                actions.Add(new ProtocolAction(IoC.Translate("Duplicate"), () =>
+                actions.Add(new ProtocolAction(() => IoC.Translate("Duplicate"), () =>
                 {
                     GlobalEventHelper.OnRequestGoToServerDuplicatePage?.Invoke(server: server, showAnimation: false);
                 }));
                 if (!forTabHeader)
                 {
-                    actions.Add(new ProtocolAction(IoC.Get<ILanguageService>().Translate("Delete"), () =>
+                    actions.Add(new ProtocolAction(() => IoC.Get<ILanguageService>().Translate("Delete"), () =>
                     {
                         if (true == MessageBoxHelper.Confirm(IoC.Translate("confirm_to_delete_selected"), ownerViewModel: IoC.Get<MainWindowViewModel>()))
                         {
@@ -87,7 +87,7 @@ public static class ProtocolActionHelper
 
         if (server is ProtocolBaseWithAddressPort protocolServerWithAddrPortBase)
         {
-            actions.Add(new ProtocolAction(IoC.Translate("server_card_operate_copy_address"),
+            actions.Add(new ProtocolAction(() => IoC.Translate("server_card_operate_copy_address"),
                 () =>
                 {
                     try
@@ -109,7 +109,7 @@ public static class ProtocolActionHelper
         {
             if (server is ProtocolBaseWithAddressPortUserPwd tmp)
             {
-                actions.Add(new ProtocolAction(IoC.Translate("server_card_operate_copy_username"),
+                actions.Add(new ProtocolAction(() => IoC.Translate("server_card_operate_copy_username"),
                     () =>
                     {
                         try
@@ -125,7 +125,7 @@ public static class ProtocolActionHelper
 
             if (server is ProtocolBaseWithAddressPortUserPwd protocolServerWithAddrPortUserPwdBase)
             {
-                actions.Add(new ProtocolAction(IoC.Translate("server_card_operate_copy_password"),
+                actions.Add(new ProtocolAction(() => IoC.Translate("server_card_operate_copy_password"),
                     action: async () =>
                     {
                         if (await SecondaryVerificationHelper.VerifyAsyncUi() != true) return;
@@ -143,7 +143,7 @@ public static class ProtocolActionHelper
         }
 
 
-        actions.Add(new ProtocolAction(IoC.Translate("Create desktop shortcut"), () =>
+        actions.Add(new ProtocolAction(() => IoC.Translate("Create desktop shortcut"), () =>
         {
             var iconPath = AppStartupHelper.MakeIcon(server.Id, server.IconImg);
             AppStartupHelper.InstallDesktopShortcutByUlid(server.DisplayName, new[] { server.Id }, iconPath);
@@ -152,7 +152,7 @@ public static class ProtocolActionHelper
 
         if (server is SSH ssh)
         {
-            actions.Add(new ProtocolAction(IoC.Translate("Open SFTP"), () =>
+            actions.Add(new ProtocolAction(() => IoC.Translate("Open SFTP"), () =>
             {
                 // open SFTP when SSH is connected.
                 var sftp = new SFTP
@@ -173,7 +173,7 @@ public static class ProtocolActionHelper
 
         if (server is RDP rdp)
         {
-            actions.Add(new ProtocolAction(IoC.Translate("Export") + " *.rdp", () =>
+            actions.Add(new ProtocolAction(() => IoC.Translate("Export") + " *.rdp", () =>
             {
                 var path = SelectFileHelper.SaveFile(filter: "rdp|*.rdp", selectedFileName: rdp.DisplayName + ".rdp");
                 if (string.IsNullOrEmpty(path)) return;

@@ -1,8 +1,18 @@
 diff --git a/Shawn.Utils.WpfResources/Theme/Styles/ComboBoxStyle.xaml b/Shawn.Utils.WpfResources/Theme/Styles/ComboBoxStyle.xaml
-index 6fde077..01be0ce 100644
+index 6fde077..29ea766 100644
 --- a/Shawn.Utils.WpfResources/Theme/Styles/ComboBoxStyle.xaml
 +++ b/Shawn.Utils.WpfResources/Theme/Styles/ComboBoxStyle.xaml
-@@ -258,14 +258,15 @@
+@@ -230,7 +230,8 @@
+                         <TextBlock.Style>
+                             <Style TargetType="{x:Type TextBlock}">
+                                 <Setter Property="VerticalAlignment" Value="Center"/>
+-                                <Setter Property="Opacity" Value="0.4"/>
++                                <Setter Property="Opacity" Value="1"/>
++                                <Setter Property="Foreground" Value="{DynamicResource PlaceholderTextBrush}"/>
+                                 <Setter Property="Visibility" Value="Collapsed"/>
+                             </Style>
+                         </TextBlock.Style>
+@@ -258,14 +259,15 @@
                          Margin="8,0,8,8" Effect="{DynamicResource EffectShadow2}"
                          Background="{TemplateBinding Background}" 
                          BorderBrush="{TemplateBinding BorderBrush}" 
@@ -20,7 +30,7 @@ index 6fde077..01be0ce 100644
                              <ScrollViewer SnapsToDevicePixels="True">
                                  <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" 
                                                  TextElement.FontFamily="{TemplateBinding FontFamily}"
-@@ -359,4 +360,4 @@
+@@ -359,4 +361,4 @@
  
      <Style TargetType="ComboBox" BasedOn="{StaticResource ComboBoxAccentStyle}"></Style>
  
@@ -229,6 +239,237 @@ index 41ff8b3..05f0510 100644
      <Style TargetType="ContextMenu" BasedOn="{StaticResource ContextMenuPrimaryStyle}"></Style>
      <Style TargetType="MenuItem" BasedOn="{StaticResource MenuItemPrimaryStyle}"></Style>
      <Style TargetType="Separator" BasedOn="{StaticResource SeparatorPrimaryStyle}"></Style>
+-</ResourceDictionary>
+\ No newline at end of file
++</ResourceDictionary>
+diff --git a/Shawn.Utils.WpfResources/Theme/Styles/ScrollViewer.xaml b/Shawn.Utils.WpfResources/Theme/Styles/ScrollViewer.xaml
+index fa2847f..60b777f 100644
+--- a/Shawn.Utils.WpfResources/Theme/Styles/ScrollViewer.xaml
++++ b/Shawn.Utils.WpfResources/Theme/Styles/ScrollViewer.xaml
+@@ -10,6 +10,9 @@
+ 
+     <system:Double x:Key="ScrollBarWidthMouseOver">8</system:Double>
+     <system:Double x:Key="ScrollBarWidth">3</system:Double>
++    <SolidColorBrush x:Key="ScrollBarThumbBrush" Color="#EEF0F2"/>
++    <SolidColorBrush x:Key="ScrollBarThumbHoverBrush" Color="#DDE1E5"/>
++    <SolidColorBrush x:Key="ScrollBarThumbDragBrush" Color="#C4CAD1"/>
+ 
+     <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}" BasedOn="{StaticResource ControlBase}">
+         <Setter Property="OverridesDefaultStyle" Value="true"/>
+@@ -27,7 +30,7 @@
+     <Style x:Key="ScrollBarThumbBaseStyle" TargetType="{x:Type Thumb}" BasedOn="{StaticResource ControlBase}">
+         <Setter Property="OverridesDefaultStyle" Value="true"/>
+         <Setter Property="IsTabStop" Value="false"/>
+-        <Setter Property="Background" Value="{DynamicResource PrimaryMidBrush}"/>
++        <Setter Property="Background" Value="{DynamicResource ScrollBarThumbBrush}"/>
+         <Setter Property="Template">
+             <Setter.Value>
+                 <ControlTemplate TargetType="{x:Type Thumb}">
+@@ -35,18 +38,23 @@
+                             x:Name="rectangle"
+                             CornerRadius="4"
+                             Margin="0"
+-                            BorderThickness="1"
++                            BorderThickness="0"
+                             BorderBrush="{TemplateBinding BorderBrush}"
+                             Background="{TemplateBinding Background}"
+                             Height="{TemplateBinding Height}" SnapsToDevicePixels="True" Width="{TemplateBinding Width}"
+                             >
+-                        <Border.Effect>
+-                            <DropShadowEffect BlurRadius="3" ShadowDepth="1" Opacity="0.8"></DropShadowEffect>
+-                        </Border.Effect>
+                     </Border>
+                 </ControlTemplate>
+             </Setter.Value>
+         </Setter>
++        <Style.Triggers>
++            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type ScrollBar}}}" Value="True">
++                <Setter Property="Background" Value="{DynamicResource ScrollBarThumbHoverBrush}"/>
++            </DataTrigger>
++            <Trigger Property="IsDragging" Value="True">
++                <Setter Property="Background" Value="{DynamicResource ScrollBarThumbDragBrush}"/>
++            </Trigger>
++        </Style.Triggers>
+     </Style>
+ 
+     <Style x:Key="ScrollBarBaseStyle" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource ControlBase}">
+@@ -76,9 +84,7 @@
+                             <Track.Thumb>
+                                 <Thumb x:Name="Thumb"
+                                        Style="{StaticResource ScrollBarThumbBaseStyle}" 
+-                                       BorderThickness="{TemplateBinding BorderThickness}"
+-                                       BorderBrush="{TemplateBinding attachProperty:VisionElement.BackgroundAccent}"
+-                                       Background="{TemplateBinding attachProperty:VisionElement.BackgroundAccent}"/>
++                                       BorderThickness="0"/>
+                             </Track.Thumb>
+                         </Track>
+                     </Grid>
+@@ -105,7 +111,6 @@
+                                 </BeginStoryboard>
+                             </Trigger.ExitActions>
+ 
+-                            <Setter TargetName="Thumb" Property="BorderBrush" Value="{Binding Path=(attachProperty:VisionElement.ForegroundAccent),RelativeSource={RelativeSource TemplatedParent}}"></Setter>
+                         </Trigger>
+                     </ControlTemplate.Triggers>
+                 </ControlTemplate>
+@@ -130,9 +135,7 @@
+                                     </Track.IncreaseRepeatButton>
+                                     <Track.Thumb>
+                                         <Thumb Name="Thumb" 
+-                                               Style="{StaticResource ScrollBarThumbBaseStyle}" 
+-                                               BorderBrush="{TemplateBinding attachProperty:VisionElement.BackgroundAccent}"
+-                                               Background="{TemplateBinding attachProperty:VisionElement.BackgroundAccent}"/>
++                                               Style="{StaticResource ScrollBarThumbBaseStyle}"/>
+                                     </Track.Thumb>
+                                 </Track>
+                             </Grid>
+@@ -158,7 +161,6 @@
+                                             </Storyboard>
+                                         </BeginStoryboard>
+                                     </Trigger.ExitActions>
+-                                    <Setter TargetName="Thumb" Property="BorderBrush" Value="{Binding Path=(attachProperty:VisionElement.ForegroundAccent),RelativeSource={RelativeSource TemplatedParent}}"></Setter>
+                                 </Trigger>
+                             </ControlTemplate.Triggers>
+                         </ControlTemplate>
+@@ -677,4 +679,4 @@
+     <Style x:Key="ScrollViewFlatAccentStyle" TargetType="ScrollViewer" BasedOn="{StaticResource ScrollViewFlatPrimaryStyle}">
+         <Setter Property="attachProperty:VisionElement.BackgroundAccent" Value="{DynamicResource AccentMidBrush}"/>
+     </Style>
+-</ResourceDictionary>
+\ No newline at end of file
++</ResourceDictionary>
+diff --git a/Shawn.Utils.WpfResources/Theme/Styles/TextBoxStyle.xaml b/Shawn.Utils.WpfResources/Theme/Styles/TextBoxStyle.xaml
+index 5bce518..8bfbf40 100644
+--- a/Shawn.Utils.WpfResources/Theme/Styles/TextBoxStyle.xaml
++++ b/Shawn.Utils.WpfResources/Theme/Styles/TextBoxStyle.xaml
+@@ -9,6 +9,8 @@
+     <Thickness x:Key="DefaultInputPadding">8,4</Thickness>
+ 
+     <Style x:Key="TextBoxBaseStyle" TargetType="TextBox" BasedOn="{StaticResource ControlBase}">
++        <Setter Property="MinHeight" Value="{DynamicResource DefaultControlHeight}" />
++        <Setter Property="VerticalAlignment" Value="Center" />
+         <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ErrorTemplate}" />
+         <Setter Property="HorizontalContentAlignment" Value="Left" />
+         <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+@@ -42,17 +44,17 @@
+                                 CornerRadius="{Binding Path=(attachProperty:VisionElement.BorderCornerRadius),RelativeSource={RelativeSource TemplatedParent}}"/>
+ 
+                         <TextBlock Text="{TemplateBinding Tag}" 
+-                                   FontSize="{DynamicResource GlobalFontSizeSmall}"
++                                   FontSize="{TemplateBinding FontSize}"
+                                    FontFamily="{TemplateBinding FontFamily}"
+                                    Margin="{TemplateBinding Padding}">
+                             <TextBlock.Style>
+                                 <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBase}">
+                                     <Setter Property="VerticalAlignment" Value="Center"/>
+-                                    <Setter Property="Opacity" Value="0.4"/>
++                                    <Setter Property="Opacity" Value="1"/>
+                                     <Setter Property="Foreground" Value="Transparent"/>
+                                     <Style.Triggers>
+                                         <DataTrigger Binding="{Binding Path=Text, RelativeSource={RelativeSource TemplatedParent}}" Value="">
+-                                            <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}, Path=Foreground}"/>
++                                            <Setter Property="Foreground" Value="{DynamicResource PlaceholderTextBrush}"/>
+                                         </DataTrigger>
+                                         <DataTrigger Binding="{Binding Path=AcceptsReturn, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                             <Setter Property="VerticalAlignment" Value="Top"/>
+@@ -106,6 +108,9 @@
+                 </ControlTemplate>
+             </Setter.Value>
+         </Setter>
++        <Style.Triggers>
++            <Trigger Property="AcceptsReturn" Value="True"><Setter Property="VerticalAlignment" Value="Stretch" /></Trigger>
++        </Style.Triggers>
+     </Style>
+ 
+     <Style x:Key="TextBoxPrimaryStyle" TargetType="TextBox" BasedOn="{StaticResource TextBoxBaseStyle}"/>
+@@ -128,7 +133,8 @@
+ 
+ 
+     <Style x:Key="PasswordBoxBaseStyleWithoutEye" TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource ControlBase}">
+-        <Setter Property="Height" Value="28" />
++        <Setter Property="MinHeight" Value="{DynamicResource DefaultControlHeight}" />
++        <Setter Property="Height" Value="Auto" />
+         <Setter Property="PasswordChar" Value="●" />
+         <Setter Property="VerticalContentAlignment" Value="Center" />
+         <Setter Property="SnapsToDevicePixels" Value="True" />
+@@ -180,25 +186,26 @@
+                                 <TextBlock Grid.Column="0" Grid.ColumnSpan="2" 
+                                            x:Name="PART_Tag" 
+                                            Cursor="IBeam"
+-                                           FontSize="{DynamicResource GlobalFontSizeSmall}"
++                                           FontSize="{TemplateBinding FontSize}"
+                                            Margin="{TemplateBinding Padding}"
+                                            Text="{TemplateBinding Tag}">
+                                     <TextBlock.Style>
+                                         <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBase}">
+                                             <Setter Property="VerticalAlignment" Value="Center"/>
+-                                            <Setter Property="Opacity" Value="0.4"/>
++                                            <Setter Property="Opacity" Value="1"/>
++                                            <Setter Property="Foreground" Value="{DynamicResource PlaceholderTextBrush}"/>
+                                             <Setter Property="Visibility" Value="Collapsed"/>
+                                         </Style>
+                                     </TextBlock.Style>
+                                 </TextBlock>
+ 
+ 
+-                                <TextBlock x:Name="PART_PlaceHolder" Grid.Column="0" Foreground="{DynamicResource BackgroundTextBrush}"
++                                <TextBlock x:Name="PART_PlaceHolder" Grid.Column="0" Foreground="{DynamicResource PlaceholderTextBrush}"
+                                            IsHitTestVisible="False" Margin="{TemplateBinding Padding}"
+                                            HorizontalAlignment="Left" VerticalAlignment="Center"
+                                            SnapsToDevicePixels="True"
+                                            Cursor="IBeam"
+-                                           Visibility="Collapsed" Opacity="0.6"
++                                           Visibility="Collapsed" Opacity="1"
+                                            TextAlignment="Center"
+                                            FontFamily="{TemplateBinding FontFamily}"
+                                            Text="{Binding Path=(attachProperty:PasswordBoxAttachProperty.PlaceHolder), RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
+@@ -255,7 +262,8 @@
+ 
+ 
+     <Style x:Key="PasswordBoxBaseStyle" TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource ControlBase}">
+-        <Setter Property="Height" Value="28" />
++        <Setter Property="MinHeight" Value="{DynamicResource DefaultControlHeight}" />
++        <Setter Property="Height" Value="Auto" />
+         <Setter Property="PasswordChar" Value="●" />
+         <Setter Property="VerticalContentAlignment" Value="Center" />
+         <Setter Property="SnapsToDevicePixels" Value="True" />
+@@ -308,14 +316,15 @@
+                                 <TextBlock Grid.Column="0" Grid.ColumnSpan="2" 
+                                            x:Name="PART_Tag" 
+                                            Cursor="IBeam"
+-                                           FontSize="{DynamicResource GlobalFontSizeSmall}"
++                                           FontSize="{TemplateBinding FontSize}"
+                                            FontFamily="{TemplateBinding FontFamily}"
+                                            Margin="{TemplateBinding Padding}"
+                                            Text="{TemplateBinding Tag}">
+                                     <TextBlock.Style>
+                                         <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBase}">
+                                             <Setter Property="VerticalAlignment" Value="Center"/>
+-                                            <Setter Property="Opacity" Value="0.4"/>
++                                            <Setter Property="Opacity" Value="1"/>
++                                            <Setter Property="Foreground" Value="{DynamicResource PlaceholderTextBrush}"/>
+                                             <Setter Property="Visibility" Value="Collapsed"/>
+                                         </Style>
+                                     </TextBlock.Style>
+@@ -336,12 +345,12 @@
+                                          FontSize="{TemplateBinding FontSize}"/>
+ 
+ 
+-                                <TextBlock x:Name="PART_PlaceHolder" Grid.Column="0" Foreground="{DynamicResource BackgroundTextBrush}"
++                                <TextBlock x:Name="PART_PlaceHolder" Grid.Column="0" Foreground="{DynamicResource PlaceholderTextBrush}"
+                                            IsHitTestVisible="False" Margin="{TemplateBinding Padding}"
+                                            HorizontalAlignment="Left" VerticalAlignment="Center"
+                                            SnapsToDevicePixels="True"
+                                            Cursor="IBeam"
+-                                           Visibility="Collapsed" Opacity="0.6"
++                                           Visibility="Collapsed" Opacity="1"
+                                            TextAlignment="Center"
+                                            Text="{Binding Path=(attachProperty:PasswordBoxAttachProperty.PlaceHolder), RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
+                                            FontFamily="{TemplateBinding FontFamily}"
+@@ -463,4 +472,4 @@
+ 
+ 
+     <Style BasedOn="{StaticResource PasswordBoxAccentStyle}" TargetType="PasswordBox"/>
 -</ResourceDictionary>
 \ No newline at end of file
 +</ResourceDictionary>

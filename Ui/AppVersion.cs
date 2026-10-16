@@ -9,7 +9,7 @@ namespace _1RM
         public const uint Patch = 0;
         public const uint Build = 0;
         // Increment only for an xRemote release; keep increasing across upstream upgrades.
-        public const uint ForkRevision = 8;
+        public const uint ForkRevision = 9;
         public const string BuildDate = "";
         public const string PreRelease = ""; // e.g. "alpha" "beta.2"
 

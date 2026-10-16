@@ -240,13 +240,19 @@
                             Visibility="{Binding DataContext.BriefNoteVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}"
                             Content="{Binding HoverNoteDisplayControl}"></ContentControl>
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5,0"
+            <Button Grid.Column="1" Command="{Binding CmdManageRemoteSessions}" Margin="5,0" Padding="0"
+                    BorderThickness="0" Background="Transparent" MinHeight="40"
+                    HorizontalAlignment="Stretch"
+                    VerticalContentAlignment="Center" HorizontalContentAlignment="Left"
                         VerticalAlignment="Center" ToolTip="{Binding ConnectionStatusHint}"
                         Visibility="{Binding ConnectionStatusVisibility}">
-                <Ellipse Width="7" Height="7" Margin="0,0,6,0"
+                <Button.Template><ControlTemplate TargetType="Button"><ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" /></ControlTemplate></Button.Template>
+                <StackPanel Orientation="Horizontal">
+                <Ellipse Width="7" Height="7" Margin="0,0,6,0" VerticalAlignment="Center"
                          Fill="{Binding ConnectionStatusColor, Converter={StaticResource ConverterColorHexString2Brush}}" />
-                <TextBlock Text="{Binding ConnectionStatusText}" Style="{StaticResource TextBlockBase}" />
+                <TextBlock Text="{Binding ConnectionStatusText}" Style="{StaticResource TextBlockBase}" VerticalAlignment="Center" />
             </StackPanel>
+            </Button>
 
             <!--address-->
             <TextBlock Margin="5 0 10 0"

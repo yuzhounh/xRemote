@@ -45,6 +45,8 @@
                 <Setter Property="Visibility" Value="Collapsed" />
             </Style>
             <Style x:Key="UniformOptionMenuItemStyle" TargetType="MenuItem" BasedOn="{StaticResource MenuItemPrimaryStyle}">
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="MinWidth" Value="100" />
                 <Setter Property="MinHeight" Value="28" />
                 <Setter Property="Padding" Value="8,6" />
@@ -89,6 +91,21 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            <Style x:Key="SearchCloseButtonStyle" TargetType="Button">
+                <Setter Property="Width" Value="28" /><Setter Property="Height" Value="28" />
+                <Setter Property="Background" Value="Transparent" /><Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
+                    <Border x:Name="Circle" CornerRadius="14" Background="{TemplateBinding Background}" BorderThickness="1" BorderBrush="Transparent">
+                        <Path Width="9" Height="9" Stretch="Fill" Data="M0,0 L9,9 M9,0 L0,9" Stroke="{TemplateBinding Foreground}" StrokeThickness="1.3" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Circle" Property="Background" Value="{DynamicResource MenuHoverBrush}" /></Trigger>
+                        <Trigger Property="IsPressed" Value="True"><Setter TargetName="Circle" Property="Background" Value="{DynamicResource MenuHoverBrush}" /><Setter TargetName="Circle" Property="Opacity" Value="0.7" /></Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Circle" Property="BorderBrush" Value="{DynamicResource AccentMidBrush}" /></Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate></Setter.Value></Setter>
+            </Style>
             <RoutedUICommand x:Key="CommandFocusFilter" Text="Focus on filter" />
         </ResourceDictionary>
     </styles:WindowChromeBase.Resources>
@@ -122,14 +139,7 @@
             </Grid.RowDefinitions>
 
             <Grid Background="Transparent" Name="WinTitleBar">
-                <StackPanel Orientation="Horizontal">
-                    <Grid Background="Transparent" Width="24" Height="24" Margin="5">
-                        <branding:AppLogo x:Name="TitleLogo" />
-                    </Grid>
-                    <TextBlock VerticalAlignment="Center" FontSize="16" Margin="8,0,0,0"
-                               Style="{StaticResource TextBlockBase}"
-                               Foreground="{DynamicResource PrimaryTextBrush}" Text="{Binding Title, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                </StackPanel>
+                <branding:WindowCaptionTitle Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
             </Grid>
 
             <!-- System Button Area -->
@@ -169,11 +179,12 @@
                        StaysOpen="False"
                        PlacementTarget="{Binding ElementName=CbPopForMenu}">
                     <Border CornerRadius="8" Padding="4" BorderThickness="1" BorderBrush="{DynamicResource MenuBorderBrush}" Background="{DynamicResource MenuSurfaceBrush}">
-                        <StackPanel Orientation="Vertical" MinWidth="138">
-                            <MenuItem Header="搜索" InputGestureText="Ctrl+F" Click="SearchConnections_OnClick" />
+                        <StackPanel x:Name="MainMenuItems" Orientation="Vertical">
+                            <StackPanel.Resources><ResourceDictionary><ResourceDictionary.MergedDictionaries><ResourceDictionary Source="/1Remote;component/Resources/Theme/CompactMainMenu.xaml" /></ResourceDictionary.MergedDictionaries></ResourceDictionary></StackPanel.Resources>
+                            <MenuItem Style="{StaticResource CompactMainMenuItemStyle}" Header="{DynamicResource Shell.Search}" InputGestureText="Ctrl+F" Click="SearchConnections_OnClick" />
                             <Separator Style="{StaticResource MenuDividerStyle}" />
 
-                            <MenuItem x:Name="ViewOptionsMenu" Header="{DynamicResource ListViewMode}">
+                            <MenuItem x:Name="ViewOptionsMenu" Style="{StaticResource CompactMainMenuItemStyle}" Header="{DynamicResource ListViewMode}">
                                 <MenuItem.Resources>
                                 </MenuItem.Resources>
                                 <MenuItem Style="{StaticResource UniformOptionMenuItemStyle}" Header="{DynamicResource ListViewMode_Card}" Command="{Binding CmdToggleCardView}">
@@ -225,7 +236,7 @@
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </MenuItem>
-                            <MenuItem x:Name="SortOptionsMenu" Header="{DynamicResource Sorting}">
+                            <MenuItem x:Name="SortOptionsMenu" Style="{StaticResource CompactMainMenuItemStyle}" Header="{DynamicResource Sorting}">
                                 <MenuItem.Resources>
                                     <Style TargetType="Path" x:Key="HeaderPathStyle">
                                         <Setter Property="Visibility" Value="Hidden" />
@@ -370,13 +381,13 @@
                                         <Path Style="{StaticResource MenuSelectionMarkStyle}"
                                               Visibility="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=MenuItem}, Converter={StaticResource ConverterBool2Visible}}" />
                                     </MenuItem.Icon>
-                                    <MenuItem.Header><TextBlock Text="降序排列" HorizontalAlignment="Left" /></MenuItem.Header>
+                                    <MenuItem.Header><TextBlock Text="{DynamicResource Shell.Descending}" HorizontalAlignment="Left" /></MenuItem.Header>
                                 </MenuItem>
                             </MenuItem>
-                            <MenuItem x:Name="ThemePresetMenu" Header="{DynamicResource Theme}" />
+                            <MenuItem x:Name="ThemePresetMenu" Style="{StaticResource CompactMainMenuItemStyle}" Header="{DynamicResource Theme}" />
                             <Separator Style="{StaticResource MenuDividerStyle}" />
-                            <MenuItem Header="{DynamicResource Options}" Command="{Binding CmdGoSysOptionsPage}" />
-                            <MenuItem Command="{Binding CmdGoAboutPage}">
+                            <MenuItem Style="{StaticResource CompactMainMenuItemStyle}" Header="{DynamicResource Options}" Command="{Binding CmdGoSysOptionsPage}" />
+                            <MenuItem Style="{StaticResource CompactMainMenuItemStyle}" Command="{Binding CmdGoAboutPage}">
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{DynamicResource About}" VerticalAlignment="Center"></TextBlock>
@@ -425,77 +436,17 @@
                 <ContentControl s:View.Model="{Binding ActiveServerViewModel}"/>
 
 
-                <ContentControl s:View.Model="{Binding SettingViewModel}">
-                    <ContentControl.Style>
-                        <Style TargetType="ContentControl">
-                            <Setter Property="Visibility" Value="Collapsed"></Setter>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ShowSetting}" Value="True">
-                                    <DataTrigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
-                                                    <DiscreteObjectKeyFrame KeyTime="00:00:0.1" Value="{x:Static Visibility.Visible}"/>
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ThicknessAnimation BeginTime="0:0:0.0" Storyboard.TargetProperty="Margin" From="1000 0 0 0" To="0" Duration="0:0:0.5"></ThicknessAnimation>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.EnterActions>
-                                    <DataTrigger.ExitActions>
-                                        <BeginStoryboard>
-                                            <Storyboard >
-                                                <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0 0 0 0" To="1000 0 0 0" Duration="0:0:0.3"></ThicknessAnimation>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
-                                                    <DiscreteObjectKeyFrame KeyTime="00:00:0.5" Value="{x:Static Visibility.Collapsed}"/>
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.ExitActions>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ContentControl.Style>
-                </ContentControl>
-                <ContentControl s:View.Model="{Binding EditorViewModel}">
-                    <ContentControl.Style>
-                        <Style TargetType="ContentControl">
-                            <Setter Property="Visibility" Value="Collapsed"></Setter>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding EditorViewModel}" Value="{x:Null}">
-                                    <DataTrigger.ExitActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
-                                                    <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ThicknessAnimation Storyboard.TargetProperty="Margin" AccelerationRatio="0.9" From="1000 0 0 0" To="0" Duration="0:0:0.5"></ThicknessAnimation>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.ExitActions>
-                                    <DataTrigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
-                                                    <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.EnterActions>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ContentControl.Style>
-                </ContentControl>
+
             </Grid>
             <Grid x:Name="ConnectionSearchBar" Grid.Row="0" Panel.ZIndex="100"
-                  Visibility="Collapsed" Width="360" Height="36" Margin="0,4,0,4"
+                  Visibility="Collapsed" Width="420" Height="38" Margin="0,4,0,4"
                   HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" SnapsToDevicePixels="True"
                   TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType">
-                <Border CornerRadius="10" Background="{DynamicResource PrimaryDarkBrush}" IsHitTestVisible="False">
-                    <Border.Effect><DropShadowEffect BlurRadius="14" ShadowDepth="3" Opacity="0.3" /></Border.Effect>
+                <Border CornerRadius="12" Background="{DynamicResource MenuSurfaceBrush}" IsHitTestVisible="False">
+                    <Border.Effect><DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.16" /></Border.Effect>
                 </Border>
-                <Border CornerRadius="10" Background="{DynamicResource PrimaryDarkBrush}"
-                        BorderBrush="{DynamicResource PrimaryLightBrush}" BorderThickness="1" Padding="10,6">
+                <Border CornerRadius="12" Background="{DynamicResource MenuSurfaceBrush}"
+                        BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="1" Padding="10,4,4,4">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" />
@@ -504,12 +455,12 @@
                         <TextBox x:Name="SearchConnectionsTextBox" BorderThickness="0"
                                  Style="{StaticResource ConnectionSearchTextBoxStyle}" Background="Transparent"
                                  Text="{Binding MainFilterString, UpdateSourceTrigger=PropertyChanged}"
-                                 Tag="搜索名称、目标或账户" KeyUp="MainFilter_OnKeyUp" VerticalContentAlignment="Center" />
+                                 Tag="{DynamicResource Shell.SearchHint}" KeyUp="MainFilter_OnKeyUp" VerticalContentAlignment="Center" />
                         <TextBlock Grid.Column="1" Text="{Binding ConnectionSearchSummary}" Margin="10,0" FontSize="14"
                                    Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center" />
-                        <Border Grid.Column="2" Width="1" Background="{DynamicResource PrimaryLightBrush}" Margin="0,2,6,2" />
-                        <Button Grid.Column="3" Content="×" Width="28" FontSize="18" ToolTip="关闭搜索 (Esc)"
-                                Style="{StaticResource ButtonBarPrimaryStyle}" Click="CloseConnectionSearch_OnClick" />
+                        <Border Grid.Column="2" Width="1" Background="{DynamicResource MenuBorderBrush}" Margin="0,4,4,4" />
+                        <Button Grid.Column="3" x:Name="CloseSearchButton" ToolTip="{DynamicResource Shell.CloseSearch}" AutomationProperties.Name="{DynamicResource Shell.CloseSearch}"
+                                Style="{StaticResource SearchCloseButtonStyle}" Click="CloseConnectionSearch_OnClick" />
                     </Grid>
                 </Border>
             </Grid>

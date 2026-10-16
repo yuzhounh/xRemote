@@ -23,6 +23,14 @@ namespace _1RM.Model
         {
             InitTimer();
             _configurationService = configurationService;
+            GlobalEventHelper.OnLanguageChanged += () =>
+            {
+                foreach (var row in VmItemList.ToArray())
+                {
+                    row.ClearActions();
+                    row.RefreshLanguage();
+                }
+            };
         }
 
         private DataSourceService? _sourceService;

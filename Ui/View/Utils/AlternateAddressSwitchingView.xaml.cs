@@ -6,7 +6,7 @@ using Shawn.Utils.WpfResources.Theme.Styles;
 
 namespace _1RM.View.Utils
 {
-    public partial class AlternateAddressSwitchingView : WindowChromeBase
+    public partial class AlternateAddressSwitchingView : DialogWindowBase
     {
         public double TopFrom
         {
@@ -17,6 +17,12 @@ namespace _1RM.View.Utils
         {
             Loaded += OnLoaded;
             Closed += OnClosed;
+        }
+
+        protected override void OnDialogClose()
+        {
+            if (DataContext is AlternateAddressSwitchingViewModel model) model.CmdCloseEnd.Execute(null);
+            else base.OnDialogClose();
         }
 
         private void OnClosed(object? sender, EventArgs e)

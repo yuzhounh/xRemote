@@ -57,7 +57,7 @@ namespace _1RM.View.Settings.Launcher
                     _configurationService.Launcher.HotKeyModifiers = value;
                     if (false == IoC.TryGet<LauncherWindowViewModel>()?.SetHotKey(LauncherEnabled, LauncherHotKeyModifiers, LauncherHotKeyKey))
                     {
-                        throw new ArgumentException();
+                        throw new ArgumentException(UiText.Get("hotkey_registered_fail"));
                     }
                     _configurationService.Save();
                     RaisePropertyChanged(nameof(LauncherHotKeyStr));
@@ -77,7 +77,7 @@ namespace _1RM.View.Settings.Launcher
                 {
                     if (false == IoC.TryGet<LauncherWindowViewModel>()?.SetHotKey(LauncherEnabled, LauncherHotKeyModifiers, LauncherHotKeyKey))
                     {
-                        throw new ArgumentException();
+                        throw new ArgumentException(UiText.Get("hotkey_registered_fail"));
                     }
                     _configurationService.Save();
                     RaisePropertyChanged(nameof(LauncherHotKeyStr));

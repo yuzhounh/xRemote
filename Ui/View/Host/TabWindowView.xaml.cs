@@ -99,7 +99,7 @@ namespace _1RM.View.Host
             var tabs = orderedTabs is { Length: > 0 } ? orderedTabs : Vm.Items.ToArray();
             if (tabs.Length > 0)
             {
-                menu.Items.Add(new MenuItem { Header = "当前标签页", IsEnabled = false });
+                menu.Items.Add(new MenuItem { Header = _1RM.Service.UiText.Get("Shell.CurrentTabs"), IsEnabled = false });
                 foreach (var tab in tabs)
                 {
                     var item = new MenuItem
@@ -126,10 +126,10 @@ namespace _1RM.View.Host
             if (recent.Length > 0)
             {
                 if (menu.Items.Count > 0) menu.Items.Add(new Separator());
-                menu.Items.Add(new MenuItem { Header = "最近使用", IsEnabled = false });
+                menu.Items.Add(new MenuItem { Header = _1RM.Service.UiText.Get("Shell.Recent"), IsEnabled = false });
             }
             if (recent.Length == 0 && tabs.Length == 0)
-                menu.Items.Add(new MenuItem { Header = "暂无最近连接", IsEnabled = false });
+                menu.Items.Add(new MenuItem { Header = _1RM.Service.UiText.Get("Shell.NoRecent"), IsEnabled = false });
             foreach (var entry in recent)
             {
                 var server = entry.Server;

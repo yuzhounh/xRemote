@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -19,9 +19,11 @@ namespace _1RM.View.Editor.Forms
     public class LocalAppFormViewModel : ProtocolBaseWithAddressPortUserPwdFormViewModel
     {
         public new LocalApp New { get; }
+        private string _presetCheckedExePath;
         public LocalAppFormViewModel(LocalApp localApp) : base(localApp)
         {
             New = localApp;
+            _presetCheckedExePath = localApp.ExePath;
             New.ArgumentList.CollectionChanged -= ArgumentListOnCollectionChanged;
             New.ArgumentList.CollectionChanged += ArgumentListOnCollectionChanged;
             CheckMacroRequirement();
@@ -312,7 +314,7 @@ namespace _1RM.View.Editor.Forms
                         {
                             if (RequiredHostName && !RequiredHostNameIsNullable && string.IsNullOrWhiteSpace(Address))
                             {
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.AddressRequired");
                             }
                             break;
                         }
@@ -321,9 +323,9 @@ namespace _1RM.View.Editor.Forms
                             if (RequiredPort)
                             {
                                 if (!RequiredPortIsNullable && string.IsNullOrWhiteSpace(Port))
-                                    return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                    return UiText.Get("Validation.PortRequired");
                                 if (!long.TryParse(Port, out _) && Port != New.ServerEditorDifferentOptions)
-                                    return IoC.Translate("Not a number");
+                                    return UiText.Get("Validation.PortInteger");
                             }
                             break;
                         }
@@ -331,7 +333,7 @@ namespace _1RM.View.Editor.Forms
                         {
                             if (RequiredUserName && !RequiredUserNameIsNullable && string.IsNullOrWhiteSpace(UserName))
                             {
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.UserRequired");
                             }
                             break;
                         }
@@ -339,7 +341,7 @@ namespace _1RM.View.Editor.Forms
                         {
                             if (RequiredPassword && !RequiredPasswordIsNullable && string.IsNullOrWhiteSpace(Password))
                             {
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.PasswordRequired");
                             }
                             break;
                         }
@@ -347,7 +349,7 @@ namespace _1RM.View.Editor.Forms
                         {
                             if (RequiredPrivateKey && !RequiredPrivateKeyIsNullable && string.IsNullOrWhiteSpace(PrivateKey))
                             {
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.PrivateKeyRequired");
                             }
                             break;
                         }
@@ -362,6 +364,8 @@ namespace _1RM.View.Editor.Forms
 
         public void ResSetArguments()
         {
+            if (string.Equals(_presetCheckedExePath, ExePath, StringComparison.OrdinalIgnoreCase)) return;
+            _presetCheckedExePath = ExePath;
             var t = AppArgumentHelper.GetPresetArgumentList(ExePath);
             if (t != null)
             {

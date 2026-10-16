@@ -37,9 +37,9 @@ namespace _1RM.Service.DataSource.DAO
             {
                 if (Status == EnumDatabaseStatus.OtherError)
                 {
-                    return "database: " + ExtendInfo;
+                    return UiText.Get("Settings.DatabaseDetails", ExtendInfo);
                 }
-                return Status.GetErrorInfo() + " (" + ExtendInfo + ")";
+                return string.IsNullOrEmpty(ExtendInfo) ? Status.GetErrorInfo() : UiText.Get("Settings.DatabaseStatusDetails", Status.GetErrorInfo(), ExtendInfo);
             }
         }
     }
@@ -49,26 +49,25 @@ namespace _1RM.Service.DataSource.DAO
     {
         public static string GetErrorInfo(this EnumDatabaseStatus result)
         {
-            var lang = IoC.Get<LanguageService>();
             switch (result)
             {
                 case EnumDatabaseStatus.AccessDenied:
-                    return "database: no write permission, or the database is currently in use by another program!";
+                    return UiText.Get("Settings.DatabaseAccessDenied");
 
                 case EnumDatabaseStatus.OK:
                     break;
 
                 case EnumDatabaseStatus.NotConnectedYet:
-                    return "database: database is not connected!";
+                    return UiText.Get("Settings.DatabaseNotConnected");
 
                 case EnumDatabaseStatus.LostConnection:
-                    return "database: database lost connection!";
+                    return UiText.Get("Settings.DatabaseDisconnected");
 
                 case EnumDatabaseStatus.EncryptKeyError:
-                    return $"database: your database is encrypted by a third-part build {Assert.APP_NAME}, this exe can not read your data correctly!";
+                    return UiText.Get("Settings.DatabaseEncryptionUnsupported");
 
                 case EnumDatabaseStatus.OtherError:
-                    return $"database: other error!";
+                    return UiText.Get("Settings.DatabaseOtherError");
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(result), result, null);

@@ -1,4 +1,4 @@
-﻿using _1RM.Model;
+using _1RM.Model;
 using _1RM.Model.Protocol;
 using _1RM.Model.Protocol.Base;
 using _1RM.Service;
@@ -77,6 +77,7 @@ namespace _1RM.View.Editor
         /// </summary>
         private ServerEditorPageViewModel(GlobalData globalData, ProtocolBase server, DataSourceBase addToDataSource, ParamsServerAddPreset? preset = null)
         {
+            _isExistingConnection = !server.IsTmpSession();
             PresetParams = preset;
             _globalData = globalData;
 
@@ -277,7 +278,14 @@ namespace _1RM.View.Editor
         public ProtocolBase Server
         {
             get => _server;
-            set => SetAndNotifyIfChanged(ref _server, value);
+            set
+            {
+                var previous = _server;
+                if (!SetAndNotifyIfChanged(ref _server, value)) return;
+                previous.PropertyChanged -= OnConnectionPropertyChanged;
+                if (_autoSaveSession != null) value.PropertyChanged += OnConnectionPropertyChanged;
+                NoteEditorInput();
+            }
         }
 
         public ObservableCollection<string> Runners { get; } = new ObservableCollection<string>();
@@ -288,11 +296,17 @@ namespace _1RM.View.Editor
             get => _selectedProtocol;
             set
             {
+                if (IsConfirmingProtocolChange)
+                {
+                    RaisePropertyChanged(nameof(SelectedProtocol));
+                    return;
+                }
                 if (IsBuckEdit == false)
                 {
                     // bulk edit do not allow change protocol
                     if (SetAndNotifyIfChanged(ref _selectedProtocol, value))
                     {
+                        if (SelectExistingProtocol(value.GetType())) return;
                         if (_orgServer.GetType() == Server.GetType())
                             _orgServer.Update(Server);
                         UpdateRunners(_selectedProtocol.Protocol);
@@ -332,9 +346,17 @@ namespace _1RM.View.Editor
                 if (_cmdSave != null) return _cmdSave;
                 _cmdSave = new((o) =>
                 {
-                    if (string.IsNullOrEmpty(Server.DisplayName) || EditorViewModel?.CanSave() != true)
+                    if (AutoSaveExisting)
+                    {
+                        _ = SaveExistingAsync();
+                        return;
+                    }
+                    if (IsSaving || !CanPersistConnection())
                         return;
 
+                    var completion = _explicitSaveCompletion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+                    IsSaving = true;
+                    SaveStatus = Text("Editor.Saving");
                     MaskLayerController.ShowMask(IoC.Get<ProcessingRingViewModel>(), IoC.Get<MainWindowViewModel>());
 
 
@@ -502,25 +524,34 @@ namespace _1RM.View.Editor
 
                             if (ret.IsSuccess)
                             {
-                                IoC.Get<MainWindowViewModel>().ShowList(true);
+                                Execute.OnUIThread(() =>
+                                {
+                                    IsSaving = false;
+                                    SaveStatus = Text("Editor.Saved");
+                                    completion.TrySetResult(true);
+                                    CloseRequested?.Invoke();
+                                });
                             }
                             else
                             {
+                                Execute.OnUIThread(() => SaveStatus = Text("Editor.SaveFailed"));
                                 MessageBoxHelper.ErrorAlert(ret.ErrorInfo);
                             }
                         }
                         catch (Exception e)
                         {
+                            Execute.OnUIThread(() => SaveStatus = Text("Editor.SaveFailed"));
                             UnifyTracing.Error(e);
                             MessageBoxHelper.ErrorAlert(e.Message);
                         }
                         finally
                         {
+                            Execute.OnUIThread(() => { IsSaving = false; completion.TrySetResult(false); });
                             MaskLayerController.HideMask();
                         }
                     });
 
-                }, o => (this.Server.DisplayName?.Trim() != "" && (EditorViewModel?.CanSave() ?? true)));
+                }, o => (!IsSaving && CanPersistConnection()));
                 return _cmdSave;
             }
         }
@@ -535,7 +566,7 @@ namespace _1RM.View.Editor
                 if (_cmdCancel != null) return _cmdCancel;
                 _cmdCancel = new RelayCommand((o) =>
                 {
-                    IoC.Get<MainWindowViewModel>().ShowList(false);
+                    CloseRequested?.Invoke();
                 });
                 return _cmdCancel;
             }
@@ -740,10 +771,12 @@ namespace _1RM.View.Editor
             {
                 return _cmdSelectImage ??= new RelayCommand((o) =>
                 {
-                    var dlg = new IconPopupDialogViewModel(Server.IconImg);
+                    var target = Server;
+                    var dlg = new IconPopupDialogViewModel(target.IconImg);
                     MaskLayerController.ShowWindowWithMask(dlg, onCloseWithTrue: () =>
                     {
-                        Server.IconBase64 = dlg.Icon.ToBase64();
+                        target.IconBase64 = dlg.Icon.ToBase64();
+                        SaveConfirmedEditorChange();
                     });
                 });
             }
@@ -817,6 +850,7 @@ namespace _1RM.View.Editor
                                 // add
                                 protocol.AlternateCredentials.Add(vm.New);
                             }
+                            SaveConfirmedEditorChange();
                             return true; // close the dialog
                         };
                         MaskLayerController.ShowWindowWithMask(vm);

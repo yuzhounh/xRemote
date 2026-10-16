@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
 using _1RM.Model.Protocol.Base;
 using _1RM.Service;
@@ -103,7 +103,8 @@ namespace _1RM.Model.Protocol
             rdpConfig.RedirectSmartCards = 1;
             rdpConfig.KeyboardHook = 2;
             rdpConfig.AudioCaptureMode = 1;
-            rdpConfig.AutoReconnectionEnabled = 1;
+            rdpConfig.ForceDisableAutoReconnect = _1RM.Service.DeviceControlClient.RequiresManualReconnect(Address);
+            rdpConfig.AutoReconnectionEnabled = rdpConfig.ForceDisableAutoReconnect ? 0 : 1;
 
             rdpConfig.RemoteApplicationMode = 1;
             rdpConfig.RemoteApplicationName = RemoteApplicationName;
@@ -140,13 +141,13 @@ namespace _1RM.Model.Protocol
                     case nameof(RemoteApplicationName):
                         {
                             if (string.IsNullOrWhiteSpace(RemoteApplicationName))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.RemoteAppNameRequired");
                             break;
                         }
                     case nameof(RemoteApplicationProgram):
                         {
                             if (string.IsNullOrWhiteSpace(RemoteApplicationProgram))
-                                return IoC.Translate(LanguageService.CAN_NOT_BE_EMPTY);
+                                return UiText.Get("Validation.RemoteAppPathRequired");
                             break;
                         }
                     default:
