@@ -161,7 +161,7 @@ namespace _1RM.Model.Protocol
         #endregion
         public override string GetHelpUrl()
         {
-            return "https://github.com/yuzhounh/xRemote/blob/main/docs/connection-editing.md#remoteapp";
+            return "https://yuzhounh.github.io/xRemote/connection-editing/#remoteapp";
         }
     }
 }

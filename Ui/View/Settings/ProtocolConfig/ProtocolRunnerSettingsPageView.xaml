@@ -196,7 +196,7 @@
 
 
                     <StackPanel Grid.Column="2" Style="{StaticResource ProtocolActionRailStyle}">
-                        <uiText:ProtocolHelpButton NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/external-runners.md#configuration" Style="{StaticResource ProtocolHelpButtonStyle}"/>
+                        <uiText:ProtocolHelpButton NavigateUri="https://yuzhounh.github.io/xRemote/external-runners/#configuration" Style="{StaticResource ProtocolHelpButtonStyle}"/>
                     <Button
                             Margin="0"
                             Background="Transparent"

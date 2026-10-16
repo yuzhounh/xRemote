@@ -72,7 +72,7 @@
                         <StackPanel>
                             <TextBlock Style="{StaticResource EditorDescriptionText}" Foreground="{DynamicResource ReadableAccentTextBrush}">
                                 <Run Text="{DynamicResource Editor.VncNotice}" />
-                                <Hyperlink NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/external-runners.md#configuration" Foreground="{DynamicResource ReadableAccentTextBrush}" TextDecorations="{x:Null}" controls:HyperlinkHelper.IsOpenExternal="True">
+                                <Hyperlink NavigateUri="https://yuzhounh.github.io/xRemote/external-runners/#configuration" Foreground="{DynamicResource ReadableAccentTextBrush}" TextDecorations="{x:Null}" controls:HyperlinkHelper.IsOpenExternal="True">
                                     <Run Text="{DynamicResource Editor.MoreDetails}" />
                                 </Hyperlink>
                             </TextBlock>

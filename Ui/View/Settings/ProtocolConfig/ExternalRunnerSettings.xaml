@@ -74,7 +74,7 @@
                 </controls:BindableAvalonEditor>
 
                 <StackPanel Grid.Column="2" Style="{StaticResource ProtocolActionRailStyle}">
-                    <layout:ProtocolHelpButton NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/external-runners.md#configuration" Style="{StaticResource ProtocolHelpButtonStyle}" ToolTip="{DynamicResource Editor.ConfigHelp}" AutomationProperties.Name="{DynamicResource Editor.ConfigHelp}"/>
+                    <layout:ProtocolHelpButton NavigateUri="https://yuzhounh.github.io/xRemote/external-runners/#configuration" Style="{StaticResource ProtocolHelpButtonStyle}" ToolTip="{DynamicResource Editor.ConfigHelp}" AutomationProperties.Name="{DynamicResource Editor.ConfigHelp}"/>
                     <layout:ProtocolHelpButton Command="{Binding DataContext.CmdShowProtocolHelp, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type protocolConfig:ProtocolRunnerSettingsPageView}}}" Style="{StaticResource ProtocolHelpButtonStyle}" ToolTip="{DynamicResource Editor.ParameterVariablesHint}" AutomationProperties.Name="{DynamicResource Editor.ParameterVariablesHint}" Tag="Info"/>
                 </StackPanel>
             </Grid>
@@ -163,7 +163,7 @@
                 <StackPanel Grid.Column="1" Grid.ColumnSpan="2">
                     <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Style="{StaticResource ProtocolActionColumnStyle}"/></Grid.ColumnDefinitions>
                         <TextBlock TextWrapping="Wrap" Margin="0" FontSize="{DynamicResource GlobalFontSizeSmall}" Text="{DynamicResource Settings.SpecialCharacterHint}" Opacity="0.8"/>
-                        <StackPanel Grid.Column="1" Style="{StaticResource ProtocolActionRailStyle}"><layout:ProtocolHelpButton NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/external-runners.md#special-characters" Style="{StaticResource ProtocolHelpButtonStyle}" ToolTip="{DynamicResource Editor.ConfigHelp}" AutomationProperties.Name="{DynamicResource Editor.ConfigHelp}"/></StackPanel>
+                        <StackPanel Grid.Column="1" Style="{StaticResource ProtocolActionRailStyle}"><layout:ProtocolHelpButton NavigateUri="https://yuzhounh.github.io/xRemote/external-runners/#special-characters" Style="{StaticResource ProtocolHelpButtonStyle}" ToolTip="{DynamicResource Editor.ConfigHelp}" AutomationProperties.Name="{DynamicResource Editor.ConfigHelp}"/></StackPanel>
                     </Grid>
                     <ListBox ItemsSource="{Binding ExternalRunner.SpecialCharacters}" BorderThickness="0" Background="Transparent" Padding="0" HorizontalContentAlignment="Stretch" Template="{StaticResource ProtocolPairListTemplate}">
                         <ListBox.Style>

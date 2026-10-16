@@ -72,7 +72,7 @@
                     <StackPanel>
                         <TextBlock Style="{StaticResource EditorDescriptionText}" Text="{DynamicResource Editor.RemoteAppNotice}"/>
                         <TextBlock Style="{StaticResource TextBlockBase}">
-                                <Hyperlink NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/connection-editing.md#remoteapp" Foreground="{DynamicResource ReadableAccentTextBrush}" TextDecorations="{x:Null}" controls:HyperlinkHelper.IsOpenExternal="True">
+                                <Hyperlink NavigateUri="https://yuzhounh.github.io/xRemote/connection-editing/#remoteapp" Foreground="{DynamicResource ReadableAccentTextBrush}" TextDecorations="{x:Null}" controls:HyperlinkHelper.IsOpenExternal="True">
                                     <Run Text="{DynamicResource Editor.ConfigHelp}"/>
                                 </Hyperlink>
                         </TextBlock>
@@ -159,7 +159,7 @@
                         </Grid>
 
                         <controls1:ProtocolHelpButton Style="{StaticResource ProtocolHelpButtonStyle}" VerticalAlignment="Top" Margin="2,0"
-                                                      NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/connection-editing.md#additional-settings" />
+                                                      NavigateUri="https://yuzhounh.github.io/xRemote/connection-editing/#additional-settings" />
                     </StackPanel>
                 </Grid>
                 <Grid Style="{StaticResource EditorRowGrid}">

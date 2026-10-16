@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/yuzhounh/xRemote/releases/latest">下载发布版</a> · <a href="#快速开始">快速开始</a> · <a href="docs/README.md">中文使用手册</a> · <a href="CHANGELOG.md">版本历史</a> · <a href="LICENSE">开源协议</a>
+  <a href="https://github.com/yuzhounh/xRemote/releases/latest">下载发布版</a> · <a href="#快速开始">快速开始</a> · <a href="https://yuzhounh.github.io/xRemote/">中文使用手册</a> · <a href="CHANGELOG.md">版本历史</a> · <a href="LICENSE">开源协议</a>
 </p>
 
 xRemote 是基于 [1Remote](https://github.com/1Remote/1Remote) 定制的 Windows 远程会话管理器，集中管理远程桌面、终端与文件传输连接，提供标签页、快捷搜索与多种主题。当前发布版本为 **xRemote 1.3.0 Rev.9**。
@@ -56,7 +56,7 @@ xRemote 是基于 [1Remote](https://github.com/1Remote/1Remote) 定制的 Window
 
 安装版默认使用 Windows AppData 保存配置；便携版将配置保存在程序目录。升级前退出旧版并保留已有配置、数据库和凭据文件。安装版卸载时保留用户配置。
 
-完整图文教程见 [中文使用手册](docs/README.md)，包括安装升级、快速开始、连接编辑、启动器与会话、外部运行器以及数据与凭据。文档中的当前本地界面改动与公开发行版的适用范围见手册目录。
+完整图文教程见 [中文使用手册](https://yuzhounh.github.io/xRemote/)，包括安装升级、快速开始、连接编辑、启动器与会话、外部运行器以及数据与凭据。[文档源码](docs/README.md)与项目一同维护。
 
 ## 从源码构建
 

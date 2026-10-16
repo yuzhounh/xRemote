@@ -223,7 +223,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="MySQL"></TextBlock>
                                 <uiText:ProtocolHelpButton Style="{StaticResource ProtocolHelpButtonStyle}" Margin="2,0"
-                                                           NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/data-and-credentials.md#online-database" />
+                                                           NavigateUri="https://yuzhounh.github.io/xRemote/data-and-credentials/#online-database" />
                             </StackPanel>
                         </MenuItem.Header>
                         <MenuItem.Icon>
@@ -236,7 +236,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="PostgreSQL"></TextBlock>
                                 <uiText:ProtocolHelpButton Style="{StaticResource ProtocolHelpButtonStyle}" Margin="2,0"
-                                                           NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/data-and-credentials.md#online-database" />
+                                                           NavigateUri="https://yuzhounh.github.io/xRemote/data-and-credentials/#online-database" />
                             </StackPanel>
                         </MenuItem.Header>
                         <MenuItem.Icon>
@@ -249,7 +249,7 @@
             </Menu>
 
             <uiText:ProtocolHelpButton Style="{StaticResource ProtocolHelpButtonStyle}" Margin="2,0"
-                                       NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/data-and-credentials.md#team-sharing" />
+                                       NavigateUri="https://yuzhounh.github.io/xRemote/data-and-credentials/#team-sharing" />
         </StackPanel>
     </Grid>
 </UserControl>

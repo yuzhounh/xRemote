@@ -242,7 +242,7 @@
                         <StackPanel Orientation="Horizontal">
                             <CheckBox Margin="0 2" VerticalAlignment="Center" IsChecked="{Binding New.MstscModeEnabled}" Content="{DynamicResource Enabled}" />
                             <controls:ProtocolHelpButton Style="{StaticResource ProtocolHelpButtonStyle}" Margin="3,0,0,0"
-                                                         NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/connection-editing.md#mstsc-mode" />
+                                                         NavigateUri="https://yuzhounh.github.io/xRemote/connection-editing/#mstsc-mode" />
                         </StackPanel>
                         <TextBlock Style="{StaticResource EditorDescriptionText}" Margin="0 5 0 0">
                             <Run Foreground="{DynamicResource SecondaryTextBrush}" Text="{DynamicResource 'In this mode RDP will start the session in the way mstsc.exe xxxx.rdp in CMD, it can offer more custom parameters.'}"/>
@@ -295,7 +295,7 @@
                         </Grid>
 
                         <controls:ProtocolHelpButton Style="{StaticResource ProtocolHelpButtonStyle}" VerticalAlignment="Top" Margin="2,0"
-                                                     NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/connection-editing.md#additional-settings" />
+                                                     NavigateUri="https://yuzhounh.github.io/xRemote/connection-editing/#additional-settings" />
                     </StackPanel>
                 </Grid>
                 <Grid Style="{StaticResource EditorRowGrid}">
