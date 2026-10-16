@@ -159,7 +159,7 @@ namespace _1RM.Utils
                 {
                     using var shortcut = new WindowsShortcut
                     {
-                        Path = Process.GetCurrentProcess().MainModule!.FileName!,
+                        Path = XRemoteAutoUpdate.LauncherPath,
                         WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory,
                         Arguments = $" --{AppStartupHelper.APP_START_MINIMIZED}",
                     };
@@ -192,7 +192,7 @@ namespace _1RM.Utils
 
             if (isSetSelfStart)
             {
-                key?.SetValue(appName, $@"""{Process.GetCurrentProcess().MainModule!.FileName!}"" --{AppStartupHelper.APP_START_MINIMIZED}");
+                key?.SetValue(appName, $@"""{XRemoteAutoUpdate.LauncherPath}"" --{AppStartupHelper.APP_START_MINIMIZED}");
             }
         }
 

@@ -28,6 +28,7 @@ internal sealed class NativeMainTitleBar
     private readonly DependencyPropertyDescriptor _backgroundDescriptor;
     private AppWindow? _appWindow;
     private bool _forwardingClose;
+    private INotifyPropertyChanged? _maskContext;
 
     internal NativeMainTitleBar(Window window, RowDefinition? row, FrameworkElement title,
         FrameworkElement menu, Action close, FrameworkElement? search = null, bool interceptToolWindowClose = false)
@@ -77,6 +78,8 @@ internal sealed class NativeMainTitleBar
             _window.Activated += UpdateColors;
             _window.Deactivated += UpdateColors;
             _window.Closed += OnClosed;
+            _window.DataContextChanged += OnMaskContextChanged;
+            ObserveMaskContext();
             if (_captionLayout != null) _window.LayoutUpdated += OnCaptionLayoutUpdated;
             _backgroundDescriptor.AddValueChanged(_window, UpdateColors);
             UpdateMetrics();
@@ -153,22 +156,50 @@ internal sealed class NativeMainTitleBar
         SetBrush("NativeCaptionHoverBrush", hover);
         SetBrush("NativeCaptionPressedBrush", pressed);
         var bar = _appWindow.TitleBar;
+        bool masked = _window.DataContext is IMaskLayerContainer { TopLevelViewModel: not null };
         // A transparent caption can expose the HWND's black clear color in WPF tool windows.
-        bar.ButtonBackgroundColor = NativeColor(background);
-        bar.ButtonInactiveBackgroundColor = NativeColor(background);
-        bar.ButtonForegroundColor = NativeColor(foreground);
-        bar.ButtonInactiveForegroundColor = NativeColor(inactive);
-        bar.ButtonHoverForegroundColor = NativeColor(foreground);
-        bar.ButtonPressedForegroundColor = NativeColor(foreground);
-        bar.ButtonHoverBackgroundColor = NativeColor(hover);
-        bar.ButtonPressedBackgroundColor = NativeColor(pressed);
+        bar.ButtonBackgroundColor = NativeColor(background, masked);
+        bar.ButtonInactiveBackgroundColor = NativeColor(background, masked);
+        bar.ButtonForegroundColor = NativeColor(foreground, masked);
+        bar.ButtonInactiveForegroundColor = NativeColor(inactive, masked);
+        bar.ButtonHoverForegroundColor = NativeColor(foreground, masked);
+        bar.ButtonPressedForegroundColor = NativeColor(foreground, masked);
+        bar.ButtonHoverBackgroundColor = NativeColor(hover, masked);
+        bar.ButtonPressedBackgroundColor = NativeColor(pressed, masked);
         // Windows preserves the red hover/pressed feedback on its Close button.
         int darkMode = dark ? 1 : 0;
         DwmSetWindowAttribute(new WindowInteropHelper(_window).Handle, 20, ref darkMode, sizeof(int));
     }
 
-    private static Windows.UI.Color NativeColor(Color color) => new()
-    { A = color.A, R = color.R, G = color.G, B = color.B };
+    private static Windows.UI.Color NativeColor(Color color, bool masked = false) => new()
+    {
+        A = color.A,
+        // Match ProcessingRingView's 50% black mask without changing the theme brushes.
+        R = masked ? (byte)(color.R * .5) : color.R,
+        G = masked ? (byte)(color.G * .5) : color.G,
+        B = masked ? (byte)(color.B * .5) : color.B
+    };
+
+    private void ObserveMaskContext()
+    {
+        if (_maskContext != null) _maskContext.PropertyChanged -= OnMaskPropertyChanged;
+        _maskContext = _window.DataContext is IMaskLayerContainer ? _window.DataContext as INotifyPropertyChanged : null;
+        if (_maskContext != null) _maskContext.PropertyChanged += OnMaskPropertyChanged;
+    }
+
+    private void OnMaskContextChanged(object sender, DependencyPropertyChangedEventArgs args)
+    {
+        ObserveMaskContext();
+        UpdateColors(null, EventArgs.Empty);
+    }
+
+    private void OnMaskPropertyChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        if (!string.IsNullOrEmpty(args.PropertyName) && args.PropertyName != nameof(IMaskLayerContainer.TopLevelViewModel)) return;
+        if (_window.Dispatcher.HasShutdownStarted) return;
+        if (_window.Dispatcher.CheckAccess()) UpdateColors(null, EventArgs.Empty);
+        else _window.Dispatcher.BeginInvoke(new Action(() => UpdateColors(null, EventArgs.Empty)));
+    }
 
     private void SetMetric(string key, double value)
     {
@@ -206,6 +237,8 @@ internal sealed class NativeMainTitleBar
 
     private void OnClosed(object? sender, EventArgs args)
     {
+        _window.DataContextChanged -= OnMaskContextChanged;
+        if (_maskContext != null) _maskContext.PropertyChanged -= OnMaskPropertyChanged;
         _window.SourceInitialized -= Initialize;
         _window.SizeChanged -= OnSizeChanged;
         _title.SizeChanged -= OnSizeChanged;

@@ -26,6 +26,7 @@ namespace _1RM.View
         {
             if (IoC.Get<ConfigurationService>().General.DoNotCheckNewVersion)
             {
+                XRemoteAutoUpdate.SetEnabled(false);
                 _checkUpdateTimer?.Stop();
                 return;
             }
@@ -83,6 +84,30 @@ namespace _1RM.View
             set => SetAndNotifyIfChanged(ref _isBreakingNewVersion, value);
         }
 
+        private string _updateStatus = "";
+        public string UpdateStatus { get => _updateStatus; set => SetAndNotifyIfChanged(ref _updateStatus, value); }
+        private bool _updateReady;
+        public bool UpdateReady
+        {
+            get => _updateReady;
+            set { if (SetAndNotifyIfChanged(ref _updateReady, value)) RaisePropertyChanged(nameof(UpdateAction)); }
+        }
+        public string UpdateAction => UpdateReady
+            ? UiText.Get("Update.Restart", "Restart and update")
+            : UiText.Get("Update.ReleaseNotes", "View release notes");
+
+        private void ReportUpdate(string status)
+        {
+            Execute.OnUIThread(() => UpdateStatus = status switch
+            {
+                "downloading" => UiText.Get("Update.Downloading", "Downloading update in the background"),
+                "verifying" => UiText.Get("Update.Verifying", "Preparing update"),
+                "ready" => UiText.Get("Update.Ready", "Update ready; takes effect next launch"),
+                "failed" => UiText.Get("Update.Retry", "Update incomplete; will retry later"),
+                _ => UiText.Get("Update.Latest", "You are up to date")
+            });
+        }
+
         public void CheckUpdateAsync()
         {
             if (IoC.Get<ConfigurationService>().General.DoNotCheckNewVersion) return;
@@ -100,8 +125,19 @@ namespace _1RM.View
                     if (result.NewerPublished && !IoC.Get<ConfigurationService>().General.DoNotCheckNewVersion)
                         OnNewVersionRelease(result);
                 });
+                if (result.NewerPublished && !IoC.Get<ConfigurationService>().General.DoNotCheckNewVersion)
+                {
+                    var ready = await XRemoteAutoUpdate.PrepareAsync(result.NewerUrl, ReportUpdate).ConfigureAwait(false);
+                    Execute.OnUIThread(() => UpdateReady = ready);
+                    if (ready) ReportUpdate("ready");
+                }
+                else ReportUpdate("latest");
             }
-            catch (Exception exception) { SimpleLogHelper.Warning(exception); }
+            catch (OperationCanceledException)
+            {
+                if (!IoC.Get<ConfigurationService>().General.DoNotCheckNewVersion) ReportUpdate("failed");
+            }
+            catch (Exception exception) { SimpleLogHelper.Warning(exception); ReportUpdate("failed"); }
             finally { Interlocked.Exchange(ref _checkingUpdate, 0); }
         }
 
@@ -110,15 +146,6 @@ namespace _1RM.View
             this.NewVersion = result.NewerVersion;
             this.NewVersionUrl = result.NewerUrl;
             this.IsBreakingNewVersion = result.NewerHasBreakChange;
-            var v = IoC.Get<ConfigurationService>().Engagement.BreakingChangeAlertVersion;
-            if (this.IsBreakingNewVersion
-                && VersionHelper.Version.FromString(result.NewerVersion) > v)
-            {
-                Execute.OnUIThreadSync(() =>
-                {
-                    IoC.Get<IWindowManager>().ShowDialog(IoC.Get<BreakingChangeUpdateViewModel>());
-                });
-            }
         }
 
 
@@ -141,12 +168,7 @@ namespace _1RM.View
             {
                 return _cmdUpdate ??= new RelayCommand((o) =>
                 {
-                    if (IsBreakingNewVersion)
-                    {
-                        MaskLayerController.ShowProcessingRing();
-                        IoC.Get<IWindowManager>().ShowDialog(IoC.Get<BreakingChangeUpdateViewModel>(), ownerViewModel: IoC.Get<MainWindowViewModel>());
-                        MaskLayerController.HideMask();
-                    }
+                    if (UpdateReady) App.Close(restartAfterUpdate: true);
                     else
                     {
                         HyperlinkHelper.OpenUriBySystem(NewVersionUrl);

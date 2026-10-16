@@ -6,7 +6,14 @@
     <s:String x:Key="Settings.Log.Warning">Warning</s:String>
     <s:String x:Key="Settings.Tabs">Tabs</s:String>
     <s:String x:Key="Settings.Misc">Other options</s:String>
-    <s:String x:Key="Settings.CheckNewVersion">Check for new versions</s:String>
+    <s:String x:Key="Settings.CheckNewVersion">Download updates automatically; install after exit</s:String>
+    <s:String x:Key="Update.Downloading">Downloading update in the background</s:String>
+    <s:String x:Key="Update.Verifying">Preparing update</s:String>
+    <s:String x:Key="Update.Ready">Update ready; takes effect next launch</s:String>
+    <s:String x:Key="Update.Retry">Update incomplete; will retry later</s:String>
+    <s:String x:Key="Update.Latest">You are up to date</s:String>
+    <s:String x:Key="Update.Restart">Restart and update</s:String>
+    <s:String x:Key="Update.ReleaseNotes">View release notes</s:String>
     <s:String x:Key="Settings.WindowTitle">Settings</s:String>
     <s:String x:Key="Settings.Appearance">Appearance</s:String>
     <s:String x:Key="Settings.DataAndCredentials">Data and credentials</s:String>

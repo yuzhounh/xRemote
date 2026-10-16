@@ -345,6 +345,7 @@ healthchecksdb
 /Ui/Resources/PuTTY
 /Ui/Resources/Languages/glossary_translated_by_google
 /control-private/
+/update-signing-private/
 **/.device-control.dpapi
 **/server.pfx
 /tmp/

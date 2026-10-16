@@ -516,7 +516,14 @@
 
     <ItemGroup>
         <Compile Include="..\control\shared\ControlModels.cs" Link="Service\ControlModels.cs" />
+        <Compile Include="..\Updater\UpdateCore.cs" Link="Service\UpdateCore.cs" />
+        <EmbeddedResource Include="..\Updater\update-public-key.xml" LogicalName="XRemote.UpdatePublicKey" />
     </ItemGroup>
+
+    <Target Name="PublishSilentUpdater" AfterTargets="Publish" Condition="'$(Configuration)'=='Release' and '$(SkipSilentUpdater)'!='true'">
+        <Exec Command="powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\..\scripts\Build-UpdateLauncher.ps1&quot; -PublishDirectory &quot;$(PublishDir).&quot;" />
+        <Exec Command="dotnet publish &quot;$(MSBuildProjectDirectory)\..\Updater\Updater.csproj&quot; -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -o &quot;$(PublishDir)updater&quot; -m:2" />
+    </Target>
 
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)'!='Debug' and '$(SkipDeveloperBuildHooks)'!='true'">
         <Exec Command="powershell.exe ..\scripts\Set-Secret.ps1 -filePath .\Ui\Assert.cs -Pattern &quot;===REPLACE_ME_WITH_APP_CENTER_SECRET===&quot; -localSecretFilePath &quot;C:\1Remote_Secret\APP_CENTER_SECRET_1REMOTE.txt&quot;&#xD;&#xA;powershell.exe ..\scripts\Set-Secret.ps1 -filePath .\Ui\Assert.cs -Pattern &quot;===REPLACE_ME_WITH_SENTRY_IO_DEN===&quot; -localSecretFilePath &quot;C:\1Remote_Secret\SENTRY_IO_DEN.txt&quot;&#xD;&#xA;powershell.exe ..\scripts\Set-Secret.ps1 -filePath .\Ui\Assert.cs -Pattern &quot;===REPLACE_ME_WITH_SALT===&quot; -localSecretFilePath &quot;C:\1Remote_Secret\Salt.txt&quot;&#xD;&#xA;powershell.exe ..\scripts\Set-BuildDate.ps1 -filePath .\Ui\AppVersion.cs&#xD;&#xA;powershell.exe ..\scripts\Set-AssemblyVersion.ps1" />

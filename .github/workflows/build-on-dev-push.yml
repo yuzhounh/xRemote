@@ -21,7 +21,7 @@ jobs:
         run: |
           dotnet publish Ui/Ui.csproj -c Release -r win-x64 --self-contained true -o artifacts/publish
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          Rename-Item artifacts/publish/1Remote.exe xRemote.exe
+          Rename-Item artifacts/publish/1Remote.exe xRemote.App.exe
           New-Item artifacts/publish/FORCE_INTO_PORTABLE_MODE -ItemType File
       - uses: actions/upload-artifact@v4
         with:

@@ -56,8 +56,11 @@
                                     </Style.Triggers>
                                 </Style>
                             </TextBlock.Style>
-                            <Hyperlink Command="{Binding CmdUpdate}"><Run Text="{DynamicResource Shell.Update}" /><Run Text="&#160;" /><Run Text="{Binding NewVersion}" /></Hyperlink>
+                            <Run Text="{DynamicResource Shell.Update}" /><Run Text="&#160;" /><Run Text="{Binding NewVersion}" />
+                            <LineBreak />
+                            <Hyperlink Command="{Binding CmdUpdate}"><Run Text="{Binding UpdateAction, Mode=OneWay}" /></Hyperlink>
                         </TextBlock>
+                        <TextBlock Text="{Binding UpdateStatus}" TextWrapping="Wrap" Margin="0,8,0,0" Opacity="0.75" />
                     </StackPanel>
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="{DynamicResource Shell.Support}" Style="{StaticResource AboutSectionTitle}" />

@@ -326,9 +326,9 @@ namespace _1RM.Service
                 {
                     using var shortcut = new WindowsShortcut
                     {
-                        Path = Process.GetCurrentProcess().MainModule!.FileName!,
+                        Path = XRemoteAutoUpdate.LauncherPath,
                         WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory,
-                        IconLocation = iconLocation ?? Process.GetCurrentProcess().MainModule!.FileName!,
+                        IconLocation = iconLocation ?? XRemoteAutoUpdate.LauncherPath,
                         Arguments = parameter,
                     };
                     shortcut.Save(shortcutPath);

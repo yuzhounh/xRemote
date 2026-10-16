@@ -116,6 +116,7 @@ namespace _1RM
 
         protected override void OnExit(ExitEventArgs e)
         {
+            XRemoteAutoUpdate.OnExit(!IoC.Get<ConfigurationService>().General.DoNotCheckNewVersion);
             // workaround
             Task.Factory.StartNew(() =>
             {

@@ -341,7 +341,14 @@
     <s:String x:Key="Settings.Log.Warning">警告</s:String>
     <s:String x:Key="Settings.Tabs">标签页</s:String>
     <s:String x:Key="Settings.Misc">其他选项</s:String>
-    <s:String x:Key="Settings.CheckNewVersion">检查新版本</s:String>
+    <s:String x:Key="Settings.CheckNewVersion">自动下载更新，退出后安装</s:String>
+    <s:String x:Key="Update.Downloading">正在后台下载更新</s:String>
+    <s:String x:Key="Update.Verifying">正在准备更新</s:String>
+    <s:String x:Key="Update.Ready">更新已就绪，下次启动自动生效</s:String>
+    <s:String x:Key="Update.Retry">更新暂未完成，稍后自动重试</s:String>
+    <s:String x:Key="Update.Latest">已是最新版本</s:String>
+    <s:String x:Key="Update.Restart">重启并更新</s:String>
+    <s:String x:Key="Update.ReleaseNotes">查看版本说明</s:String>
     <s:String x:Key="Settings.WindowTitle">设置</s:String>
     <s:String x:Key="Settings.Appearance">外观</s:String>
     <s:String x:Key="Settings.DataAndCredentials">数据与凭据</s:String>

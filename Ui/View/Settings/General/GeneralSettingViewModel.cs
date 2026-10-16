@@ -48,6 +48,7 @@ namespace _1RM.View.Settings.General
                 if (_configurationService.General.DoNotCheckNewVersion != !value)
                 {
                     _configurationService.General.DoNotCheckNewVersion = !value;
+                    XRemoteAutoUpdate.SetEnabled(value);
                     RaisePropertyChanged();
                     _configurationService.Save();
                     IoC.Get<AboutPageViewModel>().StartVersionCheckTimer();

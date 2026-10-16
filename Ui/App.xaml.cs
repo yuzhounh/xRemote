@@ -23,6 +23,7 @@ namespace _1RM
         public static void Main(string[] args)
         {
             var argss = args.ToList();
+            if (XRemoteAutoUpdate.ContinuePendingAtStartup(args)) return;
             AppInitHelper.Init();
 #if FOR_MICROSOFT_STORE_ONLY
             // see: https://stackoverflow.com/questions/57755792/how-can-i-handle-file-activation-from-a-wpf-app-which-is-running-as-uwp
@@ -97,9 +98,10 @@ namespace _1RM
         }
 
         public static bool ExitingFlag = false;
-        public static void Close(int exitCode = 0)
+        public static void Close(int exitCode = 0, bool restartAfterUpdate = false)
         {
-            if (!ExitingFlag && View.Editor.ServerEditorWindowView.DeferApplicationClose(() => Close(exitCode))) return;
+            if (!ExitingFlag && View.Editor.ServerEditorWindowView.DeferApplicationClose(() => Close(exitCode, restartAfterUpdate))) return;
+            if (restartAfterUpdate) XRemoteAutoUpdate.RequestRestart();
             // workaround
             Task.Factory.StartNew(() =>
             {

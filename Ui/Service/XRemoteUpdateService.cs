@@ -34,7 +34,7 @@ public static class XRemoteUpdateService
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
             SimpleLogHelper.Warning("xRemote release source is unavailable or has no published release.");
-            return VersionHelper.CheckUpdateResult.False();
+            throw new HttpRequestException("xRemote release source is unavailable or has no published release.");
         }
         response.EnsureSuccessStatusCode();
         return ParseRelease(await response.Content.ReadAsStringAsync().ConfigureAwait(false), AppVersion.UpdateVersionData);
