@@ -462,7 +462,7 @@
     <s:String x:Key="Shell.OpenApp">開啟 {0}</s:String>
     <s:String x:Key="Shell.AboutTagline">你的遠端連線管理工具</s:String>
     <s:String x:Key="Shell.Version">版本</s:String>
-    <s:String x:Key="Shell.Update">新版本：</s:String>
+    <s:String x:Key="Shell.Update">新版本</s:String>
     <s:String x:Key="Shell.Support">說明與支援</s:String>
     <s:String x:Key="Shell.Components">包含的元件</s:String>
     <s:String x:Key="Shell.PortableLocation">目前資料夾（可攜版）</s:String>

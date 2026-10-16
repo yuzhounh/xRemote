@@ -47,8 +47,8 @@ Source: "{#PackageSource}\*"; DestDir: "{app}"; Excludes: "FORCE_INTO_PORTABLE_M
 Source: "{#ModeMarker}"; DestDir: "{app}"; Flags: ignoreversion; Check: UseAppDataMode
 
 [Icons]
-Name: "{group}\xRemote"; Filename: "{app}\xRemote.exe"; WorkingDir: "{app}"
-Name: "{autodesktop}\xRemote"; Filename: "{app}\xRemote.exe"; WorkingDir: "{app}"; Tasks: desktopicon
+Name: "{group}\xRemote"; Filename: "{app}\xRemote.exe"; WorkingDir: "{app}"; Comment: "xRemote - Based on 1Remote"
+Name: "{autodesktop}\xRemote"; Filename: "{app}\xRemote.exe"; WorkingDir: "{app}"; Comment: "xRemote - Based on 1Remote"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\xRemote.exe"; WorkingDir: "{app}"; Description: "启动 xRemote"; Flags: nowait postinstall skipifsilent

@@ -46,20 +46,33 @@
                             <TextBlock Text="{DynamicResource Shell.Version}" Opacity="0.65" FontSize="12" />
                             <TextBlock Text="{Binding CurrentVersion}" Margin="0,2,0,0" />
                         </StackPanel>
-                        <TextBlock Margin="0,10,0,0" TextWrapping="Wrap">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBase}">
-                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
+                        <StackPanel Margin="0,10,0,0">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding NewVersion}" Value=""><Setter Property="Visibility" Value="Collapsed" /></DataTrigger>
                                         <DataTrigger Binding="{Binding NewVersion}" Value="{x:Null}"><Setter Property="Visibility" Value="Collapsed" /></DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </TextBlock.Style>
-                            <Run Text="{DynamicResource Shell.Update}" /><Run Text="&#160;" /><Run Text="{Binding NewVersion}" />
-                            <LineBreak />
-                            <Hyperlink Command="{Binding CmdUpdate}"><Run Text="{Binding UpdateAction, Mode=OneWay}" /></Hyperlink>
-                        </TextBlock>
+                            </StackPanel.Style>
+                            <TextBlock Text="{DynamicResource Shell.Update}" Opacity="0.65" FontSize="12" />
+                            <TextBlock Margin="0,2,0,0" TextWrapping="Wrap">
+                                <Hyperlink NavigateUri="{Binding NewVersionUrl}" controls:HyperlinkHelper.IsOpenExternal="True">
+                                    <Run Text="{Binding NewVersion}" />
+                                </Hyperlink>
+                            </TextBlock>
+                            <Button Command="{Binding CmdUpdate}" Content="{Binding UpdateAction, Mode=OneWay}"
+                                    HorizontalAlignment="Left" Margin="0,8,0,0">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding UpdateReady}" Value="True"><Setter Property="Visibility" Value="Visible" /></DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
                         <TextBlock Text="{Binding UpdateStatus}" TextWrapping="Wrap" Margin="0,8,0,0" Opacity="0.75" />
                     </StackPanel>
                     <StackPanel Grid.Column="2">

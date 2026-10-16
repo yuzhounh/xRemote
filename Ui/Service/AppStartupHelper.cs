@@ -330,6 +330,7 @@ namespace _1RM.Service
                         WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory,
                         IconLocation = iconLocation ?? XRemoteAutoUpdate.LauncherPath,
                         Arguments = parameter,
+                        Description = "xRemote - Based on 1Remote",
                     };
                     shortcut.Save(shortcutPath);
                 }
