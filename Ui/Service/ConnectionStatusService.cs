@@ -58,7 +58,7 @@ public sealed class ConnectionStatusService : IDisposable
                 var address = endpoint.Address;
                 if (string.IsNullOrWhiteSpace(address) || !int.TryParse(endpoint.Port, out var port) || port is < 1 or > 65535)
                 {
-                    await Execute.OnUIThreadAsync(() => row.SetConnectionStatus(false, "Shell.MissingEndpoint"));
+                    await Execute.OnUIThreadAsync(() => { row.SetRemoteSessionStatus(null); row.SetConnectionStatus(false, "Shell.MissingEndpoint"); });
                     return;
                 }
                 await slots.WaitAsync(token);

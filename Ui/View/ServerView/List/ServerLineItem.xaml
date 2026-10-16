@@ -137,16 +137,18 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Name="Grid" Background="Transparent">
+    <Grid Name="Grid" Background="Transparent" Cursor="Hand"
+          PreviewMouseLeftButtonDown="Row_OnPreviewMouseLeftButtonDown" MouseLeftButtonUp="Row_OnMouseLeftButtonUp">
         <Grid Opacity="0.4" Background="{Binding Server.ColorHex,Converter={StaticResource ConverterColorHexString2Brush}, Mode=OneWay}"></Grid>
 
-        <Grid>
+        <Grid serverList:ServerColumnLayout.Enabled="True">
             <Grid.Margin>
                 <Thickness Right="{StaticResource ScrollBarWidthMouseOver}"></Thickness>
             </Grid.Margin>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="Selector"></ColumnDefinition>
                 <ColumnDefinition Width="{Binding DataContext.StatusWidth, Mode=OneWay, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="ConnectionStatus" />
+                <ColumnDefinition Width="{Binding DataContext.RemoteUsageWidth, Mode=OneWay, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="RemoteUsage" />
                 <ColumnDefinition Width="Auto" SharedSizeGroup="Span"></ColumnDefinition>
                 <ColumnDefinition Width="{Binding DataContext.NameWidth, Mode=OneWay, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="Name" />
                 <ColumnDefinition Width="{Binding DataContext.NoteWidth, Mode=OneWay, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="BriefNote" />
@@ -182,7 +184,7 @@
             </CheckBox>
 
             <!--protocol name-->
-            <TextBlock Grid.Column="6" Margin="5 0 10 0" Visibility="{Binding DataContext.ProtocolColumnVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}"
+            <TextBlock Grid.Column="7" Margin="5 0 10 0" Visibility="{Binding DataContext.ProtocolColumnVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}"
                        Style="{StaticResource TextBlockBase}"
                        Text="{Binding Server.ProtocolDisplayName}"
                        FontSize="{DynamicResource GlobalFontSizeSubtitle}" FontWeight="Normal"
@@ -192,7 +194,7 @@
 
 
             <!-- setting menu button -->
-            <Button Grid.Column="8"
+            <Button Grid.Column="9"
                     x:Name="BtnSettingMenu"
                     Margin="0 0 10 0"
                     Width="20" Height="20" HorizontalAlignment="Right"
@@ -205,23 +207,29 @@
             </Button>
 
             <!--icon-->
-            <Image Grid.Column="2"
+            <Image Grid.Column="3"
                    Width="30" HorizontalAlignment="Center" Margin="5 0"
                    Source="{Binding Server.IconImg}" 
                    RenderOptions.BitmapScalingMode="LowQuality"
                    ></Image>
 
             <!--display name-->
-            <TextBlock Grid.Column="3" ToolTip="{Binding DisplayName}" Background="Transparent"
+            <Grid Grid.Column="4">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+            <TextBlock ToolTip="{Binding DisplayName}" Background="Transparent"
                        Style="{StaticResource TextBlockBase}"
                        FontSize="{DynamicResource GlobalFontSizeSubtitle}" 
                        Margin="5 0 10 0" 
                        VerticalAlignment="Center" 
                        TextTrimming="CharacterEllipsis" 
                        Text="{Binding Server.DisplayName}"></TextBlock>
+            <Button Grid.Column="1" Content="{DynamicResource Device.OpenDetails}" Command="{Binding CmdShowDeviceDetails}"
+                    ToolTip="{DynamicResource Device.Details}" Margin="0,0,8,0" Padding="6,0" MinWidth="44" Height="30"
+                    VerticalAlignment="Center" Style="{StaticResource DeviceDetailsLinkStyle}" />
+            </Grid>
 
             <!--tags-->
-            <ItemsControl Grid.Column="7" Visibility="{Binding DataContext.TagsColumnVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}"
+            <ItemsControl Grid.Column="8" Visibility="{Binding DataContext.TagsColumnVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}"
                           Margin="5 0 10 0" 
                           MaxWidth="200" 
                           VerticalAlignment="Center" HorizontalAlignment="Left"
@@ -236,33 +244,42 @@
             </ItemsControl>
 
             <!--brief note -->
-            <ContentControl Grid.Column="4"
+            <ContentControl Grid.Column="5"
                             Margin="0 0 10 0"
                             VerticalAlignment="Center"
                             Visibility="{Binding DataContext.BriefNoteVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}"
                             Content="{Binding HoverNoteDisplayControl}"></ContentControl>
 
             <Grid Grid.Column="1" ClipToBounds="True" Visibility="{Binding DataContext.StatusColumnVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}">
-            <Button Command="{Binding CmdManageRemoteSessions}" Margin="5,0" Padding="0"
-                    BorderThickness="0" Background="Transparent" MinHeight="40"
+            <Border Margin="5,0" Padding="0" Background="Transparent" MinHeight="40"
                     HorizontalAlignment="Stretch"
-                    VerticalContentAlignment="Center" HorizontalContentAlignment="Left"
                         VerticalAlignment="Center" ToolTip="{Binding ConnectionStatusHint}"
                         Visibility="{Binding ConnectionStatusVisibility}">
-                <Button.Template><ControlTemplate TargetType="Button"><ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" /></ControlTemplate></Button.Template>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <Ellipse Width="7" Height="7" Margin="0,0,6,0" VerticalAlignment="Center"
                          Fill="{Binding ConnectionStatusColor, Converter={StaticResource ConverterColorHexString2Brush}}" />
                 <TextBlock Text="{Binding ConnectionStatusText}" Style="{StaticResource TextBlockBase}" VerticalAlignment="Center" />
             </StackPanel>
-            </Button>
+            </Border>
 
+            </Grid>
+
+            <Grid Grid.Column="2" ClipToBounds="True" Visibility="{Binding DataContext.RemoteUsageColumnVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}">
+                <Border Margin="5,0" Padding="0" MinHeight="40" Background="Transparent"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                        Visibility="{Binding RemoteUsageVisibility}" ToolTip="{Binding RemoteUsageHint}">
+                    <Grid VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="13" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                        <Ellipse Width="7" Height="7" Margin="0,0,6,0" VerticalAlignment="Center" Fill="{Binding RemoteUsageColor, Converter={StaticResource ConverterColorHexString2Brush}}" />
+                        <TextBlock Grid.Column="1" Text="{Binding RemoteUsageText}" Style="{StaticResource TextBlockBase}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
             </Grid>
 
             <!--address-->
             <TextBlock Margin="5 0 10 0"
                        Style="{StaticResource TextBlockBase}"
-                       Grid.Column="5" Visibility="{Binding DataContext.AddressColumnVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}"
+                       Grid.Column="6" Visibility="{Binding DataContext.AddressColumnVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}"
                        Background="Transparent"
                        ToolTip="{Binding Server.SubTitle}"
                        FontSize="{DynamicResource GlobalFontSizeSubtitle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"

@@ -45,7 +45,11 @@ $taskSource=Join-Path $taskRoot 'Updater\Launcher.cpp'
 $taskBatch=Join-Path $taskWork 'build.cmd'
 $taskCommands=@('@echo off',('call "'+$taskDev+'" -no_logo -arch=x64 >nul'),'if errorlevel 1 exit /b 1',('rc /nologo /fo "'+$taskRes+'" "'+$taskRcPath+'"'),'if errorlevel 1 exit /b 1',('cl /nologo /EHsc /std:c++17 /O1 /MT /DUNICODE /D_UNICODE /Fo"'+$taskObj+'" "'+$taskSource+'" "'+$taskRes+'" /link /SUBSYSTEM:WINDOWS /OUT:"'+$taskExe+'" bcrypt.lib shell32.lib user32.lib'),'exit /b %errorlevel%')
 [IO.File]::WriteAllLines($taskBatch,$taskCommands,[Text.Encoding]::ASCII)
-$taskBuild=Start-Process -FilePath $env:ComSpec -ArgumentList ('/d /s /c ""'+$taskBatch+'""') -WindowStyle Hidden -Wait -PassThru -RedirectStandardOutput (Join-Path $taskWork 'build.log') -RedirectStandardError (Join-Path $taskWork 'build-error.log')
+$taskBuild=Start-Process -FilePath $env:ComSpec -ArgumentList ('/d /s /c ""'+$taskBatch+'""') -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $taskWork 'build.log') -RedirectStandardError (Join-Path $taskWork 'build-error.log')
+# Start-Process -Wait also waits for detached compiler helpers such as VCTIP.
+# Only the batch exit code determines whether the launcher build succeeded.
+$null = $taskBuild.Handle # Cache the native handle before exit (Windows PowerShell 5.1).
+$taskBuild.WaitForExit()
 Get-Content (Join-Path $taskWork 'build.log') -Tail 5
 Get-Content (Join-Path $taskWork 'build-error.log') -Tail 5
 if($taskBuild.ExitCode -ne 0){throw 'Native update launcher build failed'}

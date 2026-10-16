@@ -74,6 +74,20 @@ public static class DeviceControlClient
         return await client.GetFromJsonAsync<ControlStatus>("v1/status", Json, token).ConfigureAwait(false)
             ?? throw new InvalidOperationException(UiText.Get("Shell.NoSessionStatus"));
     }
+    public static async Task<DeviceHardwareInfo> Hardware(string address, bool storageOnly, bool refresh, CancellationToken token)
+    {
+        using var client = Open(address);
+        client.Timeout = TimeSpan.FromSeconds(24);
+        var path = storageOnly ? "v1/storage" : "v1/hardware";
+        using var response = await client.GetAsync(path + "?refresh=" + (refresh ? "true" : "false"), token).ConfigureAwait(false);
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            throw new DeviceInformationException("Device.ServiceUpdateNeeded");
+        response.EnsureSuccessStatusCode();
+        var info = await response.Content.ReadFromJsonAsync<DeviceHardwareInfo>(Json, token).ConfigureAwait(false);
+        if (info?.Schema != 1 || string.IsNullOrWhiteSpace(info.Machine))
+            throw new DeviceInformationException("Device.ReadFailed");
+        return info;
+    }
     public static async Task Disconnect(string address, SessionView selected)
     {
         using var client = Open(address);

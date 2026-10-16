@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Controls.Primitives;
+using Shawn.Utils.Wpf;
 using _1RM.Model;
 using _1RM.View;
 using _1RM.View.ServerView;
@@ -75,6 +77,33 @@ namespace _1RM.Controls
         private void ItemsCheckBox_OnClick(object sender, RoutedEventArgs e)
         {
             ServerListPageView.ItemsCheckBox_OnClick_Static(sender, e);
+        }
+
+        private Point rowPress;
+        private bool connectOnRelease;
+        private long lastConnect;
+        private static bool IsRowAction(DependencyObject? source) => source != null &&
+            (source is ButtonBase or TextBoxBase or Thumb
+             || MyVisualTreeHelper.VisualUpwardSearch<ButtonBase>(source) != null
+             || MyVisualTreeHelper.VisualUpwardSearch<TextBoxBase>(source) != null
+             || MyVisualTreeHelper.VisualUpwardSearch<Thumb>(source) != null);
+        private void Row_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            rowPress = e.GetPosition(this);
+            connectOnRelease = e.ClickCount == 1 && Keyboard.Modifiers == ModifierKeys.None
+                && !IsRowAction(e.OriginalSource as DependencyObject);
+        }
+        private void Row_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            bool launch = connectOnRelease; connectOnRelease = false;
+            var release = e.GetPosition(this);
+            if (!launch || IsRowAction(e.OriginalSource as DependencyObject) || Keyboard.Modifiers != ModifierKeys.None
+                || Math.Abs(release.X - rowPress.X) >= SystemParameters.MinimumHorizontalDragDistance
+                || Math.Abs(release.Y - rowPress.Y) >= SystemParameters.MinimumVerticalDragDistance
+                || Environment.TickCount64 - lastConnect < 700) return;
+            lastConnect = Environment.TickCount64;
+            var command = ProtocolBaseViewModel?.CmdConnServer;
+            if (command?.CanExecute(null) == true) { command.Execute(null); e.Handled = true; }
         }
 
         private void UIElement_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)

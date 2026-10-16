@@ -417,6 +417,7 @@ namespace _1RM.View.ServerView
             menu.Items.Clear();
             foreach (var (label, property) in new[] {
                 ("Name", (string?)null), ("Shell.Status", nameof(vm.ShowStatusColumn)),
+                ("Device.RemoteUsage", nameof(vm.ShowRemoteUsageColumn)),
                 ("Target", nameof(vm.ShowAddressColumn)), ("Protocol", nameof(vm.ShowProtocolColumn)),
                 ("Tags", nameof(vm.ShowTagsColumn)), ("Note", nameof(vm.ShowNoteColumn)) })
             {
@@ -445,6 +446,7 @@ namespace _1RM.View.ServerView
                 switch (thumb.Tag as string)
                 {
                     case "Status": vm.StatusWidth += e.HorizontalChange; break;
+                    case "RemoteUsage": vm.RemoteUsageWidth += e.HorizontalChange; break;
                     case "Name": vm.NameWidth += e.HorizontalChange; break;
                     case "Address": vm.AddressWidth += e.HorizontalChange; break;
                     case "Protocol": vm.ProtocolWidth += e.HorizontalChange; break;

@@ -7,6 +7,19 @@ namespace _1RM.View.ServerView;
 
 public partial class ServerListPageViewModel
 {
+    public bool ShowRemoteUsageColumn
+    {
+        get => LocalityListViewService.Settings.ShowRemoteUsageColumn;
+        set { if (ShowRemoteUsageColumn == value) return; LocalityListViewService.Settings.ShowRemoteUsageColumn = value;
+            ColumnsChanged(nameof(ShowRemoteUsageColumn), nameof(RemoteUsageColumnVisibility), nameof(RemoteUsageWidth)); }
+    }
+    public Visibility RemoteUsageColumnVisibility => ShowRemoteUsageColumn ? Visibility.Visible : Visibility.Collapsed;
+    public double RemoteUsageWidth
+    {
+        get => ShowRemoteUsageColumn ? LocalityListViewService.Settings.ServerListRemoteUsageWidth : 0;
+        set { if (!ShowRemoteUsageColumn || !double.IsFinite(value)) return;
+            LocalityListViewService.Settings.ServerListRemoteUsageWidth = Math.Clamp(value, 90, 500); RaisePropertyChanged(); }
+    }
     public bool ShowStatusColumn
     {
         get => LocalityListViewService.Settings.ShowStatusColumn;
@@ -57,7 +70,8 @@ public partial class ServerListPageViewModel
     public void ResetColumns()
     {
         // Restore visibility only; keep the user's carefully adjusted widths.
-        ShowStatusColumn = ShowAddressColumn = ShowProtocolColumn = true;
+        ShowStatusColumn = ShowRemoteUsageColumn = ShowAddressColumn = ShowProtocolColumn = true;
         ShowTagsColumn = ShowNoteColumn = false;
+        ServerColumnLayout.Reset();
     }
 }

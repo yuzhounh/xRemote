@@ -251,7 +251,7 @@
                 </CheckBox>
 
                 <ContentControl Grid.Row="0"
-                                HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,28,0,0"
+                                HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,54,0,0"
                                 Content="{Binding HoverNoteDisplayControl}"></ContentControl>
 
                 <Grid Name="GridNameBar" Grid.Row="1" Background="{Binding ElementName=CardRealBorder,Path=BorderBrush}" >
@@ -312,5 +312,21 @@
             </StackPanel>
         </Border>
         </Button>
+        <Button Command="{Binding CmdShowDeviceDetails}" HorizontalAlignment="Right" VerticalAlignment="Top"
+                Panel.ZIndex="6" Margin="4,30,8,0" Padding="0" BorderThickness="0" Background="Transparent"
+                Visibility="{Binding RemoteUsageVisibility}" ToolTip="{Binding RemoteUsageHint}">
+            <Button.Template><ControlTemplate TargetType="Button"><ContentPresenter /></ControlTemplate></Button.Template>
+            <Border Height="20" CornerRadius="9" Padding="4,1" Background="{DynamicResource PrimaryMidBrush}">
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse Width="7" Height="7" Margin="0,0,4,0" VerticalAlignment="Center"
+                             Fill="{Binding RemoteUsageColor, Converter={StaticResource ConverterColorHexString2Brush}}" />
+                    <TextBlock Text="{Binding RemoteUsageText}" MaxWidth="112" TextTrimming="CharacterEllipsis"
+                               FontSize="11" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}" />
+                </StackPanel>
+            </Border>
+        </Button>
+        <Button Command="{Binding CmdShowDeviceDetails}" Content="{DynamicResource Device.OpenDetails}" ToolTip="{DynamicResource Device.Details}"
+                Panel.ZIndex="6" MinWidth="44" Padding="6,0" Height="28" Margin="6,0,0,24"
+                HorizontalAlignment="Left" VerticalAlignment="Bottom" Style="{StaticResource DeviceDetailsLinkStyle}" />
     </Grid>
 </UserControl>

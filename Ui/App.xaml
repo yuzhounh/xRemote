@@ -21,7 +21,9 @@
                 <ResourceDictionary Source="./Resources/Theme/SettingsTextFallback.xaml" />
                 <ResourceDictionary Source="./Resources/Languages/en-us.xaml"></ResourceDictionary>
                 <ResourceDictionary Source="./Resources/Theme/EditorForm.xaml" />
+                <ResourceDictionary Source="./Resources/Theme/DeviceUi.xaml" />
                 <ResourceDictionary>
+                    <Style TargetType="Expander" BasedOn="{StaticResource SectionExpanderStyle}" />
                     <Style TargetType="{x:Type avalonEdit:CompletionWindow}">
                         <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
                         <Setter Property="WindowStyle" Value="None"></Setter>

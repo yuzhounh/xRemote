@@ -20,6 +20,9 @@ namespace _1RM.Service.Locality
         public double ServerListNameWidth = 300;
         public double ServerListNoteWidth = 100;
         public double ServerListStatusWidth = 84;
+        public double ServerListRemoteUsageWidth = 140;
+        public bool ShowRemoteUsageColumn = true;
+        public List<string> ColumnOrder = new() { "Status", "RemoteUsage", "Name", "Note", "Address", "Protocol", "Tags" };
         public double ServerListAddressWidth = 550;
         public double ServerListProtocolWidth = 100;
         public double ServerListTagsWidth = 160;

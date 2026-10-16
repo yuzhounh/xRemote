@@ -25,7 +25,7 @@
             </CollectionViewSource>
 
 
-            <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource ExpanderWithAnEye}"></Style>
+            <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource SectionExpanderStyle}"></Style>
 
 
 
@@ -82,7 +82,6 @@
             <DataTemplate x:Key="DataTemplateForServerList" DataType="view:ProtocolBaseViewModel">
                 <Grid Name="Grid" FocusVisualStyle="{x:Null}" Background="{DynamicResource BackgroundBrush}">
                     <Grid.InputBindings>
-                        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding CmdConnServer}"></MouseBinding>
                         <MouseBinding MouseAction="RightClick" Command="{Binding CmdEditServer}"></MouseBinding>
                     </Grid.InputBindings>
                     <Border x:Name="GridContainer"></Border>
@@ -316,7 +315,12 @@
                             </Border.Margin>
                         </Border>
                     </Grid>
-                    <Grid x:Name="ColumnHeaders" VerticalAlignment="Center" Background="Transparent" ContextMenuOpening="ColumnHeaders_OnContextMenuOpening">
+                    <Grid x:Name="ColumnHeaders" VerticalAlignment="Center" Background="Transparent" Cursor="Hand"
+                          serverView:ServerColumnLayout.Enabled="True" ContextMenuOpening="ColumnHeaders_OnContextMenuOpening"
+                          PreviewMouseLeftButtonDown="ColumnHeaders_OnPreviewMouseLeftButtonDown"
+                          PreviewMouseMove="ColumnHeaders_OnPreviewMouseMove"
+                          PreviewMouseLeftButtonUp="ColumnHeaders_OnPreviewMouseLeftButtonUp"
+                          LostMouseCapture="ColumnHeaders_OnLostMouseCapture">
                         <Grid.ContextMenu><ContextMenu /></Grid.ContextMenu>
                         <Grid.Margin>
                             <Thickness Right="{StaticResource ScrollBarWidthMouseOver}"></Thickness>
@@ -335,6 +339,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="Selector"></ColumnDefinition>
                             <ColumnDefinition Width="{Binding StatusWidth, Mode=OneWay}" SharedSizeGroup="ConnectionStatus" />
+                            <ColumnDefinition Width="{Binding RemoteUsageWidth, Mode=OneWay}" SharedSizeGroup="RemoteUsage" />
                             <ColumnDefinition Width="40" SharedSizeGroup="Span"></ColumnDefinition>
                             <ColumnDefinition Width="{Binding NameWidth, Mode=OneWay}" SharedSizeGroup="Name" MinWidth="100" />
                             <ColumnDefinition Width="{Binding NoteWidth, Mode=OneWay}" SharedSizeGroup="BriefNote" MinWidth="{Binding NoteMinimumWidth}" />
@@ -370,7 +375,7 @@
                         </Border>
 
                         <!--protocol name-->
-                        <Grid Grid.Column="6" Visibility="{Binding ProtocolColumnVisibility}">
+                        <Grid Grid.Column="7" Visibility="{Binding ProtocolColumnVisibility}">
                             <Button HorizontalContentAlignment="Left" Style="{StaticResource ButtonBarPrimaryStyle}"
                                 Margin="0 0 10 0"
                                 attachProperty:VisionElement.BorderCornerRadius="{StaticResource DefaultCornerRadius}"
@@ -384,8 +389,8 @@
                         </Grid>
 
                         <!--display name-->
-                        <Grid Grid.Column="3">
-                            <Button Grid.Column="3" HorizontalContentAlignment="Left" Margin="0 0 10 0" Style="{StaticResource ButtonBarPrimaryStyle}"
+                        <Grid Grid.Column="4">
+                            <Button Grid.Column="4" HorizontalContentAlignment="Left" Margin="0 0 10 0" Style="{StaticResource ButtonBarPrimaryStyle}"
                                 attachProperty:VisionElement.BorderCornerRadius="{StaticResource DefaultCornerRadius}"
                                 Background="{DynamicResource BackgroundBrush}"
                                 Foreground="{DynamicResource BackgroundTextBrush}"
@@ -396,9 +401,9 @@
                             </Button>
                         </Grid>
 
-                        <TextBlock Grid.Column="4" Text="{DynamicResource Note}" Margin="5"
+                        <TextBlock Grid.Column="5" Text="{DynamicResource Note}" Margin="5"
                                    VerticalAlignment="Center" Visibility="{Binding BriefNoteVisibility}" />
-                        <TextBlock Grid.Column="7" Text="{DynamicResource Tags}" Margin="5"
+                        <TextBlock Grid.Column="8" Text="{DynamicResource Tags}" Margin="5"
                                    VerticalAlignment="Center" Visibility="{Binding TagsColumnVisibility}" />
 
                         <Button Grid.Column="1" Visibility="{Binding StatusColumnVisibility}" HorizontalContentAlignment="Left" Margin="0 0 10 0" Padding="0" BorderThickness="0"
@@ -411,7 +416,7 @@
                         </Button>
 
                         <!--address-->
-                        <Grid Grid.Column="5" Visibility="{Binding AddressColumnVisibility}">
+                        <Grid Grid.Column="6" Visibility="{Binding AddressColumnVisibility}">
                             <Button HorizontalContentAlignment="Left" Style="{StaticResource ButtonBarPrimaryStyle}"
                                     Margin="0 0 10 0"
                                     attachProperty:VisionElement.BorderCornerRadius="{StaticResource DefaultCornerRadius}"
@@ -427,15 +432,20 @@
                         </Grid>
                         <Thumb Grid.Column="1" Tag="Status" Style="{StaticResource ColumnResizeThumbStyle}" Visibility="{Binding StatusColumnVisibility}"
                                DragDelta="ColumnResize_OnDragDelta" DragCompleted="ColumnResize_OnDragCompleted" />
-                        <Thumb Grid.Column="3" Tag="Name" Style="{StaticResource ColumnResizeThumbStyle}"
+                        <Thumb Grid.Column="4" Tag="Name" Style="{StaticResource ColumnResizeThumbStyle}"
                                DragDelta="ColumnResize_OnDragDelta" DragCompleted="ColumnResize_OnDragCompleted" />
-                        <Thumb Grid.Column="4" Tag="Note" Style="{StaticResource ColumnResizeThumbStyle}" Visibility="{Binding BriefNoteVisibility}"
+                        <Thumb Grid.Column="5" Tag="Note" Style="{StaticResource ColumnResizeThumbStyle}" Visibility="{Binding BriefNoteVisibility}"
                                DragDelta="ColumnResize_OnDragDelta" DragCompleted="ColumnResize_OnDragCompleted" />
-                        <Thumb Grid.Column="7" Tag="Tags" Style="{StaticResource ColumnResizeThumbStyle}" Visibility="{Binding TagsColumnVisibility}"
+                        <Thumb Grid.Column="8" Tag="Tags" Style="{StaticResource ColumnResizeThumbStyle}" Visibility="{Binding TagsColumnVisibility}"
                                DragDelta="ColumnResize_OnDragDelta" DragCompleted="ColumnResize_OnDragCompleted" />
-                        <Thumb Grid.Column="5" Tag="Address" Style="{StaticResource ColumnResizeThumbStyle}" Visibility="{Binding AddressColumnVisibility}"
+                        <Thumb Grid.Column="6" Tag="Address" Style="{StaticResource ColumnResizeThumbStyle}" Visibility="{Binding AddressColumnVisibility}"
                                DragDelta="ColumnResize_OnDragDelta" DragCompleted="ColumnResize_OnDragCompleted" />
-                        <Thumb Grid.Column="6" Tag="Protocol" Style="{StaticResource ColumnResizeThumbStyle}" Visibility="{Binding ProtocolColumnVisibility}"
+                        <Thumb Grid.Column="7" Tag="Protocol" Style="{StaticResource ColumnResizeThumbStyle}" Visibility="{Binding ProtocolColumnVisibility}"
+                               DragDelta="ColumnResize_OnDragDelta" DragCompleted="ColumnResize_OnDragCompleted" />
+                        <TextBlock Grid.Column="2" Text="{DynamicResource Device.RemoteUsage}" Margin="18,5,5,5"
+                                   Foreground="{DynamicResource BackgroundTextBrush}"
+                                   VerticalAlignment="Center" Visibility="{Binding RemoteUsageColumnVisibility}" />
+                        <Thumb Grid.Column="2" Tag="RemoteUsage" Style="{StaticResource ColumnResizeThumbStyle}" Visibility="{Binding RemoteUsageColumnVisibility}"
                                DragDelta="ColumnResize_OnDragDelta" DragCompleted="ColumnResize_OnDragCompleted" />
                     </Grid>
                 </Grid>
@@ -465,7 +475,7 @@
                                                     <Expander IsExpanded="{Binding Items[0].GroupedIsExpanded, FallbackValue=False, TargetNullValue=False}"
                                                               Background="{DynamicResource BackgroundBrush}" 
                                                               Foreground="{DynamicResource BackgroundTextBrush}" 
-                                                              Style="{StaticResource ExpanderWithAnEye}"
+                                                              Style="{StaticResource SectionExpanderStyle}"
                                                               BorderThickness="0">
                                                         <Expander.Header>
                                                             <StackPanel Orientation="Horizontal" AllowDrop="True">

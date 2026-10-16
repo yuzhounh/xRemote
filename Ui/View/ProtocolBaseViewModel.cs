@@ -103,7 +103,21 @@ namespace _1RM.View
         private string _remoteState = "Shell.Unknown";
         private bool _hasRemoteStatus;
         private XRemote.Control.ControlStatus? _remoteStatus;
-        private bool _remoteInUse;
+        public XRemote.Control.ControlStatus? RemoteStatus => _remoteStatus;
+        public bool HasFreshRemoteStatus => _hasRemoteStatus && _remoteStatus != null
+            && DateTimeOffset.UtcNow - _remoteStatus.ObservedAt is var age
+            && age >= TimeSpan.FromSeconds(-30) && age <= TimeSpan.FromSeconds(90);
+        public int? ActiveRemoteSessionCount => HasFreshRemoteStatus
+            ? _remoteStatus!.Sessions.Count(s => s.Session.IsRemoteActive) : null;
+        public string RemoteUsageText => !HasFreshRemoteStatus ? UiText.Get("Device.UsageUnknown")
+            : ActiveRemoteSessionCount > 0 ? UiText.Get("Device.RemoteCount", ActiveRemoteSessionCount)
+            : _remoteState == "Shell.Local" ? UiText.Get("Shell.Local") : UiText.Get("Device.NoRemote");
+        public string RemoteUsageColor => !HasFreshRemoteStatus ? "#9CA3AF"
+            : ActiveRemoteSessionCount > 0 ? "#FBBF24" : _remoteState == "Shell.Local" ? "#60A5FA" : "#34D399";
+        public string RemoteUsageHint => !HasFreshRemoteStatus ? UiText.Get("Device.UsageUnknownHint")
+            : UiText.Get("Device.ObservedAt", _remoteStatus!.ObservedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"));
+        public System.Windows.Visibility RemoteUsageVisibility => Server is RDP
+            ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
         public string ConnectionStatusText => UiText.Get(_connectionStatusText);
         public string ConnectionStatusColor => _connectionStatusColor;
         public string CardConnectionStatusColor => _connectionOnline == false ? "#F87171" : _connectionStatusColor;
@@ -115,11 +129,11 @@ namespace _1RM.View
         internal void SetRemoteSessionStatus(XRemote.Control.ControlStatus? status)
         {
             var active = status?.Sessions.Where(s => s.Session.IsRemoteActive).ToArray();
-            _remoteStatus = status;
+            if (status != null) _remoteStatus = status;
             _hasRemoteStatus = status != null;
             _remoteState = Server is not RDP ? "Shell.Online" : status == null ? "Shell.Unknown" : active!.Length > 0 ? "Shell.Remote" :
                 status.Sessions.Any(s => s.Session.Protocol == 0 && s.Session.State == 0 && s.Session.Locked == false) ? "Shell.Local" : "Shell.Idle";
-            _remoteInUse = _remoteState is "Shell.Remote" or "Shell.Local";
+            RefreshLanguage();
         }
         public System.Windows.Visibility ConnectionStatusVisibility => Server is ProtocolBaseWithAddressPort
             ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
@@ -128,7 +142,7 @@ namespace _1RM.View
         {
             _connectionOnline = online;
             _connectionStatusText = online == true
-                ? _hasRemoteStatus && _remoteInUse ? _remoteState : "Shell.Online"
+                ? "Shell.Online"
                 : online == false ? "Shell.Unreachable" : "Shell.Checking";
             _connectionStatusColor = online == true ? "#34D399" : online == false ? "#9CA3AF" : "#FBBF24";
             _connectionStatusHint = hint;
@@ -144,6 +158,13 @@ namespace _1RM.View
             RaisePropertyChanged(nameof(CardConnectionStatusText));
             RaisePropertyChanged(nameof(ConnectionStatusHint));
             RaisePropertyChanged(nameof(ConnectionStatusVisibility));
+            RaisePropertyChanged(nameof(RemoteStatus));
+            RaisePropertyChanged(nameof(RemoteUsageText));
+            RaisePropertyChanged(nameof(RemoteUsageColor));
+            RaisePropertyChanged(nameof(RemoteUsageHint));
+            RaisePropertyChanged(nameof(RemoteUsageVisibility));
+            RaisePropertyChanged(nameof(ActiveRemoteSessionCount));
+            RaisePropertyChanged(nameof(HasFreshRemoteStatus));
         }
 
         public ProtocolBase Server
@@ -154,6 +175,7 @@ namespace _1RM.View
                 if (_server != value)
                 {
                     _server = value;
+                    _remoteStatus = null;
                     SetRemoteSessionStatus(null);
                     SetConnectionStatus(null, "Shell.CheckingHint");
                     _server.Tags = _server.Tags.Select(x => x.ToLower()).ToList();
@@ -272,6 +294,11 @@ namespace _1RM.View
 
 
         #region CMD
+        private RelayCommand? _cmdShowDeviceDetails;
+        public RelayCommand CmdShowDeviceDetails => _cmdShowDeviceDetails ??= new RelayCommand(_ =>
+        {
+            if (IoC.Get<MainWindowViewModel>().View is MainWindowView main) main.ShowDeviceDetails(this);
+        });
         private RelayCommand? _cmdManageRemoteSessions;
         public RelayCommand CmdManageRemoteSessions => _cmdManageRemoteSessions ??= new RelayCommand(_ =>
         {

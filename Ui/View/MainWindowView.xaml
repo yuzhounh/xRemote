@@ -433,7 +433,11 @@
                     </Style>
                 </Grid.Style>
 
-                <ContentControl s:View.Model="{Binding ActiveServerViewModel}"/>
+                <DockPanel>
+                    <Border x:Name="DeviceDetailsHost" DockPanel.Dock="Right" Width="900" Visibility="Collapsed"
+                            BorderThickness="1,0,0,0" BorderBrush="{DynamicResource MenuBorderBrush}" Background="{DynamicResource BackgroundBrush}" />
+                    <ContentControl s:View.Model="{Binding ActiveServerViewModel}"/>
+                </DockPanel>
 
 
 

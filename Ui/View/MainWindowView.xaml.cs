@@ -39,6 +39,7 @@ namespace _1RM.View
             this.SizeChanged += (sender, args) =>
             {
                 if (ConnectionSearchBar.Visibility == Visibility.Visible) UpdateSearchLayout();
+                FitDeviceDetails();
                 if (this.WindowState == WindowState.Normal)
                 {
                     localityService.MainWindowState = this.WindowState;
