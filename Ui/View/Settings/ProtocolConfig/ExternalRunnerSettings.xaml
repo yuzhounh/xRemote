@@ -147,7 +147,7 @@
                         </Hyperlink>
                     </TextBlock>
                     <TextBlock VerticalAlignment="Center" Margin="2 0">
-                        <Hyperlink NavigateUri="https://1remote.github.io/usage/protocol/runner/" TextDecorations="{x:Null}" 
+                        <Hyperlink NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/external-runners.md#configuration" TextDecorations="{x:Null}"
                                    controls1:HyperlinkHelper.IsOpenExternal="True">
                             (?)
                         </Hyperlink>
@@ -282,7 +282,7 @@
                                Text="{DynamicResource Settings.SpecialCharacterHint}"
                                Opacity="0.8"></TextBlock>
                         <TextBlock VerticalAlignment="Center" Margin="2 0">
-                            <Hyperlink NavigateUri="https://1remote.github.io/usage/protocol/runner/" TextDecorations="{x:Null}" 
+                            <Hyperlink NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/external-runners.md#configuration" TextDecorations="{x:Null}"
                                        controls1:HyperlinkHelper.IsOpenExternal="True">
                                 (?)
                             </Hyperlink>

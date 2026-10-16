@@ -62,7 +62,7 @@
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Support" Style="{StaticResource AboutSectionTitle}" />
                         <TextBlock>
-                            <Hyperlink NavigateUri="https://1remote.github.io/usage/quick-start/" controls:HyperlinkHelper.IsOpenExternal="True">
+                            <Hyperlink NavigateUri="https://github.com/yuzhounh/xRemote/blob/main/docs/README.md" controls:HyperlinkHelper.IsOpenExternal="True">
                                 <Run Text="{DynamicResource about_page_how_to_use}" />
                             </Hyperlink>
                         </TextBlock>
