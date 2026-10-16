@@ -69,9 +69,9 @@ public partial class ServerListPageViewModel
     }
     public void ResetColumns()
     {
-        // Restore visibility only; keep the user's carefully adjusted widths.
-        ShowStatusColumn = ShowRemoteUsageColumn = ShowAddressColumn = ShowProtocolColumn = true;
-        ShowTagsColumn = ShowNoteColumn = false;
+        // Restore default visibility and order; keep the user's adjusted widths.
+        ShowStatusColumn = ShowAddressColumn = ShowProtocolColumn = true;
+        ShowRemoteUsageColumn = ShowTagsColumn = ShowNoteColumn = false;
         ServerColumnLayout.Reset();
     }
 }

@@ -9,7 +9,7 @@ xRemote 基于 [1Remote 1.3.0](https://github.com/1Remote/1Remote/tree/1.3.0) �
 - 本地仍保留 Rev.1–Rev.6 的运行产物，Rev.6 还保留 Windows 便携 ZIP 和安装 EXE。这些产物不等同于各版独立源码快照；本次补录各版开发日志，运行目录及旧安装文件保留本地。
 - [Rev.7](https://github.com/yuzhounh/xRemote/releases/tag/v1.3.0-r7) 和 [Rev.8](https://github.com/yuzhounh/xRemote/releases/tag/v1.3.0-r8) 有正式源码标签、Windows 便携包、安装程序及 SHA-256 校验文件。
 - 早期条目依据项目保留的开发记录、构建日志、版本元数据和安装收据整理。原始机器部署、连接地址、账户和凭据记录留在本地；公开日志只保留产品改动。原记录合并描述的 Rev.6–Rev.7 功能，在下文按阶段说明，不追补未经独立源码证明的逐项提交时间。
-- 本页覆盖截至 Rev.11 的 Windows 发布历史。
+- 本页覆盖截至 Rev.12 的 Windows 发布历史。
 
 ## 相对 1Remote 1.3.0 的主要改动（截至 Rev.8）
 
@@ -45,6 +45,15 @@ xRemote 基于 [1Remote 1.3.0](https://github.com/1Remote/1Remote/tree/1.3.0) �
 - 将依赖改动保存为补丁并提供准备脚本；保留上游程序集、配置和凭据标识，维持已有数据兼容性。
 
 ## 逐版开发记录
+
+### 1.3.0 Rev.12 — 精简设备详情与默认列显示
+
+2026-10-16；[正式发布与下载](https://github.com/yuzhounh/xRemote/releases/tag/v1.3.0-r12)，[源码](https://github.com/yuzhounh/xRemote/tree/v1.3.0-r12)。
+
+- 主列表的“远程使用”列默认隐藏，可通过列标题右键菜单按需开启；恢复默认列时也保持隐藏，已有的手动显隐设置继续保留。
+- 设备详情中的刷新、配对、连接管理和预览图等操作统一为蓝色文字链接，去掉常驻灰色背景及边框。
+- 详情仅保留远程会话、设备信息和存储三个外层卡片；账户、磁盘等内部内容以留白和分割线区分，桌面预览及备注并入设备信息。
+- 存储使用条固定为 Windows 风格蓝色，不再随浅色主题显示为灰色。
 
 ### 1.3.0 Rev.11 — 设备详情、远程使用状态与可调整列布局
 

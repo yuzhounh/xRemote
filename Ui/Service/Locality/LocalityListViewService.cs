@@ -21,7 +21,7 @@ namespace _1RM.Service.Locality
         public double ServerListNoteWidth = 100;
         public double ServerListStatusWidth = 84;
         public double ServerListRemoteUsageWidth = 140;
-        public bool ShowRemoteUsageColumn = true;
+        public bool ShowRemoteUsageColumn = false;
         public List<string> ColumnOrder = new() { "Status", "RemoteUsage", "Name", "Note", "Address", "Protocol", "Tags" };
         public double ServerListAddressWidth = 550;
         public double ServerListProtocolWidth = 100;

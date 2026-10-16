@@ -97,10 +97,11 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
         refreshStorage = ActionButton("Remote.Refresh", () => ReloadStorage(true));
         var disks = Section(rightColumn, "Device.Storage", refreshStorage);
         disks.Children.Add(storageNote); disks.Children.Add(storageRows);
-        rightColumn.Children.Add(previewSection);
+        info.Children.Add(previewSection);
         if (!string.IsNullOrWhiteSpace(device.Server.Note))
         {
-            var notes = Section(rightColumn, "Note");
+            var notes = Section(info, null);
+            notes.Children.Add(Label("Note", 15, true));
             notes.Children.Add(new _1RM.Controls.NoteDisplay.NoteDisplayAndEditor
             { Server = device.Server, EditEnable = false, Height = 200, CloseButtonVisibility = Visibility.Collapsed });
         }
@@ -305,7 +306,8 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
         {
             var bar = new ProgressBar { Minimum = 0, Maximum = 100, Value = 100.0 * (volume.SizeBytes!.Value - volume.FreeBytes!.Value) / volume.SizeBytes.Value,
                 Height = 5, Margin = new Thickness(0, 2, 0, 6) };
-            bar.SetResourceReference(Control.ForegroundProperty, "AccentMidBrush"); target.Children.Add(bar);
+            bar.Foreground = new SolidColorBrush(Color.FromRgb(0, 120, 212));
+            target.Children.Add(bar);
         }
     }
     private void LoadPreview()
@@ -370,6 +372,18 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
     private static StackPanel Section(StackPanel target, string? key, Button? action = null)
     {
         var content = new StackPanel();
+        if (key == null)
+        {
+            if (target.Children.Count > 0)
+            {
+                var divider = new Border { Height = 1, Margin = new Thickness(0, 12, 0, 8) };
+                divider.SetResourceReference(Border.BackgroundProperty, "MenuBorderBrush");
+                target.Children.Add(divider);
+            }
+            content.Margin = new Thickness(0, 8, 0, 0);
+            target.Children.Add(content);
+            return content;
+        }
         if (key != null)
         {
             var heading = new DockPanel { Margin = new Thickness(0, 0, 0, 4) };
@@ -387,7 +401,7 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
     private static Button ActionButton(string key, Func<Task> action)
     {
         var button = new Button { MinHeight = 32, Padding = new Thickness(10, 5, 10, 5), Margin = new Thickness(0, 4, 8, 6), HorizontalAlignment = HorizontalAlignment.Left };
-        button.SetResourceReference(StyleProperty, "ButtonPrimaryStyle"); UiText.Bind(button, ContentControl.ContentProperty, key);
+        button.SetResourceReference(StyleProperty, "DeviceDetailsLinkStyle"); UiText.Bind(button, ContentControl.ContentProperty, key);
         button.Click += async (_, e) => { e.Handled = true; await action(); }; return button;
     }
     public void Dispose()
