@@ -5,6 +5,9 @@
             <TextBlock Text="{Binding Text}" TextWrapping="Wrap" TextAlignment="{Binding TextAlignment}" Foreground="{DynamicResource BackgroundTextBrush}" />
         </ScrollViewer>
         <ItemsControl ItemsSource="{Binding ButtonList}" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <ItemsControl.Style><Style TargetType="ItemsControl"><Style.Triggers>
+                <DataTrigger Binding="{Binding ShowButtons}" Value="False"><Setter Property="Visibility" Value="Collapsed" /></DataTrigger>
+            </Style.Triggers></Style></ItemsControl.Style>
             <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate><DataTemplate>
                 <Button Content="{Binding Label}" MinWidth="88" MinHeight="32" Padding="14,6" Margin="8,0,0,0" Style="{StaticResource ButtonPrimaryStyle}"

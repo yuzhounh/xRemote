@@ -62,8 +62,9 @@ public static class ThemedMessageBox
             if (action.IsDefault) defaultAction = action;
             action.Click += (_, _) => model.ButtonClicked(choice.Value); actions.Children.Add(action);
         }
-        body.Children.Add(actions); window.DialogContent = body;
-        if (defaultAction != null)
+        if (model.ShowButtons) body.Children.Add(actions);
+        window.DialogContent = body;
+        if (model.ShowButtons && defaultAction != null)
         {
             System.Windows.Input.FocusManager.SetFocusedElement(window, defaultAction);
             window.ContentRendered += (_, _) => defaultAction.Focus();

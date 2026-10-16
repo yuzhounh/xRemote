@@ -42,7 +42,7 @@ sftp://%1RM_USERNAME%@%1RM_HOSTNAME%:%1RM_PORT% /privatekey=%1RM_PRIVATE_KEY_PAT
 <a id="macros"></a>
 ## 参数宏
 
-点击参数输入区右侧的圆圈 **i**，查看该协议当前可用变量。圆圈 **？** 打开本文的配置说明。
+点击参数输入区右侧的圆圈 **i**，查看该协议当前可用变量。点击右上角 **×** 或按 **Esc** 关闭说明窗口。圆圈 **？** 打开本文的配置说明。
 
 [![应用内参数说明窗口](images/runner-macros.png)](images/runner-macros.png)
 

@@ -115,6 +115,9 @@ namespace _1RM.View.Utils
             this.Text = messageBoxText;
             this.DisplayName = string.IsNullOrWhiteSpace(caption) ? UiText.Get("Info") : caption;
             this.Icon = icon;
+            ShowButtons = buttons != MessageBoxButton.OK
+                || icon is not (MessageBoxImage.None or MessageBoxImage.Information)
+                || buttonLabels?.Count > 0;
             var buttonList = new BindableCollection<LabelledValue<MessageBoxResult>>();
             this.ButtonList = buttonList;
             foreach (var val in ButtonToResults[buttons])
@@ -154,6 +157,8 @@ namespace _1RM.View.Utils
         /// Gets or sets the list of buttons which are shown in the View.
         /// </summary>
         public IObservableCollection<LabelledValue<MessageBoxResult>>? ButtonList { get; protected set; }
+
+        public bool ShowButtons { get; private set; } = true;
 
         /// <summary>
         /// Gets or sets the item in ButtonList which is the Default button

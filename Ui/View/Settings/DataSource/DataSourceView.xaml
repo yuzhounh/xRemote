@@ -221,8 +221,9 @@
                     <MenuItem Command="{Binding CmdAdd}" CommandParameter="MySQL">
                         <MenuItem.Header>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="MySQL"></TextBlock>
+                                <TextBlock Text="MySQL" VerticalAlignment="Center"></TextBlock>
                                 <uiText:ProtocolHelpButton Style="{StaticResource ProtocolHelpButtonStyle}" Margin="2,0"
+                                                           VerticalAlignment="Center"
                                                            NavigateUri="https://yuzhounh.github.io/xRemote/data-and-credentials/#online-database" />
                             </StackPanel>
                         </MenuItem.Header>
@@ -234,8 +235,9 @@
                     <MenuItem Command="{Binding CmdAdd}" CommandParameter="PostgreSQL">
                         <MenuItem.Header>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="PostgreSQL"></TextBlock>
+                                <TextBlock Text="PostgreSQL" VerticalAlignment="Center"></TextBlock>
                                 <uiText:ProtocolHelpButton Style="{StaticResource ProtocolHelpButtonStyle}" Margin="2,0"
+                                                           VerticalAlignment="Center"
                                                            NavigateUri="https://yuzhounh.github.io/xRemote/data-and-credentials/#online-database" />
                             </StackPanel>
                         </MenuItem.Header>

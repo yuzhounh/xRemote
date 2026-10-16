@@ -19,14 +19,13 @@ public partial class ProtocolHelpWindowView : Window
         InitializeComponent();
         DataContext = this;
         _nativeTitleBar = new NativeMainTitleBar(this, CaptionRow, CaptionArea, CaptionReserve, Close);
+        ContentRendered += (_, _) => CompactDialogSizing.Fit(this, MappingBody);
     }
-
-    private void Confirm_OnClick(object sender, RoutedEventArgs e) => Close();
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
-        if (e.Key != Key.Escape || e.Handled) return;
+        if (e.Key is not (Key.Escape or Key.Enter) || e.Handled) return;
         e.Handled = true;
         Close();
     }
