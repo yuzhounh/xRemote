@@ -1,15 +1,12 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using _1RM.Model.Protocol.Base;
 using _1RM.Service;
 using Microsoft.Win32;
@@ -23,11 +20,9 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
     private readonly string address;
     private readonly TextBlock online = Value(), usage = Value(), sessionNote = Value(), hardwareNote = Value(), storageNote = Value();
     private readonly StackPanel sessionRows = new(), hardwareRows = new(), storageRows = new();
-    private readonly Image preview = new() { Height = 150, Stretch = Stretch.Uniform, Visibility = Visibility.Collapsed };
     private readonly Button refreshStatus, refreshHardware, refreshStorage;
     private readonly Grid dashboard = new();
     private readonly StackPanel leftColumn = new(), rightColumn = new();
-    private readonly DispatcherTimer timer = new() { Interval = TimeSpan.FromSeconds(30) };
     private CancellationTokenSource? lifetime;
     private DeviceHardwareInfo? hardware, storage;
     private bool statusBusy, hardwareBusy, storageBusy, disposed;
@@ -40,7 +35,7 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
         SetResourceReference(FontSizeProperty, "GlobalFontSizeBody");
         SetResourceReference(ForegroundProperty, "BackgroundTextBrush");
         SetResourceReference(BackgroundProperty, "BackgroundBrush");
-        var layout = new DockPanel { Margin = new Thickness(18, 12, 18, 18) };
+        var layout = new DockPanel { Margin = new Thickness(18, 12, 4, 18) };
         var heading = new DockPanel { Margin = new Thickness(0, 0, 0, 12) };
         var close = ActionButton("Close", () => { CloseRequested?.Invoke(); return Task.CompletedTask; });
         close.Content = "×"; close.FontSize = 20; close.Width = 40; close.MinWidth = 40; close.Padding = new Thickness(0);
@@ -49,7 +44,8 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
         DockPanel.SetDock(close, Dock.Right); heading.Children.Add(close);
         heading.Children.Add(Label("Device.Details", 18, true));
         if (embedded) { DockPanel.SetDock(heading, Dock.Top); layout.Children.Add(heading); }
-        var content = new StackPanel();
+        // Leave a gutter for the overlay scrollbar, independently of the window-edge spacing.
+        var content = new StackPanel { Margin = new Thickness(0, 0, 16, 0) };
         layout.Children.Add(new ScrollViewer { Content = content, VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
             HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled });
         Content = layout;
@@ -73,31 +69,25 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
         dashboard.Children.Add(leftColumn); dashboard.Children.Add(rightColumn); content.Children.Add(dashboard);
         SizeChanged += (_, _) => ArrangeColumns();
 
-        var previewArea = new StackPanel();
-        previewArea.Children.Add(preview);
-        var previewHint = Label("Device.PreviewHint"); previewHint.Opacity = .7; previewArea.Children.Add(previewHint);
-        previewArea.Children.Add(ActionButton("Device.SetPreview", SelectPreview));
-        var previewSection = new Expander { Content = previewArea, Margin = new Thickness(0, 12, 0, 4) };
-        previewSection.Header = Label("Device.Preview");
-        LoadPreview();
-
         refreshStatus = ActionButton("Remote.Refresh", ReloadStatus);
-        var sessions = Section(leftColumn, "Remote.Title", refreshStatus);
-        var sessionActions = new WrapPanel();
+        var sessionActions = new StackPanel { Orientation = Orientation.Horizontal };
         sessionActions.Children.Add(ActionButton("Remote.ImportPairing", ImportPairing));
         sessionActions.Children.Add(ActionButton("Device.ManageSessions", () =>
         {
             if (address.Length > 0) new RemoteSessionsWindow(address, Device.DisplayName) { Owner = Window.GetWindow(this) }.Show();
             return Task.CompletedTask;
         }));
-        sessions.Children.Add(sessionActions); sessions.Children.Add(sessionNote); sessions.Children.Add(sessionRows);
+        sessionActions.Children.Add(refreshStatus);
+        foreach (Button button in sessionActions.Children)
+            button.Margin = new Thickness(0, 0, button == refreshStatus ? 0 : 8, 0);
+        var sessions = Section(rightColumn, "Remote.Title", sessionActions);
+        sessions.Children.Add(sessionNote); sessions.Children.Add(sessionRows);
         refreshHardware = ActionButton("Remote.Refresh", () => ReloadHardware(true));
         var info = Section(leftColumn, "Device.Hardware", refreshHardware);
         info.Children.Add(hardwareNote); info.Children.Add(hardwareRows);
         refreshStorage = ActionButton("Remote.Refresh", () => ReloadStorage(true));
-        var disks = Section(rightColumn, "Device.Storage", refreshStorage);
+        var disks = Section(leftColumn, "Device.Storage", refreshStorage);
         disks.Children.Add(storageNote); disks.Children.Add(storageRows);
-        info.Children.Add(previewSection);
         if (!string.IsNullOrWhiteSpace(device.Server.Note))
         {
             var notes = Section(info, null);
@@ -107,10 +97,6 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
         }
         Loaded += OnLoaded;
         Unloaded += (_, _) => Dispose();
-        timer.Tick += async (_, _) =>
-        {
-            if (IsVisible && Window.GetWindow(this)?.WindowState != WindowState.Minimized) await ReloadStatus();
-        };
     }
 
     private void ArrangeColumns()
@@ -126,14 +112,39 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
         if (disposed || lifetime != null) return;
         lifetime = new CancellationTokenSource();
         Device.PropertyChanged += DeviceChanged;
+        DeviceInformationCache.Updated += InformationChanged;
         UpdateStatus(); RenderSessions();
         hardware = DeviceInformationCache.Load(address, false);
         storage = DeviceInformationCache.Load(address, true);
         if (hardware != null) RenderHardware(hardware);
         if (storage != null) RenderStorage(storage);
         else if (hardware != null) { storage = hardware; RenderStorage(hardware); }
-        timer.Start();
-        await Task.WhenAll(ReloadStatus(), ReloadHardware(false));
+        // Sessions bind to the main poller; only request an initial read if no fresh result exists.
+        var sessions = Device.HasFreshRemoteStatus ? Task.CompletedTask : ReloadStatus();
+        await ReloadHardware(false);
+        if (disposed) return;
+        // The first hardware collection already includes a storage snapshot; do not collect twice.
+        if (DeviceInformationCache.IsStorageFresh(hardware) && (storage == null || hardware!.ObservedAt > storage.ObservedAt))
+        {
+            storage = hardware; RenderStorage(storage!);
+        }
+        await Task.WhenAll(sessions, ReloadStorage(false));
+    }
+    private void InformationChanged(string updatedAddress)
+    {
+        if (disposed || !string.Equals(address, updatedAddress, StringComparison.OrdinalIgnoreCase) || Dispatcher.HasShutdownStarted) return;
+        Dispatcher.BeginInvoke(new Action(() =>
+        {
+            if (disposed) return;
+            if (DeviceInformationCache.Load(address, false) is { } newHardware)
+            {
+                hardware = newHardware; RenderHardware(newHardware);
+            }
+            if (DeviceInformationCache.Load(address, true) is { } newStorage)
+            {
+                storage = newStorage; RenderStorage(newStorage);
+            }
+        }));
     }
     private void DeviceChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -162,8 +173,7 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
         statusBusy = true; refreshStatus.IsEnabled = false;
         try
         {
-            var state = await DeviceControlClient.Status(address, lifetime.Token);
-            if (!disposed) Device.SetRemoteSessionStatus(state);
+            await IoC.Get<ConnectionStatusService>().RefreshDeviceAsync(Device).WaitAsync(lifetime.Token);
         }
         catch (OperationCanceledException) { }
         catch
@@ -182,8 +192,6 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
             var value = await DeviceInformationCache.Read(address, false, refresh, lifetime.Token);
             if (disposed) return;
             hardware = value; RenderHardware(value);
-            // Hardware refresh never replaces an already displayed storage snapshot.
-            if (storage == null) { storage = value; RenderStorage(value); }
         }
         catch (OperationCanceledException) { }
         catch (Exception ex)
@@ -196,6 +204,7 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
     private async Task ReloadStorage(bool refresh)
     {
         if (storageBusy || lifetime == null || disposed) return;
+        if (!refresh && DeviceInformationCache.IsStorageFresh(storage)) return;
         if (!Paired()) { storageNote.Text = UiText.Get("Device.PairingNeeded"); return; }
         storageBusy = true; refreshStorage.IsEnabled = false; storageNote.Text = UiText.Get("Device.Loading");
         try
@@ -221,7 +230,11 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
             DeviceControlClient.Import(address, picker.FileName);
             hardware = null; storage = null; hardwareRows.Children.Clear(); storageRows.Children.Clear();
             await Task.WhenAll(ReloadStatus(), ReloadHardware(true));
-            IoC.Get<ConnectionStatusService>().RequestRefresh();
+            if (!disposed)
+            {
+                if (DeviceInformationCache.IsStorageFresh(hardware)) { storage = hardware; RenderStorage(storage!); }
+                await ReloadStorage(false);
+            }
         }
         catch { sessionNote.Text = UiText.Get("Remote.PairingFailed"); }
     }
@@ -247,13 +260,12 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
                     : session.Protocol == 0 ? "Remote.LocalSession" : "Remote.OtherSession";
                 card.Children.Add(Label(key));
                 AddValue(card, "Device.Source", string.IsNullOrWhiteSpace(session.Client) ? UiText.Get("Device.NotRecorded") : session.Client);
-                var details = new StackPanel();
+                var details = new StackPanel { Margin = new Thickness(0, 4, 0, 8) };
                 AddValue(details, "Device.SessionId", session.Id.ToString(CultureInfo.InvariantCulture));
                 AddValue(details, "Device.Account", session.User);
                 AddValue(details, "Device.LockState", session.Locked.HasValue ? UiText.Get(session.Locked.Value ? "Device.Locked" : "Device.Unlocked") : Unknown());
                 AddValue(details, "Device.Logon", FileTime(session.LogonTime));
-                var more = new Expander { Content = details, Margin = new Thickness(0, 4, 0, 8) };
-                more.Header = Label("Device.More"); card.Children.Add(more);
+                card.Children.Add(details);
             }
         }
     }
@@ -306,39 +318,12 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
         {
             var bar = new ProgressBar { Minimum = 0, Maximum = 100, Value = 100.0 * (volume.SizeBytes!.Value - volume.FreeBytes!.Value) / volume.SizeBytes.Value,
                 Height = 5, Margin = new Thickness(0, 2, 0, 6) };
-            bar.Foreground = new SolidColorBrush(Color.FromRgb(0, 120, 212));
+            bool lowSpace = (decimal)volume.FreeBytes!.Value * 10 < volume.SizeBytes!.Value;
+            // Windows Explorer's native normal and low-space fill colors on this Windows theme.
+            bar.Foreground = new SolidColorBrush(lowSpace ? Color.FromRgb(196, 43, 28) : Color.FromRgb(0, 112, 203));
             target.Children.Add(bar);
         }
     }
-    private void LoadPreview()
-    {
-        try
-        {
-            var path = DeviceInformationCache.PreviewPath(address.Length > 0 ? address : Device.Id);
-            if (!File.Exists(path)) return;
-            var image = new BitmapImage(); image.BeginInit(); image.CacheOption = BitmapCacheOption.OnLoad; image.UriSource = new Uri(path); image.EndInit(); image.Freeze();
-            preview.Source = image; preview.Visibility = Visibility.Visible;
-        }
-        catch { preview.Source = null; preview.Visibility = Visibility.Collapsed; }
-    }
-    private Task SelectPreview()
-    {
-        var picker = new OpenFileDialog { Filter = "Images|*.png;*.jpg;*.jpeg;*.bmp" };
-        if (picker.ShowDialog(Window.GetWindow(this)) != true) return Task.CompletedTask;
-        try
-        {
-            if (new FileInfo(picker.FileName).Length > 20 * 1024 * 1024) throw new IOException();
-            var image = new BitmapImage(); image.BeginInit(); image.CacheOption = BitmapCacheOption.OnLoad; image.DecodePixelWidth = 1280;
-            image.UriSource = new Uri(picker.FileName); image.EndInit(); image.Freeze();
-            var path = DeviceInformationCache.PreviewPath(address.Length > 0 ? address : Device.Id);
-            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-            using (var stream = File.Create(path)) { var encoder = new PngBitmapEncoder(); encoder.Frames.Add(BitmapFrame.Create(image)); encoder.Save(stream); }
-            preview.Source = image; preview.Visibility = Visibility.Visible;
-        }
-        catch { sessionNote.Text = UiText.Get("Device.PreviewFailed"); }
-        return Task.CompletedTask;
-    }
-
     private static string Unknown() => UiText.Get("Device.Unavailable");
     private static string Join(params string[] values) => string.Join(" · ", values.Where(v => !string.IsNullOrWhiteSpace(v)));
     private static string Observed(DateTimeOffset time) => time == default ? Unknown() : UiText.Get("Device.ObservedAt", time.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"));
@@ -369,7 +354,7 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
         row.Children.Add(new TextBlock { Text = string.IsNullOrWhiteSpace(value) ? Unknown() : value, TextWrapping = TextWrapping.Wrap, IsHitTestVisible = true });
         target.Children.Add(row);
     }
-    private static StackPanel Section(StackPanel target, string? key, Button? action = null)
+    private static StackPanel Section(StackPanel target, string? key, FrameworkElement? action = null)
     {
         var content = new StackPanel();
         if (key == null)
@@ -407,7 +392,8 @@ public sealed class DeviceDetailsPane : UserControl, IDisposable
     public void Dispose()
     {
         if (disposed) return; disposed = true;
-        Device.PropertyChanged -= DeviceChanged; timer.Stop();
+        Device.PropertyChanged -= DeviceChanged;
+        DeviceInformationCache.Updated -= InformationChanged;
         lifetime?.Cancel(); lifetime?.Dispose(); lifetime = null;
     }
 }

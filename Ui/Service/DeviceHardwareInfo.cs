@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -60,8 +61,18 @@ public sealed class DeviceInformationException(string resourceKey) : Exception(r
 internal static class DeviceInformationCache
 {
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
-    internal static string PreviewPath(string address) => Path.Combine(AppPathHelper.Instance.LocalityDirPath,
-        "device-information", Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(address))) + ".png");
+    private static readonly ConcurrentDictionary<string, SemaphoreSlim> Gates = new(StringComparer.OrdinalIgnoreCase);
+    internal static event Action<string>? Updated;
+    internal static readonly TimeSpan HardwareLifetime = TimeSpan.FromDays(1);
+    internal static readonly TimeSpan StorageLifetime = TimeSpan.FromHours(1);
+    internal static bool IsHardwareFresh(DeviceHardwareInfo? info) => IsFresh(info, HardwareLifetime);
+    internal static bool IsStorageFresh(DeviceHardwareInfo? info) => IsFresh(info, StorageLifetime);
+    private static bool IsFresh(DeviceHardwareInfo? info, TimeSpan lifetime)
+    {
+        if (info == null) return false;
+        var age = DateTimeOffset.UtcNow - info.ObservedAt;
+        return age >= TimeSpan.FromSeconds(-30) && age < lifetime;
+    }
     private static string? CachePath(string address, bool storage)
     {
         var pairing = DeviceControlClient.Find(address);
@@ -83,27 +94,49 @@ internal static class DeviceInformationCache
     }
     internal static async Task<DeviceHardwareInfo> Read(string address, bool storage, bool refresh, CancellationToken token)
     {
-        if (!refresh && Load(address, storage) is { } cached && DateTimeOffset.UtcNow - cached.ObservedAt < TimeSpan.FromHours(24))
-            return cached;
-        var info = await DeviceControlClient.Hardware(address, storage, refresh, token).ConfigureAwait(false);
+        var path = CachePath(address, storage) ?? throw new InvalidOperationException(UiText.Get("Shell.Unpaired"));
+        var gate = Gates.GetOrAdd(path, _ => new SemaphoreSlim(1, 1));
+        await gate.WaitAsync(token).ConfigureAwait(false);
         try
         {
-            var path = CachePath(address, storage);
-            if (path != null)
+            // Recheck under the shared gate so a background read and an opened pane do not collect twice.
+            if (!refresh && Load(address, storage) is { } cached && (storage ? IsStorageFresh(cached) : IsHardwareFresh(cached)))
+                return cached;
+            var info = await DeviceControlClient.Hardware(address, storage, refresh, token).ConfigureAwait(false);
+            if (CachePath(address, storage) != path) throw new OperationCanceledException("Device pairing changed");
+            await Save(path, info, token).ConfigureAwait(false);
+            // Full hardware collection also contains storage; reuse it if storage is due.
+            if (!storage && (info.Disks?.Length > 0 || info.Volumes?.Length > 0))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-                var temporary = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+                var storagePath = path.Replace(".hardware.json", ".storage.json", StringComparison.Ordinal);
+                var storageGate = Gates.GetOrAdd(storagePath, _ => new SemaphoreSlim(1, 1));
+                await storageGate.WaitAsync(token).ConfigureAwait(false);
                 try
                 {
-                    await File.WriteAllTextAsync(temporary, JsonSerializer.Serialize(info, Json), token).ConfigureAwait(false);
-                    File.Move(temporary, path, true);
+                    if (!IsStorageFresh(Load(address, true))) await Save(storagePath, info, token).ConfigureAwait(false);
                 }
-                finally { if (File.Exists(temporary)) File.Delete(temporary); }
+                finally { storageGate.Release(); }
             }
+            Updated?.Invoke(address);
+            return info;
+        }
+        finally { gate.Release(); }
+    }
+    private static async Task Save(string path, DeviceHardwareInfo info, CancellationToken token)
+    {
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            var temporary = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+            try
+            {
+                await File.WriteAllTextAsync(temporary, JsonSerializer.Serialize(info, Json), token).ConfigureAwait(false);
+                File.Move(temporary, path, true);
+            }
+            finally { if (File.Exists(temporary)) File.Delete(temporary); }
         }
         catch (OperationCanceledException) { throw; }
         catch (IOException) { }
         catch (UnauthorizedAccessException) { }
-        return info;
     }
 }

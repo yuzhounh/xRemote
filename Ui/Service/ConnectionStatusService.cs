@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -18,7 +19,11 @@ public sealed class ConnectionStatusService : IDisposable
     private readonly GlobalData _data;
     private readonly CancellationTokenSource _stop = new();
     private Timer? _timer;
+    private Timer? _informationTimer;
     private int _refreshing;
+    private int _refreshingInformation;
+    private readonly Dictionary<string, Task<XRemote.Control.ControlStatus?>> _remoteRequests = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, DateTimeOffset> _informationRetryAfter = new(StringComparer.OrdinalIgnoreCase);
 
     public ConnectionStatusService(GlobalData data) => _data = data;
 
@@ -26,12 +31,90 @@ public sealed class ConnectionStatusService : IDisposable
     {
         if (_timer != null) return;
         _data.OnReloadAll += RequestRefresh;
+        _data.OnReloadAll += RequestInformationRefresh;
         _timer = new Timer(_ => RequestRefresh(), null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
+        _informationTimer = new Timer(_ => RequestInformationRefresh(), null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
     }
 
     public void RequestRefresh()
     {
         if (!_stop.IsCancellationRequested) _ = RefreshAsync();
+    }
+
+    // Both the main poller and detail buttons share each in-flight remote-status request.
+    private Task<XRemote.Control.ControlStatus?> ReadRemoteStatusAsync(string address)
+    {
+        lock (_remoteRequests)
+        {
+            if (_remoteRequests.TryGetValue(address, out var pending)) return pending;
+            var completion = new TaskCompletionSource<XRemote.Control.ControlStatus?>(TaskCreationOptions.RunContinuationsAsynchronously);
+            _remoteRequests[address] = completion.Task;
+            _ = CompleteRemoteStatusAsync(address, completion);
+            return completion.Task;
+        }
+    }
+    private async Task CompleteRemoteStatusAsync(string address, TaskCompletionSource<XRemote.Control.ControlStatus?> completion)
+    {
+        XRemote.Control.ControlStatus? status = null;
+        try
+        {
+            if (DeviceControlClient.Find(address) != null)
+                status = await DeviceControlClient.Status(address, _stop.Token).ConfigureAwait(false);
+        }
+        catch { /* An unavailable management service means unknown usage, never idle. */ }
+        finally
+        {
+            lock (_remoteRequests) _remoteRequests.Remove(address);
+            completion.TrySetResult(status);
+        }
+    }
+    internal async Task RefreshDeviceAsync(ProtocolBaseViewModel row)
+    {
+        if (_stop.IsCancellationRequested || row.Server is not _1RM.Model.Protocol.RDP endpoint) return;
+        var address = endpoint.Address;
+        var status = await ReadRemoteStatusAsync(address).ConfigureAwait(false);
+        await Execute.OnUIThreadAsync(() =>
+        {
+            if (_data.VmItemList.Contains(row) && ReferenceEquals(row.Server, endpoint) && endpoint.Address == address)
+                row.SetRemoteSessionStatus(status);
+        });
+    }
+    private void RequestInformationRefresh()
+    {
+        if (!_stop.IsCancellationRequested) _ = RefreshInformationAsync();
+    }
+    private async Task RefreshInformationAsync()
+    {
+        if (Interlocked.Exchange(ref _refreshingInformation, 1) != 0) return;
+        try
+        {
+            var addresses = Array.Empty<string>();
+            await Execute.OnUIThreadAsync(() => addresses = _data.VmItemList
+                .Select(row => (row.Server as ProtocolBaseWithAddressPort)?.Address)
+                .Where(address => !string.IsNullOrWhiteSpace(address)).Select(address => address!)
+                .Distinct(StringComparer.OrdinalIgnoreCase).ToArray());
+            // Inventory collection is separate from the 30-second status poll and uses one worker.
+            foreach (var address in addresses)
+            {
+                if (_stop.IsCancellationRequested) return;
+                if (_informationRetryAfter.TryGetValue(address, out var retry) && DateTimeOffset.UtcNow < retry) continue;
+                try
+                {
+                    if (DeviceControlClient.Find(address) == null) continue;
+                    await DeviceInformationCache.Read(address, false, false, _stop.Token).ConfigureAwait(false);
+                    await DeviceInformationCache.Read(address, true, false, _stop.Token).ConfigureAwait(false);
+                    _informationRetryAfter.Remove(address);
+                }
+                catch (OperationCanceledException) when (_stop.IsCancellationRequested) { return; }
+                catch (Exception ex)
+                {
+                    _informationRetryAfter[address] = DateTimeOffset.UtcNow.AddMinutes(5);
+                    SimpleLogHelper.Warning("Device information refresh deferred: " + ex.Message);
+                }
+            }
+        }
+        catch (Exception ex) { if (!_stop.IsCancellationRequested) SimpleLogHelper.Error(ex); }
+        finally { Interlocked.Exchange(ref _refreshingInformation, 0); }
     }
 
     internal static async Task<bool> ProbeAsync(string address, int port, CancellationToken cancellationToken)
@@ -72,9 +155,7 @@ public sealed class ConnectionStatusService : IDisposable
                     XRemote.Control.ControlStatus? remote = null;
                     if (endpoint is _1RM.Model.Protocol.RDP)
                     {
-                        try { if (DeviceControlClient.Find(address) != null) remote = await DeviceControlClient.Status(address, token).ConfigureAwait(false); }
-                        catch (OperationCanceledException) when (token.IsCancellationRequested) { throw; }
-                        catch { /* Unavailable management is unknown, never idle. */ }
+                        remote = await ReadRemoteStatusAsync(address).ConfigureAwait(false);
                     }
                     await Execute.OnUIThreadAsync(() =>
                     {
@@ -98,7 +179,10 @@ public sealed class ConnectionStatusService : IDisposable
     public void Dispose()
     {
         _data.OnReloadAll -= RequestRefresh;
+        _data.OnReloadAll -= RequestInformationRefresh;
         _timer?.Dispose();
+        _informationTimer?.Dispose();
+        _informationTimer = null;
         _timer = null;
         _stop.Cancel();
     }
