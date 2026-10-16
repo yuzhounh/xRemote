@@ -22,6 +22,13 @@ namespace _1RM.Service.Locality
         public double ServerListStatusWidth = 84;
         public double ServerListAddressWidth = 550;
         public double ServerListProtocolWidth = 100;
+        public double ServerListTagsWidth = 160;
+        public bool ShowStatusColumn = true;
+        public bool ShowAddressColumn = true;
+        public bool ShowProtocolColumn = true;
+        public bool ShowTagsColumn = false;
+        // Null migrates the existing note preference without resetting user layouts.
+        public bool? ShowNoteColumn;
     }
 
     public static class LocalityListViewService

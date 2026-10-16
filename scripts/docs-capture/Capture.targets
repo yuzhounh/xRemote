@@ -1,0 +1,4 @@
+<Project>
+  <PropertyGroup Condition="'$(MSBuildProjectName)'=='Ui'"><StartupObject>Program</StartupObject></PropertyGroup>
+  <ItemGroup Condition="'$(MSBuildProjectName)'=='Ui'"><Compile Include="$(MSBuildThisFileDirectory)Program.cs" /><Compile Include="$(MSBuildThisFileDirectory)WindowCapture.cs" /><Compile Include="$(MSBuildThisFileDirectory)DialogSmokeChecks.cs" /></ItemGroup>
+</Project>

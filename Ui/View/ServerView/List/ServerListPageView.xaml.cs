@@ -410,6 +410,34 @@ namespace _1RM.View.ServerView
             ServerPageView_TagListHelper.HeaderTag_OnClick(DataContext, sender, e);
         }
 
+        private void ColumnHeaders_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            if (sender is not Grid header || DataContext is not ServerListPageViewModel vm) return;
+            var menu = header.ContextMenu;
+            menu.Items.Clear();
+            foreach (var (label, property) in new[] {
+                ("Name", (string?)null), ("Shell.Status", nameof(vm.ShowStatusColumn)),
+                ("Target", nameof(vm.ShowAddressColumn)), ("Protocol", nameof(vm.ShowProtocolColumn)),
+                ("Tags", nameof(vm.ShowTagsColumn)), ("Note", nameof(vm.ShowNoteColumn)) })
+            {
+                var item = new MenuItem { IsCheckable = true, StaysOpenOnClick = true };
+                item.SetResourceReference(HeaderedItemsControl.HeaderProperty, label);
+                if (property == null) { item.IsChecked = true; item.IsEnabled = false; }
+                else item.SetBinding(MenuItem.IsCheckedProperty, new Binding(property) { Source = vm, Mode = BindingMode.TwoWay });
+                // The shared menu template renders Icon, but has no checked glyph.
+                var check = new TextBlock { Text = "✓", FontSize = 14, VerticalAlignment = VerticalAlignment.Center };
+                check.SetBinding(VisibilityProperty, new Binding(nameof(MenuItem.IsChecked))
+                    { Source = item, Converter = new BooleanToVisibilityConverter() });
+                item.Icon = check;
+                menu.Items.Add(item);
+            }
+            menu.Items.Add(new Separator());
+            var reset = new MenuItem();
+            reset.SetResourceReference(HeaderedItemsControl.HeaderProperty, "Shell.ResetColumns");
+            reset.Click += (_, _) => vm.ResetColumns();
+            menu.Items.Add(reset);
+        }
+
         private void ColumnResize_OnDragDelta(object sender, DragDeltaEventArgs e)
         {
             if (sender is Thumb thumb && DataContext is ServerListPageViewModel vm)
@@ -420,6 +448,8 @@ namespace _1RM.View.ServerView
                     case "Name": vm.NameWidth += e.HorizontalChange; break;
                     case "Address": vm.AddressWidth += e.HorizontalChange; break;
                     case "Protocol": vm.ProtocolWidth += e.HorizontalChange; break;
+                    case "Tags": vm.TagsWidth += e.HorizontalChange; break;
+                    case "Note": vm.NoteWidth += e.HorizontalChange; break;
                 }
                 e.Handled = true;
             }

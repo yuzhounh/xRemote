@@ -707,4 +707,5 @@
     <s:String x:Key="Settings.EnvironmentValuePlaceholder">變數內容或連線變數</s:String>
     <s:String x:Key="Settings.EmptyCredentials">尚未儲存登入認證資料，可點選上方「新增」開始建立。</s:String>
     <s:String x:Key="Editor.CredentialChoiceHint">選擇目前資料來源中的登入資訊。清單為空時，請先在「設定 → 資料與認證」中新增。</s:String>
+    <s:String x:Key="Shell.ResetColumns">還原預設欄位</s:String>
 </ResourceDictionary>

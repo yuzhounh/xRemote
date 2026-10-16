@@ -41,6 +41,9 @@ namespace _1RM.Controls
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             PopupCardSettingMenu.Closed += PopupCardSettingMenuOnClosed;
+            if (ProtocolBaseViewModel?.HoverNoteDisplayControl is { } note)
+                note.IsBriefNoteShown = _1RM.Service.Locality.LocalityListViewService.Settings.ShowNoteColumn
+                    ?? IoC.Get<_1RM.Service.ConfigurationService>().General.ShowNoteFieldInListView;
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)

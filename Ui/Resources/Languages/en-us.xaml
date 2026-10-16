@@ -707,4 +707,5 @@ Use value|display name, for example:
     <s:String x:Key="Settings.EnvironmentValuePlaceholder">Variable content or connection variable</s:String>
     <s:String x:Key="Settings.EmptyCredentials">No login credentials saved yet. Click Add above to create one.</s:String>
     <s:String x:Key="Editor.CredentialChoiceHint">Choose login information saved in the current data source. If the list is empty, add credentials in Settings → Data and credentials.</s:String>
+    <s:String x:Key="Shell.ResetColumns">Restore default columns</s:String>
 </ResourceDictionary>

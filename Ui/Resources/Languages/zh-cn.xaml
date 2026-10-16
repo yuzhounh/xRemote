@@ -727,4 +727,5 @@
     <s:String x:Key="Settings.EnvironmentValuePlaceholder">变量内容或连接变量</s:String>
     <s:String x:Key="Settings.EmptyCredentials">尚未保存登录凭据，可点击上方“添加”开始创建。</s:String>
     <s:String x:Key="Editor.CredentialChoiceHint">选择当前数据源中的登录信息。列表为空时，请先在“设置 → 数据与凭据”中添加。</s:String>
+    <s:String x:Key="Shell.ResetColumns">恢复默认列</s:String>
 </ResourceDictionary>

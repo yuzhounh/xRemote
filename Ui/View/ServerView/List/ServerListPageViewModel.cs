@@ -73,7 +73,7 @@ namespace _1RM.View.ServerView
         public ServerListPageViewModel(DataSourceService sourceService, GlobalData appData) : base(sourceService, appData)
         {
             // Make sure the update do triggered the first time assign a value 
-            BriefNoteVisibility = IoC.Get<ConfigurationService>().General.ShowNoteFieldInListView ? Visibility.Visible : Visibility.Collapsed;
+            BriefNoteVisibility = ShowNoteColumn ? Visibility.Visible : Visibility.Collapsed;
             
             // Register CollectionChanged handler once to update selection-related properties
             VmServerList.CollectionChanged += (s, e) =>
@@ -97,10 +97,10 @@ namespace _1RM.View.ServerView
 
         public double StatusWidth
         {
-            get => LocalityListViewService.Settings.ServerListStatusWidth;
+            get => ShowStatusColumn ? LocalityListViewService.Settings.ServerListStatusWidth : 0;
             set
             {
-                if (!double.IsFinite(value)) return;
+                if (!double.IsFinite(value) || !ShowStatusColumn) return;
                 LocalityListViewService.Settings.ServerListStatusWidth = Math.Clamp(value, 64, 400);
                 RaisePropertyChanged();
             }
@@ -108,10 +108,10 @@ namespace _1RM.View.ServerView
 
         public double AddressWidth
         {
-            get => LocalityListViewService.Settings.ServerListAddressWidth;
+            get => ShowAddressColumn ? LocalityListViewService.Settings.ServerListAddressWidth : 0;
             set
             {
-                if (!double.IsFinite(value)) return;
+                if (!double.IsFinite(value) || !ShowAddressColumn) return;
                 LocalityListViewService.Settings.ServerListAddressWidth = Math.Clamp(value, 200, 2000);
                 RaisePropertyChanged();
             }
@@ -119,10 +119,10 @@ namespace _1RM.View.ServerView
 
         public double ProtocolWidth
         {
-            get => LocalityListViewService.Settings.ServerListProtocolWidth;
+            get => ShowProtocolColumn ? LocalityListViewService.Settings.ServerListProtocolWidth : 0;
             set
             {
-                if (!double.IsFinite(value)) return;
+                if (!double.IsFinite(value) || !ShowProtocolColumn) return;
                 LocalityListViewService.Settings.ServerListProtocolWidth = Math.Clamp(value, 70, 400);
                 RaisePropertyChanged();
             }
@@ -133,8 +133,8 @@ namespace _1RM.View.ServerView
             get => BriefNoteVisibility == Visibility.Visible ? LocalityListViewService.Settings.ServerListNoteWidth : 0;
             set
             {
-                if (BriefNoteVisibility != Visibility.Visible) return;
-                LocalityListViewService.ServerListNoteWidthSet(value);
+                if (BriefNoteVisibility != Visibility.Visible || !double.IsFinite(value)) return;
+                LocalityListViewService.Settings.ServerListNoteWidth = Math.Clamp(value, 50, 1000);
                 RaisePropertyChanged();
             }
         }
@@ -462,9 +462,7 @@ namespace _1RM.View.ServerView
             {
                 return _cmdHideNoteField ??= new RelayCommand((o) =>
                 {
-                    IoC.Get<ConfigurationService>().General.ShowNoteFieldInListView = false;
-                    IoC.Get<ConfigurationService>().Save();
-                    BriefNoteVisibility = Visibility.Collapsed;
+                    ShowNoteColumn = false;
                 });
             }
         }
@@ -477,9 +475,7 @@ namespace _1RM.View.ServerView
             {
                 return _cmdShowNoteField ??= new RelayCommand((o) =>
                 {
-                    IoC.Get<ConfigurationService>().General.ShowNoteFieldInListView = true;
-                    IoC.Get<ConfigurationService>().Save();
-                    BriefNoteVisibility = Visibility.Visible;
+                    ShowNoteColumn = true;
                 });
             }
         }

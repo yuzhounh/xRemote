@@ -65,7 +65,7 @@ namespace _1RM.Service
         [DefaultValue(false)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool ShowRecentlySessionInTray = false;
-        public bool ShowNoteFieldInListView = true;
+        public bool ShowNoteFieldInListView = false;
 
         public int LogLevel = (int)SimpleLogHelper.EnumLogLevel.Warning;
         #endregion

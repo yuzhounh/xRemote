@@ -146,12 +146,14 @@
             </Grid.Margin>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="Selector"></ColumnDefinition>
-                <ColumnDefinition Width="{Binding DataContext.StatusWidth, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="ConnectionStatus" />
+                <ColumnDefinition Width="{Binding DataContext.StatusWidth, Mode=OneWay, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="ConnectionStatus" />
                 <ColumnDefinition Width="Auto" SharedSizeGroup="Span"></ColumnDefinition>
-                <ColumnDefinition Width="{Binding DataContext.NameWidth, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="Name" />
-                <ColumnDefinition Width="{Binding DataContext.NoteWidth, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="BriefNote" />
-                <ColumnDefinition Width="{Binding DataContext.AddressWidth, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="Address" />
-                <ColumnDefinition Width="{Binding DataContext.ProtocolWidth, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="Protocol" />
+                <ColumnDefinition Width="{Binding DataContext.NameWidth, Mode=OneWay, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="Name" />
+                <ColumnDefinition Width="{Binding DataContext.NoteWidth, Mode=OneWay, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="BriefNote" />
+                <ColumnDefinition Width="{Binding DataContext.AddressWidth, Mode=OneWay, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="Address" />
+                <ColumnDefinition Width="{Binding DataContext.ProtocolWidth, Mode=OneWay, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="Protocol" />
+                <ColumnDefinition Width="{Binding DataContext.TagsWidth, Mode=OneWay, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}" SharedSizeGroup="Tags" />
+                <ColumnDefinition Width="30" SharedSizeGroup="Actions" />
             </Grid.ColumnDefinitions>
 
 
@@ -180,7 +182,7 @@
             </CheckBox>
 
             <!--protocol name-->
-            <TextBlock Grid.Column="6" Margin="5 0 10 0"
+            <TextBlock Grid.Column="6" Margin="5 0 10 0" Visibility="{Binding DataContext.ProtocolColumnVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}"
                        Style="{StaticResource TextBlockBase}"
                        Text="{Binding Server.ProtocolDisplayName}"
                        FontSize="{DynamicResource GlobalFontSizeSubtitle}" FontWeight="Normal"
@@ -190,7 +192,7 @@
 
 
             <!-- setting menu button -->
-            <Button Grid.Column="6"
+            <Button Grid.Column="8"
                     x:Name="BtnSettingMenu"
                     Margin="0 0 10 0"
                     Width="20" Height="20" HorizontalAlignment="Right"
@@ -219,10 +221,10 @@
                        Text="{Binding Server.DisplayName}"></TextBlock>
 
             <!--tags-->
-            <ItemsControl Grid.Column="3"
+            <ItemsControl Grid.Column="7" Visibility="{Binding DataContext.TagsColumnVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}"
                           Margin="5 0 10 0" 
                           MaxWidth="200" 
-                          VerticalAlignment="Center" HorizontalAlignment="Right" 
+                          VerticalAlignment="Center" HorizontalAlignment="Left"
                           ItemsSource="{Binding Tags}"
                           ItemsPanel="{StaticResource LineItemItemsTemplateWrapPanel}"
                           ItemTemplate="{StaticResource LineItemDataTemplateTag}"
@@ -240,7 +242,8 @@
                             Visibility="{Binding DataContext.BriefNoteVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}"
                             Content="{Binding HoverNoteDisplayControl}"></ContentControl>
 
-            <Button Grid.Column="1" Command="{Binding CmdManageRemoteSessions}" Margin="5,0" Padding="0"
+            <Grid Grid.Column="1" ClipToBounds="True" Visibility="{Binding DataContext.StatusColumnVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}">
+            <Button Command="{Binding CmdManageRemoteSessions}" Margin="5,0" Padding="0"
                     BorderThickness="0" Background="Transparent" MinHeight="40"
                     HorizontalAlignment="Stretch"
                     VerticalContentAlignment="Center" HorizontalContentAlignment="Left"
@@ -254,10 +257,12 @@
             </StackPanel>
             </Button>
 
+            </Grid>
+
             <!--address-->
             <TextBlock Margin="5 0 10 0"
                        Style="{StaticResource TextBlockBase}"
-                       Grid.Column="5"
+                       Grid.Column="5" Visibility="{Binding DataContext.AddressColumnVisibility, RelativeSource={RelativeSource AncestorType=serverList:ServerListPageView}}"
                        Background="Transparent"
                        ToolTip="{Binding Server.SubTitle}"
                        FontSize="{DynamicResource GlobalFontSizeSubtitle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
