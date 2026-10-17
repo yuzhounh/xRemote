@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -38,9 +38,11 @@ namespace _1RM.Resources.Icons
 
         #endregion singleton
 
+        private readonly Task? _loadTask;
+
         private ServerIcons()
         {
-            Task.Factory.StartNew(() =>
+            _loadTask = Task.Factory.StartNew(() =>
             {
                 var resourceName = this.GetType().Assembly.GetName().Name + ".g";
                 var mgr = new ResourceManager(resourceName, this.GetType().Assembly);
@@ -76,8 +78,48 @@ namespace _1RM.Resources.Icons
         {
             get
             {
+                _loadTask?.Wait(3000);
+                EnsureUsedIconsLoaded();
                 _icons ??= new List<BitmapSource>(IconsBase64.Select(x => Convert.FromBase64String(x).BitmapFromBytes().ToBitmapSource()));
                 return _icons;
+            }
+        }
+
+        public void EnsureUsedIconsLoaded()
+        {
+            try
+            {
+                var globalData = IoC.TryGet<Model.GlobalData>();
+                if (globalData?.VmItemList != null)
+                {
+                    var usedList = new List<string>();
+                    foreach (var item in globalData.VmItemList)
+                    {
+                        var b64 = item.Server?.IconBase64;
+                        if (!string.IsNullOrWhiteSpace(b64) && !usedList.Contains(b64))
+                        {
+                            usedList.Add(b64);
+                        }
+                    }
+                    bool changed = false;
+                    for (int i = usedList.Count - 1; i >= 0; i--)
+                    {
+                        var b64 = usedList[i];
+                        if (!IconsBase64.Contains(b64))
+                        {
+                            IconsBase64.Insert(0, b64);
+                            changed = true;
+                        }
+                    }
+                    if (changed)
+                    {
+                        _icons = null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SimpleLogHelper.Error(ex);
             }
         }
     }

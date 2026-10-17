@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
@@ -41,7 +41,7 @@
 
 
     <PropertyGroup Condition="!$(Configuration.Contains('Net6')) and !$(Configuration.Contains('Net48'))">
-        <TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
+        <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(Configuration.Contains('Net6'))">
@@ -224,6 +224,10 @@
         <Resource Include="Resources\dummy.wav">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
+        <Resource Include="Resources\Icons\000_Device\000_OfficePC.png" />
+        <Resource Include="Resources\Icons\000_Device\001_Server_Yellow.png" />
+        <Resource Include="Resources\Icons\000_Device\002_Server_Green.png" />
+        <Resource Include="Resources\Icons\000_Device\003_Server_Purple.png" />
         <Resource Include="Resources\Icons\000_OS\000_Win10_1.png" />
         <Resource Include="Resources\Icons\000_OS\000_Win11_0.png" />
         <Resource Include="Resources\Icons\000_OS\000_Win11_1.png" />
@@ -516,6 +520,7 @@
 
     <ItemGroup>
         <Compile Include="..\control\shared\ControlModels.cs" Link="Service\ControlModels.cs" />
+        <Compile Include="..\control\shared\RemoteAccessModels.cs" Link="Service\RemoteAccessModels.cs" />
         <Compile Include="..\Updater\UpdateCore.cs" Link="Service\UpdateCore.cs" />
         <EmbeddedResource Include="..\Updater\update-public-key.xml" LogicalName="XRemote.UpdatePublicKey" />
     </ItemGroup>
