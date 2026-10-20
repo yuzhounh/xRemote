@@ -146,6 +146,8 @@
     <s:String x:Key="New session always use full screen">連線後自動進入全螢幕</s:String>
     <s:String x:Key="New session use full screen if the last session is full screen">還原上次工作階段的全螢幕狀態</s:String>
     <s:String x:Key="Resolution">解析度</s:String>
+    <s:String x:Key="Editor.ResolutionPresets">預設</s:String>
+    <s:String x:Key="Editor.ResolutionPresetsHint">使用指定的遠端解析度，畫面適應視窗。較低解析度可減少畫面傳輸量，重新連線後生效。</s:String>
     <s:String x:Key="Fit to window">與客戶端視窗大小相同 (需要Windows Server 2012 R2及以上的伺服器)</s:String>
     <s:String x:Key="Custom resolution (stretch)">自訂解析度 (延展)</s:String>
     <s:String x:Key="Custom resolution (fixed)">自訂解析度 (固定大小)</s:String>
@@ -262,6 +264,16 @@
     <s:String x:Key="with alternative">有替代方案</s:String>
     <s:String x:Key="Automatic address switching">自動切換位址</s:String>
     <s:String x:Key="Availability detection">位址可用檢測</s:String>
+    <s:String x:Key="ConnectionCheck.Title">連線檢測</s:String>
+    <s:String x:Key="ConnectionCheck.Checking">正在檢測連線連接埠…</s:String>
+    <s:String x:Key="ConnectionCheck.Remaining">剩餘 {0} 秒</s:String>
+    <s:String x:Key="ConnectionCheck.Timeout">連線逾時</s:String>
+    <s:String x:Key="ConnectionCheck.Failed">連線失敗</s:String>
+    <s:String x:Key="ConnectionCheck.Success">連線成功 · {0} 毫秒</s:String>
+    <s:String x:Key="ConnectionCheck.Canceled">已取消檢測</s:String>
+    <s:String x:Key="ConnectionCheck.Unavailable">目前無法存取此位址的連線連接埠。</s:String>
+    <s:String x:Key="ConnectionCheck.Retry">重新檢測</s:String>
+    <s:String x:Key="ConnectionCheck.CopyHint">選取位址後即可複製。</s:String>
     <s:String x:Key="Check if address is available before connect">連接前檢查地址是否可用</s:String>
     <s:String x:Key="When the default host or port is unavailable the alternate addresses will be tried in sequence">當默認主機或端口不可用時，將按順序嘗試備用地址</s:String>
     <s:String x:Key="support multi-address multi-account">支持多地址多賬戶</s:String>
@@ -762,4 +774,12 @@
     <s:String x:Key="Device.UnmappedVolume">未對應至實體磁碟的磁碟區</s:String>
     <s:String x:Key="Device.NoStorage">暫無儲存資訊。</s:String>
     <s:String x:Key="Device.Unavailable">未知</s:String>
+    <s:String x:Key="Remote.GuardUnknown">其他遠控狀態未知，已保留連線，無法確認獨佔存取。</s:String>
+    <s:String x:Key="Remote.GuardUnknownSoftware">{0}：控制狀態未知，已保留連線，無法確認獨佔存取。</s:String>
+    <s:String x:Key="Remote.GuardStopped">{0} 正在控制這台電腦。xRemote 已停止本次連線及其磁碟重新導向；對方結束控制後，請手動重新連線。</s:String>
+    <s:String x:Key="Remote.GuardStopUnconfirmed">已偵測到其他遠控，但尚未確認本連線中斷。請手動關閉此分頁，磁碟存取可能仍然有效。</s:String>
+    <s:String x:Key="Remote.NetworkAdvice">目前連線持續回報較低網路品質。降低解析度可能改善流暢度。</s:String>
+    <s:String x:Key="Remote.NetworkLower">本次降至 {0}×{1}</s:String>
+    <s:String x:Key="Remote.NetworkKeep">保持目前</s:String>
+    <s:String x:Key="Remote.NetworkLowerFailed">無法線上調整解析度。可在連線編輯中選擇較低解析度，下次重新連線後生效。</s:String>
 </ResourceDictionary>

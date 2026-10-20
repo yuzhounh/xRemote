@@ -46,7 +46,6 @@ namespace _1RM.Utils
                 {
                     SimpleLogHelper.Debug("TcpHelper: timeoutTask is completed, cancel connectTask.");
                     cts.Cancel();
-                    connectTask.Dispose();
                     return null;
                 }
 
@@ -54,7 +53,6 @@ namespace _1RM.Utils
                 {
                     SimpleLogHelper.Debug("TcpHelper: Connection cancelled.");
                     cts.Cancel();
-                    connectTask.Dispose();
                     return null;
                 }
 

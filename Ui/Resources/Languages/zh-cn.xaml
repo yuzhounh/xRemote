@@ -146,6 +146,8 @@
     <s:String x:Key="New session always use full screen">连接后自动进入全屏</s:String>
     <s:String x:Key="New session use full screen if the last session is full screen">恢复上次会话的全屏状态</s:String>
     <s:String x:Key="Resolution">分辨率</s:String>
+    <s:String x:Key="Editor.ResolutionPresets">预设</s:String>
+    <s:String x:Key="Editor.ResolutionPresetsHint">使用指定的远程分辨率，画面适应窗口。较低分辨率可减少画面传输量，重新连接后生效。</s:String>
     <s:String x:Key="Fit to window">适应窗口大小(服务器要求Windows Server 2012 R2及以上)</s:String>
     <s:String x:Key="Custom resolution (stretch)">自定义分辨率 (拉伸)</s:String>
     <s:String x:Key="Custom resolution (fixed)">自定义分辨率 (固定)</s:String>
@@ -262,6 +264,16 @@
     <s:String x:Key="with alternative">使用备选凭证</s:String>
     <s:String x:Key="Automatic address switching">自动切换地址</s:String>
     <s:String x:Key="Availability detection">地址可用性检测</s:String>
+    <s:String x:Key="ConnectionCheck.Title">连接检测</s:String>
+    <s:String x:Key="ConnectionCheck.Checking">正在检测连接端口…</s:String>
+    <s:String x:Key="ConnectionCheck.Remaining">剩余 {0} 秒</s:String>
+    <s:String x:Key="ConnectionCheck.Timeout">连接超时</s:String>
+    <s:String x:Key="ConnectionCheck.Failed">连接失败</s:String>
+    <s:String x:Key="ConnectionCheck.Success">连接成功 · {0} 毫秒</s:String>
+    <s:String x:Key="ConnectionCheck.Canceled">已取消检测</s:String>
+    <s:String x:Key="ConnectionCheck.Unavailable">当前无法访问此地址的连接端口。</s:String>
+    <s:String x:Key="ConnectionCheck.Retry">重新检测</s:String>
+    <s:String x:Key="ConnectionCheck.CopyHint">选中地址后即可复制。</s:String>
     <s:String x:Key="Check if address is available before connect">连接前检测地址是否可用</s:String>
     <s:String x:Key="When the default host or port is unavailable the alternate addresses will be tried in sequence">当默认的地址不可用时，将自动依次尝试备选地址</s:String>
     <s:String x:Key="support multi-address multi-account">支持多地址、多账号</s:String>
@@ -782,4 +794,12 @@
     <s:String x:Key="Device.UnmappedVolume">未映射到物理磁盘的分区</s:String>
     <s:String x:Key="Device.NoStorage">暂无存储信息。</s:String>
     <s:String x:Key="Device.Unavailable">未知</s:String>
+    <s:String x:Key="Remote.GuardUnknown">其他远控状态未知，已保留连接，无法确认独占访问。</s:String>
+    <s:String x:Key="Remote.GuardUnknownSoftware">{0}：控制状态未知，已保留连接，无法确认独占访问。</s:String>
+    <s:String x:Key="Remote.GuardStopped">{0} 正在控制这台电脑。xRemote 已停止本次连接及其磁盘重定向；对方结束控制后，请手动重新连接。</s:String>
+    <s:String x:Key="Remote.GuardStopUnconfirmed">已检测到其他远控，但尚未确认本连接断开。请手动关闭本标签，磁盘访问可能仍然有效。</s:String>
+    <s:String x:Key="Remote.NetworkAdvice">当前连接持续报告较低网络质量。降低分辨率可能改善流畅度。</s:String>
+    <s:String x:Key="Remote.NetworkLower">本次降至 {0}×{1}</s:String>
+    <s:String x:Key="Remote.NetworkKeep">保持当前</s:String>
+    <s:String x:Key="Remote.NetworkLowerFailed">无法在线调整分辨率。可在连接编辑中选择较低分辨率，下次重新连接后生效。</s:String>
 </ResourceDictionary>

@@ -74,11 +74,26 @@ dotnet publish Ui/Ui.csproj -c Release -r win-x64 --self-contained true -o artif
 
 Release 发布同时包含 `xRemote-update-win-x64.json` 签名清单与完整 ZIP；打包脚本使用本地忽略目录 `update-signing-private/release-key.xml` 的私钥，客户端只内置 `Updater/update-public-key.xml` 公钥。私钥不能提交或上传，也不能在普通重建时重新生成。缺少私钥的构建机仍可编译，但必须取得既有签名能力后才能生成供自动更新使用的发行包。更新下载在后台完成，真正退出后静默应用，下次启动生效；详见[安装与升级](docs/installation.md)。
 
+## 内部维护文档
+
+公开使用手册位于 `docs/`，由 MkDocs 发布。`docs-internal/` 保存本地内部资料，已从 Git 提交中排除，也不在文档站源目录内：
+
+- 文档与帮助入口维护记录：`docs-internal/documentation.md`
+- 构建与验证记录：`docs-internal/baseline_validation.md`
+- 本机与远端整合更新记录：`docs-internal/local_integration.md`
+- 新设备 ControlHost 安装指南：`docs-internal/new-device-controlhost-install.md`，包含本地部署约定，按内部操作资料维护。
+- Android 当前设计：`docs-internal/android-design.md`
+- Windows 更新设计：`docs-internal/windows-update-design.md`
+- 连接编辑器设计：`docs-internal/editor-design.md`
+- 会话控制设计与实现边界：`docs-internal/session-control-design.md`
+
+这些路径供本地工作区使用，公开仓库和文档站不包含对应文件。
+
 ## 版本规则
 
-- `Ui/AppVersion.cs` 分别定义官方基线和 xRemote 修订号；当前界面版本为 `1.3.0 Rev.13`，Windows 数字版本为 `1.3.0.13`。
-- 官方基线只在整合对应上游版本时更新；`ForkRevision` 只在正式发布 xRemote 时递增，整合上游新版后也不归零，普通编辑和重复编译不递增。
-- Git 标签使用 `v1.3.0-r13`，便携包使用 `xRemote-v1.3.0-r13-x64.zip`。
+- `Ui/AppVersion.cs` 分别定义官方基线和 xRemote 修订号；当前界面版本为 `1.3.0 Rev.15`，Windows 数字版本为 `1.3.0.15`。
+- 官方基线只在整合对应上游版本时更新；`ForkRevision` 在同一基线内从 1 递增到 99，整合上游新版后从 1 重新开始，普通编辑和重复编译不递增。
+- Git 标签和新发布包的修订号固定为两位，例如 `v1.3.0-r01`、`xRemote-v1.3.0-r01-x64.zip`；界面仍显示 `Rev.1`。历史发布的原安装附件保持不变。
 - 为兼容已有数据，内部程序集、配置文件名及凭据存储标识继续沿用 1Remote。
 
 ## 开源协议与致谢

@@ -125,6 +125,7 @@ namespace _1RM.View.Host.ProtocolHosts
             GridLoading.Visibility = Visibility.Visible;
 
             _rdpSettings = rdp;
+            InitializeNetworkAdvice();
 
             _loginResizeTimer = new Timer(300) { Enabled = false, AutoReset = false };
             _loginResizeTimer.Elapsed += (sender, args) =>
@@ -292,6 +293,7 @@ namespace _1RM.View.Host.ProtocolHosts
                 };
                 _rdpClient.OnConnected += OnRdpClientConnected;
                 _rdpClient.OnLoginComplete += OnRdpClientLoginComplete;
+                _rdpClient.OnNetworkStatusChanged += OnRdpNetworkStatusChanged;
                 ((System.ComponentModel.ISupportInitialize)(_rdpClient)).EndInit();
                 RdpHost.Child = _rdpClient;
 
@@ -771,7 +773,7 @@ namespace _1RM.View.Host.ProtocolHosts
         }
 
         #region Base Interface
-        public override void Conn()
+        private void ConnectRdpCore()
         {
             Debug.Assert(_rdpClient != null); if (_rdpClient == null) return;
             Dispatcher.Invoke(() =>
@@ -910,6 +912,7 @@ namespace _1RM.View.Host.ProtocolHosts
 
         private void DisposeRdpClient()
         {
+            StopNetworkAdvice();
             lock (_rdpClientDisposeLock)
             {
                 try
@@ -929,6 +932,7 @@ namespace _1RM.View.Host.ProtocolHosts
 
         private void RdpClientDispose()
         {
+            StopRemoteAccessMonitor();
             GlobalEventHelper.OnScreenResolutionChanged -= OnScreenResolutionChanged;
             try
             {

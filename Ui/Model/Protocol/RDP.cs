@@ -756,6 +756,8 @@ namespace _1RM.Model.Protocol
                 case ERdpWindowResizeMode.Stretch:
                     rdpConfig.SmartSizing = 1;
                     rdpConfig.DynamicResolution = 0;
+                    rdpConfig.DesktopWidth = this.RdpWidth > 0 ? this.RdpWidth ?? 800 : 800;
+                    rdpConfig.DesktopHeight = this.RdpHeight > 0 ? this.RdpHeight ?? 600 : 600;
                     break;
 
                 case ERdpWindowResizeMode.Fixed:

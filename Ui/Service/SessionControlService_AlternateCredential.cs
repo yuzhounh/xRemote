@@ -77,152 +77,109 @@ namespace _1RM.Service
         public static async Task<Credential?> FindFirstConnectableAddressAsync(IEnumerable<Credential> pingCredentials, string protocolDisplayName)
         {
             var credentials = pingCredentials.Select(x => x.CloneMe()).ToList();
+            if (credentials.Count == 0) return null;
             const int maxWaitSeconds = 5;
             using var cts = new CancellationTokenSource();
-
-            var uiPingItems = new List<PingTestItem>();
+            var items = new List<PingTestItem>();
             foreach (var credential in credentials)
             {
-                // Normalize credentials - ensure all have address and port
-                credential.Address = string.IsNullOrEmpty(credential.Address) ? credentials.First().Address : credential.Address;
-                credential.Port = string.IsNullOrEmpty(credential.Port) ? credentials.First().Port : credential.Port;
-                uiPingItems.Add(new PingTestItem(credential.Name, credential.Address + ":" + credential.Port)
-                {
-                    Status = PingStatus.None,
-                });
+                credential.Address = string.IsNullOrEmpty(credential.Address) ? credentials[0].Address : credential.Address;
+                credential.Port = string.IsNullOrEmpty(credential.Port) ? credentials[0].Port : credential.Port;
+                items.Add(new PingTestItem(credential.Name, credential.Address + ":" + credential.Port));
             }
-
             var dlg = new AlternateAddressSwitchingViewModel(cts)
             {
-                Title = protocolDisplayName + ": " + IoC.Translate("Availability detection"),
-                PingTestItems = uiPingItems
+                Title = protocolDisplayName + " · " + UiText.Get("ConnectionCheck.Title"),
+                PingTestItems = items
             };
-            SimpleLogHelper.Debug($"FindFirstConnectableAddressAsync in {uiPingItems.Count} address, showing dlg...");
-            await Execute.OnUIThreadAsync(() => { IoC.Get<IWindowManager>().ShowWindow(dlg); });
-
-            var taskList = new List<(Task<bool?> Task, Credential Credential)>();
-            for (int i = 0; i < credentials.Count; i++)
+            await Execute.OnUIThreadAsync(() =>
             {
-                // add tasks to ping each credential
-                var credential = credentials[i];
-                var pingTestItem = uiPingItems[i];
-                var task = Task.Run(async () =>
+                dlg.BeginAttempt(maxWaitSeconds);
+                IoC.Get<IWindowManager>().ShowWindow(dlg);
+            });
+
+            while (!cts.IsCancellationRequested)
+            {
+                using var attempt = CancellationTokenSource.CreateLinkedTokenSource(cts.Token);
+                await Execute.OnUIThreadAsync(() => dlg.BeginAttempt(maxWaitSeconds));
+
+                async Task<bool?> ProbeAsync(int index)
+                {
+                    var credential = credentials[index];
+                    var watch = System.Diagnostics.Stopwatch.StartNew();
+                    bool? result;
+                    try
+                    {
+                        result = await TcpHelper.TestConnectionAsync(credential.Address, credential.Port,
+                            attempt.Token, maxWaitSeconds * 1000).ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException) { result = null; }
+                    catch (Exception ex)
+                    {
+                        SimpleLogHelper.Error(ex);
+                        result = false;
+                    }
+                    await Execute.OnUIThreadAsync(() =>
+                    {
+                        if (dlg.IsCanceled) return;
+                        items[index].Ping = (int)watch.ElapsedMilliseconds;
+                        items[index].Status = result == true ? PingStatus.Success
+                            : attempt.IsCancellationRequested ? PingStatus.Canceled
+                            : result == null ? PingStatus.TimedOut : PingStatus.Failed;
+                    });
+                    return result;
+                }
+
+                async Task CountDownAsync()
                 {
                     try
                     {
-                        await Execute.OnUIThreadAsync(() => pingTestItem.Status = PingStatus.Pinging);
-                        var startTime = DateTime.UtcNow;
-                        var ret = await TcpHelper.TestConnectionAsync(credential.Address, credential.Port, cts.Token, maxWaitSeconds * 1000);
-                        await Execute.OnUIThreadAsync(() =>
+                        for (var remaining = maxWaitSeconds - 1; remaining >= 0; remaining--)
                         {
-                            pingTestItem.Ping = (int)(DateTime.UtcNow - startTime).TotalMilliseconds;
-                            pingTestItem.Status = ret switch
-                            {
-                                null => PingStatus.Canceled,
-                                true => PingStatus.Success,
-                                _ => PingStatus.Failed
-                            };
-                        });
-                        await Task.Delay(200, cts.Token); // To avoid the UI closing too quickly, making it hard to see.
-                        return ret;
+                            await Task.Delay(1000, attempt.Token).ConfigureAwait(false);
+                            await Execute.OnUIThreadAsync(() => { if (!dlg.IsCanceled) dlg.Eta = remaining; });
+                        }
                     }
-                    catch (OperationCanceledException)
-                    {
-                        await Execute.OnUIThreadAsync(() => pingTestItem.Status = PingStatus.Canceled);
-                        return null;
-                    }
-                    catch (Exception ex)
-                    {
-                        SimpleLogHelper.Error($"Error testing connection: {ex.Message}");
-                        await Execute.OnUIThreadAsync(() => pingTestItem.Status = PingStatus.Failed);
-                        return false;
-                    }
-                }, cts.Token);
-                taskList.Add((task, credential));
-            }
+                    catch (OperationCanceledException) { }
+                }
 
-            // start a task to update UI countdown
-            var countDownTask = Task.Run(async () =>
-            {
+                var countdown = CountDownAsync();
+                var probes = credentials.Select((_, index) => ProbeAsync(index)).ToList();
+                var remainingProbes = probes.ToList();
+                Credential? successfulCredential = null;
                 try
                 {
-                    for (int i = 0; i < maxWaitSeconds; i++)
+                    while (remainingProbes.Count > 0)
                     {
-                        await Execute.OnUIThreadAsync(() => dlg.Eta = maxWaitSeconds - i);
-                        if (cts.Token.IsCancellationRequested)
+                        var completed = await Task.WhenAny(remainingProbes).ConfigureAwait(false);
+                        remainingProbes.Remove(completed);
+                        if (await completed.ConfigureAwait(false) == true)
                         {
+                            successfulCredential = credentials[probes.IndexOf(completed)];
                             break;
                         }
-                        await Task.Delay(1000, cts.Token);
                     }
                 }
-                catch (OperationCanceledException)
+                finally
                 {
+                    attempt.Cancel();
+                    await Task.WhenAll(probes).ConfigureAwait(false);
+                    await countdown.ConfigureAwait(false);
                 }
-                catch (Exception e)
+
+                if (cts.IsCancellationRequested) return null;
+                if (successfulCredential != null)
                 {
-                    SimpleLogHelper.Error($"Error in countdown task: {e.Message}");
+                    await Execute.OnUIThreadAsync(() => dlg.RequestClose());
+                    return successfulCredential.CloneMe();
                 }
-            }, cts.Token);
 
-
-            Credential? successfulCredential = null;
-            try
-            {
-                var remainingTasks = taskList.Select(t => t.Task).ToList();
-                while (remainingTasks.Any())
-                {
-                    var completedTask = await Task.WhenAny(remainingTasks);
-                    remainingTasks.Remove(completedTask);
-
-                    // if success then get credential
-                    var taskInfo = taskList.FirstOrDefault(t => t.Task == completedTask);
-                    if (taskInfo != default && await taskInfo.Task == true)
-                    {
-                        successfulCredential = taskInfo.Credential;
-                        SimpleLogHelper.DebugInfo($"Task for credential {successfulCredential.Name} completed successfully. Cancelling remaining tasks.");
-                        break;
-                    }
-                }
-            }
-            finally
-            {
-                await Execute.OnUIThreadAsync(() => dlg.Eta = 0);
-                cts.Cancel();
-            }
-
-
-            try
-            {
-                await Task.WhenAny(countDownTask, Task.Delay(maxWaitSeconds * 1000));
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-
-
-            if (dlg.IsCanceled)
-            {
-                return null;
-            }
-
-            // return the first credential when ping success
-            if (successfulCredential != null)
-            {
-                // close the pop window
-                await Execute.OnUIThreadAsync(() => { dlg.RequestClose(); });
-                return successfulCredential.CloneMe();
-            }
-            else
-            {
-                // none of the address is connectable
-                // show error message
+                Task<bool>? retry = null;
                 await Execute.OnUIThreadAsync(() =>
                 {
-                    dlg.Message = IoC.Translate("We are not able to connect to xxx", protocolDisplayName);
-                    dlg.StartAutoCloseCounter();
+                    if (!dlg.IsCanceled) retry = dlg.ShowFailure(items.Any(item => item.Status == PingStatus.TimedOut));
                 });
+                if (retry == null || !await retry.ConfigureAwait(false)) return null;
             }
             return null;
         }

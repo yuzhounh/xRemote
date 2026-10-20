@@ -16,138 +16,106 @@ using Shawn.Utils;
 
 namespace _1RM.View.Utils
 {
-    public enum PingStatus
-    {
-        None,
-        Pinging,
-        Canceled,
-        Failed,
-        Success
-    }
+    public enum PingStatus { None, Pinging, Canceled, Failed, Success, TimedOut }
+
     public class PingTestItem : NotifyPropertyChangedBase
     {
-        public PingTestItem(string name, string address)
-        {
-            Name = name;
-            Address = address;
-        }
-
-        public string Name {get; }
-        public string Address {get; }
-
-        private PingStatus _status = PingStatus.None;
+        public PingTestItem(string name, string address) { Name = name; Address = address; }
+        public string Name { get; }
+        public string Address { get; }
+        private PingStatus _status;
         public PingStatus Status
         {
             get => _status;
-            set => SetAndNotifyIfChanged(ref _status, value);
+            set { SetAndNotifyIfChanged(ref _status, value); RaisePropertyChanged(nameof(StatusText)); }
         }
-
-        private int _ping = 0;
-        /// <summary>
-        /// the timespan between start and end of the ping in Milliseconds
-        /// </summary>
+        private int _ping;
         public int Ping
         {
             get => _ping;
-            set => SetAndNotifyIfChanged(ref _ping, value);
+            set { SetAndNotifyIfChanged(ref _ping, value); RaisePropertyChanged(nameof(StatusText)); }
         }
+        public string StatusText => Status switch
+        {
+            PingStatus.Pinging => UiText.Get("ConnectionCheck.Checking"),
+            PingStatus.Success => UiText.Get("ConnectionCheck.Success", Ping),
+            PingStatus.Failed => UiText.Get("ConnectionCheck.Failed"),
+            PingStatus.TimedOut => UiText.Get("ConnectionCheck.Timeout"),
+            PingStatus.Canceled => UiText.Get("ConnectionCheck.Canceled"),
+            _ => ""
+        };
     }
 
     public class AlternateAddressSwitchingViewModel : NotifyPropertyChangedBaseScreen
     {
         private readonly CancellationTokenSource _cts;
+        private TaskCompletionSource<bool>? _retry;
+        public AlternateAddressSwitchingViewModel(CancellationTokenSource cts) => _cts = cts;
+        public bool IsCanceled { get; private set; }
         private string _title = "";
-
-        public AlternateAddressSwitchingViewModel(CancellationTokenSource cts)
-        {
-            _cts = cts;
-        }
-
-        ~AlternateAddressSwitchingViewModel()
-        {
-            __autoCloseTimer?.Dispose();
-        }
-
-        public bool IsCanceled { get; private set; } =false;
-
-        public string Title
-        {
-            get => _title;
-            set => SetAndNotifyIfChanged(ref _title, value);
-        }
-
+        public string Title { get => _title; set => SetAndNotifyIfChanged(ref _title, value); }
         private string _message = "";
-        public string Message
-        {
-            get => _message;
-            set => SetAndNotifyIfChanged(ref _message, value);
-        }
-
-        private int _eta = 0;
+        public string Message { get => _message; set => SetAndNotifyIfChanged(ref _message, value); }
+        private int _eta;
         public int Eta
         {
             get => _eta;
-            set => SetAndNotifyIfChanged(ref _eta, value);
+            set { SetAndNotifyIfChanged(ref _eta, value); RaisePropertyChanged(nameof(RemainingText)); }
         }
-
-        private List<PingTestItem> _pingTestItems = new List<PingTestItem>();
+        public string RemainingText => UiText.Get("ConnectionCheck.Remaining", Eta);
+        private bool _isChecking = true;
+        public bool IsChecking
+        {
+            get => _isChecking;
+            private set
+            {
+                SetAndNotifyIfChanged(ref _isChecking, value);
+                RaisePropertyChanged(nameof(HasFailed));
+                RaisePropertyChanged(nameof(StatusIcon));
+            }
+        }
+        public bool HasFailed => !IsChecking;
+        public string StatusIcon => IsChecking ? "…" : "!";
+        private List<PingTestItem> _pingTestItems = new();
         public List<PingTestItem> PingTestItems
         {
             get => _pingTestItems;
             set => SetAndNotifyIfChanged(ref _pingTestItems, value);
-        } 
-
-
-        private RelayCommand? _cmdCloseContinue;
-        public RelayCommand CmdCloseContinue
-        {
-            get
-            {
-                return _cmdCloseContinue ??= new RelayCommand((o) =>
-                {
-                    this.RequestClose();
-                });
-            }
         }
 
+        public void BeginAttempt(int seconds)
+        {
+            _retry = null;
+            IsChecking = true;
+            Eta = seconds;
+            Message = UiText.Get("ConnectionCheck.Checking");
+            foreach (var item in PingTestItems) { item.Ping = 0; item.Status = PingStatus.Pinging; }
+        }
+
+        public Task<bool> ShowFailure(bool timedOut)
+        {
+            _retry = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            Message = UiText.Get(timedOut ? "ConnectionCheck.Timeout" : "ConnectionCheck.Failed");
+            IsChecking = false;
+            return _retry.Task;
+        }
+
+        private RelayCommand? _cmdRetry;
+        public RelayCommand CmdRetry => _cmdRetry ??= new RelayCommand(_ =>
+        {
+            if (!IsChecking && _retry != null)
+            {
+                IsChecking = true;
+                _retry.TrySetResult(true);
+            }
+        });
         private RelayCommand? _cmdCloseEnd;
-        public RelayCommand CmdCloseEnd
+        public RelayCommand CmdCloseEnd => _cmdCloseEnd ??= new RelayCommand(_ =>
         {
-            get
-            {
-                return _cmdCloseEnd ??= new RelayCommand((o) =>
-                {
-                    IsCanceled = true;
-                    if (_cts.IsCancellationRequested == false) _cts.Cancel();
-                    this.RequestClose();
-                });
-            }
-        }
-
-        private System.Timers.Timer? __autoCloseTimer;
-        private int _autoCloseEta = 0;
-        public void StartAutoCloseCounter(int autoCloseEta = 5)
-        {
-            _autoCloseEta = autoCloseEta + 3;
-            __autoCloseTimer = new System.Timers.Timer(1000);
-            __autoCloseTimer.Interval = 1000;
-            __autoCloseTimer.Elapsed += (sender, args) =>
-            {
-                _autoCloseEta--;
-                if (_autoCloseEta >= 0 &&
-                    (_autoCloseEta < 5 || _autoCloseEta <= autoCloseEta))
-                {
-                    Eta = _autoCloseEta;
-                }
-
-                if (_autoCloseEta <= 0)
-                {
-                    __autoCloseTimer.AutoReset = false;
-                    Execute.OnUIThread(() => this.RequestClose());
-                }
-            };
-            __autoCloseTimer.AutoReset = true;
-            __autoCloseTimer.Start();
-        }
+            IsCanceled = true;
+            _retry?.TrySetResult(false);
+            if (!_cts.IsCancellationRequested) _cts.Cancel();
+            RequestClose();
+        });
     }
 }

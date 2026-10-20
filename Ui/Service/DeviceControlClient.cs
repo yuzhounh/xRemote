@@ -88,6 +88,15 @@ public static class DeviceControlClient
             throw new DeviceInformationException("Device.ReadFailed");
         return info;
     }
+    public static async Task<RemoteAccessStatus?> RemoteAccess(string address, CancellationToken token)
+    {
+        if (Find(address) == null) return null;
+        using var client = Open(address);
+        using var response = await client.GetAsync("v1/remote-access", token).ConfigureAwait(false);
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<RemoteAccessStatus>(Json, token).ConfigureAwait(false);
+    }
     public static async Task Disconnect(string address, SessionView selected)
     {
         using var client = Open(address);

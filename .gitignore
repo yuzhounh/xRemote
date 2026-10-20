@@ -351,3 +351,4 @@ healthchecksdb
 /tmp/
 /dist/
 /review/
+/docs-internal/

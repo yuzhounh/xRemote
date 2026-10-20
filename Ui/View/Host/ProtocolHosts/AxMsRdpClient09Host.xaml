@@ -7,9 +7,18 @@
                   mc:Ignorable="d" 
                   d:DesignHeight="450" d:DesignWidth="800">
     <Grid x:Name="Grid">
-        <WindowsFormsHost x:Name="RdpHost"/>
-        <Control Name="GridLoading" Style="{StaticResource BusyAnimationStyle}" Background="Black"/>
-        <Grid Name="GridMessageBox" Background="Black">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+        <Border x:Name="NetworkAdviceBanner" Grid.Row="0" Visibility="Collapsed" Padding="10,6"
+                Background="{DynamicResource MenuSurfaceBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="0,0,0,1">
+            <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Right" Margin="8,0,0,0" Content="{DynamicResource Remote.NetworkKeep}" Click="NetworkAdviceDismiss_OnClick"/>
+                <Button x:Name="NetworkAdviceApply" DockPanel.Dock="Right" Margin="8,0,0,0" Click="NetworkAdviceApply_OnClick"/>
+                <TextBlock x:Name="NetworkAdviceText" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="{DynamicResource PrimaryTextBrush}"/>
+            </DockPanel>
+        </Border>
+        <WindowsFormsHost x:Name="RdpHost" Grid.Row="1"/>
+        <Control Name="GridLoading" Grid.Row="1" Style="{StaticResource BusyAnimationStyle}" Background="Black"/>
+        <Grid Name="GridMessageBox" Grid.Row="1" Background="Black">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.1*" MaxWidth="100" MinWidth="20"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
