@@ -146,6 +146,8 @@
     <s:String x:Key="New session always use full screen">New session always use full screen</s:String>
     <s:String x:Key="New session use full screen if the last session is full screen">New session use full screen if the last session is full screen</s:String>
     <s:String x:Key="Resolution">Resolution</s:String>
+    <s:String x:Key="Editor.ResolutionPresets">Presets</s:String>
+    <s:String x:Key="Editor.ResolutionPresetsHint">Use a fixed remote resolution and fit the picture to the window. Lower resolutions reduce display traffic. Reconnect to apply.</s:String>
     <s:String x:Key="Fit to window">Fit to window(Supported server: Windows Server 2012 R2 and above)</s:String>
     <s:String x:Key="Custom resolution (stretch)">Custom resolution (stretch)</s:String>
     <s:String x:Key="Custom resolution (fixed)">Custom resolution (fixed)</s:String>
@@ -262,6 +264,16 @@
     <s:String x:Key="with alternative">with alternative</s:String>
     <s:String x:Key="Automatic address switching">Automatic address switching</s:String>
     <s:String x:Key="Availability detection">Availability detection</s:String>
+    <s:String x:Key="ConnectionCheck.Title">Connection check</s:String>
+    <s:String x:Key="ConnectionCheck.Checking">Checking the connection port…</s:String>
+    <s:String x:Key="ConnectionCheck.Remaining">{0} seconds remaining</s:String>
+    <s:String x:Key="ConnectionCheck.Timeout">Connection timed out</s:String>
+    <s:String x:Key="ConnectionCheck.Failed">Unable to connect</s:String>
+    <s:String x:Key="ConnectionCheck.Success">Connected · {0} ms</s:String>
+    <s:String x:Key="ConnectionCheck.Canceled">Detection canceled</s:String>
+    <s:String x:Key="ConnectionCheck.Unavailable">The connection port at this address is currently unavailable.</s:String>
+    <s:String x:Key="ConnectionCheck.Retry">Retry</s:String>
+    <s:String x:Key="ConnectionCheck.CopyHint">Select the address to copy it.</s:String>
     <s:String x:Key="Check if address is available before connect">Check if address is available before connect</s:String>
     <s:String x:Key="When the default host or port is unavailable the alternate addresses will be tried in sequence">When the default host or port is unavailable the alternate addresses will be tried in sequence</s:String>
     <s:String x:Key="support multi-address multi-account">support multi-address multi-account</s:String>
@@ -762,4 +774,12 @@ Use value|display name, for example:
     <s:String x:Key="Device.UnmappedVolume">Volume without a physical-disk mapping</s:String>
     <s:String x:Key="Device.NoStorage">No storage information available.</s:String>
     <s:String x:Key="Device.Unavailable">Unknown</s:String>
+    <s:String x:Key="Remote.GuardUnknown">Other remote-control status is unknown. Connection retained; exclusive access cannot be confirmed.</s:String>
+    <s:String x:Key="Remote.GuardUnknownSoftware">{0}: control status unknown. Connection retained; exclusive access cannot be confirmed.</s:String>
+    <s:String x:Key="Remote.GuardStopped">{0} is controlling this computer. xRemote has stopped this connection and its drive redirection. Reconnect manually when the other session ends.</s:String>
+    <s:String x:Key="Remote.GuardStopUnconfirmed">Another remote-control session was detected, but xRemote could not confirm disconnection. Close this tab manually; drive access may still be available.</s:String>
+    <s:String x:Key="Remote.NetworkAdvice">The connection has been reporting low network quality. A lower resolution may improve responsiveness.</s:String>
+    <s:String x:Key="Remote.NetworkLower">Use {0}×{1} this session</s:String>
+    <s:String x:Key="Remote.NetworkKeep">Keep current</s:String>
+    <s:String x:Key="Remote.NetworkLowerFailed">The resolution could not be changed online. Choose a lower resolution in connection settings and reconnect when ready.</s:String>
 </ResourceDictionary>

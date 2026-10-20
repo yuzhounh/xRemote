@@ -75,6 +75,33 @@ namespace _1RM.View.Editor.Forms
             TextBoxRdpControlAdditionalSettings.TextChanged += RdpControlTextBox_TextChanged;
         }
 
+        private void ButtonResolutionPresets_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.ContextMenu is ContextMenu menu)
+            {
+                menu.PlacementTarget = button;
+                menu.IsOpen = true;
+            }
+        }
+
+        private void ResolutionPreset_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is not RdpFormViewModel viewModel
+                || viewModel.New.RdpFullScreenFlag == ERdpFullScreenFlag.EnableFullAllScreens
+                || sender is not MenuItem { Tag: string preset }) return;
+
+            var dimensions = preset.Split('x');
+            if (dimensions.Length != 2
+                || !int.TryParse(dimensions[0], out var width)
+                || !int.TryParse(dimensions[1], out var height)) return;
+
+            viewModel.New.RdpWidth = width;
+            viewModel.New.RdpHeight = height;
+            // Keep the remote pixel count fixed while fitting the picture to the client window.
+            viewModel.New.RdpWindowResizeMode = ERdpWindowResizeMode.Stretch;
+            e.Handled = true;
+        }
+
         // Extract event handlers to named methods to reduce lambda allocation overhead
         private void RdpFileTextBox_GotFocus(object sender, RoutedEventArgs e)
         {

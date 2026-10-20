@@ -25,6 +25,8 @@ xRemote 集中管理 Windows 远程桌面、终端和文件传输连接。本手
 
 ## 文档维护与来源
 
+历史发行说明：[Windows 1.3.0 Rev.9](releases/release-v1.3.0-r9.md)。该说明对应 Rev.9，不代表当前版本。
+
 文档和截图随应用源码维护，由同一份 Markdown 自动生成 MkDocs 文档站。功能或界面变化时，同步更新对应章节、截图与帮助入口；不要只改版本号而保留不匹配的操作步骤。
 
 本手册为 xRemote 编写，截图来自 xRemote。概念和高级功能可继续参考 [1Remote 官方文档](https://1remote.github.io/)，应用的上游来源和开源许可见 [项目说明](https://github.com/yuzhounh/xRemote) 与 [LICENSE](https://github.com/yuzhounh/xRemote/blob/main/LICENSE)。

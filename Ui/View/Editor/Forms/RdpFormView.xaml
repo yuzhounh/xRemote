@@ -130,10 +130,14 @@
                     <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource EditorRowGridTitle}" Text="{DynamicResource Resolution}"/>
                     <Grid Style="{StaticResource EditorRowGridInput}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
                         <Grid.Resources>
                             <forms:ConverterERdpWindowResizeMode x:Key="ConverterERdpWindowResizeMode"/>
                         </Grid.Resources>
-                        <ComboBox Name="ComboBoxResolution" SelectedIndex="{Binding New.RdpWindowResizeMode, Converter={StaticResource ConverterERdpWindowResizeMode}}">
+                        <ComboBox Name="ComboBoxResolution" Margin="0,0,8,0" SelectedIndex="{Binding New.RdpWindowResizeMode, Converter={StaticResource ConverterERdpWindowResizeMode}}">
                             <ComboBoxItem Content="{DynamicResource 'Fit to window'}"/>
                             <ComboBoxItem Content="{DynamicResource 'Custom resolution (stretch)'}" Visibility="{Binding New.RdpFullScreenFlag, Converter={StaticResource ConverterEqual2Collapsed}, ConverterParameter={x:Static protocol:ERdpFullScreenFlag.EnableFullAllScreens}}">
                             </ComboBoxItem>
@@ -145,6 +149,23 @@
                             </ComboBoxItem>
                             <ComboBoxItem Visibility="{Binding New.RdpWindowResizeMode, Converter={StaticResource ConverterEqual2Visible}, ConverterParameter={x:Null}}" Content="{Binding New.ServerEditorDifferentOptions}"/>
                         </ComboBox>
+                        <Button Grid.Column="1" Padding="12,0" Content="{DynamicResource Editor.ResolutionPresets}"
+                                ToolTip="{DynamicResource Editor.ResolutionPresetsHint}" Click="ButtonResolutionPresets_OnClick"
+                                Visibility="{Binding New.RdpFullScreenFlag, Converter={StaticResource ConverterEqual2Collapsed}, ConverterParameter={x:Static protocol:ERdpFullScreenFlag.EnableFullAllScreens}}">
+                            <Button.ContextMenu>
+                                <ContextMenu Placement="Bottom">
+                                    <MenuItem Header="1024 × 768" Tag="1024x768" Click="ResolutionPreset_OnClick"/>
+                                    <MenuItem Header="1280 × 720" Tag="1280x720" Click="ResolutionPreset_OnClick"/>
+                                    <MenuItem Header="1280 × 800" Tag="1280x800" Click="ResolutionPreset_OnClick"/>
+                                    <MenuItem Header="1366 × 768" Tag="1366x768" Click="ResolutionPreset_OnClick"/>
+                                    <MenuItem Header="1600 × 900" Tag="1600x900" Click="ResolutionPreset_OnClick"/>
+                                    <MenuItem Header="1920 × 1080" Tag="1920x1080" Click="ResolutionPreset_OnClick"/>
+                                    <MenuItem Header="1920 × 1200" Tag="1920x1200" Click="ResolutionPreset_OnClick"/>
+                                    <MenuItem Header="2560 × 1440" Tag="2560x1440" Click="ResolutionPreset_OnClick"/>
+                                    <MenuItem Header="3840 × 2160" Tag="3840x2160" Click="ResolutionPreset_OnClick"/>
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
                     </Grid>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="156,8,0,0">

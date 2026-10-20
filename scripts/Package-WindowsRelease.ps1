@@ -6,11 +6,17 @@ param(
 $ErrorActionPreference = 'Stop'
 $taskSource = (Resolve-Path -LiteralPath $PublishDirectory).Path
 $taskMetadata = [System.Diagnostics.FileVersionInfo]::GetVersionInfo((Join-Path $taskSource '1Remote.exe'))
+$taskRuntimeOptions = (Get-Content -LiteralPath (Join-Path $taskSource '1Remote.runtimeconfig.json') -Raw | ConvertFrom-Json).runtimeOptions
+if ($taskRuntimeOptions.framework -or $taskRuntimeOptions.frameworks -or -not $taskRuntimeOptions.includedFrameworks) {
+    throw 'Expected a self-contained build. Publish with --self-contained true; do not reuse a framework-dependent build with --no-build.'
+}
 if ($taskMetadata.ProductName -ne 'xRemote' -or $taskMetadata.FileVersion -notmatch '^\d+\.\d+\.\d+\.\d+$') {
     throw 'Input is not a published xRemote Windows build'
 }
 $taskParts = $taskMetadata.FileVersion.Split('.')
-$taskVersion = ($taskParts[0..2] -join '.') + '-r' + $taskParts[3]
+$taskRevision = [int]$taskParts[3]
+if ($taskRevision -lt 1 -or $taskRevision -gt 99) { throw 'Release revision must be 1-99; reset it to 1 when integrating a new upstream baseline.' }
+$taskVersion = ($taskParts[0..2] -join '.') + '-r' + $taskRevision.ToString('D2')
 $taskForbidden = @(Get-ChildItem -LiteralPath $taskSource -Recurse -Force | Where-Object {
     $_.Name -match '^1Remote\.(json|db|dataSources\.json)(-wal|-shm)?$|^\.locality$|^\.icons$|^\.logs$|^\.rdp-passwords\.json$'
 })

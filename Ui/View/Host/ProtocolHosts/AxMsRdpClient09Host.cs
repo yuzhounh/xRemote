@@ -119,6 +119,8 @@ namespace _1RM.View.Host.ProtocolHosts
         private void OnRdpClientDisconnected(object sender, IMsTscAxEvents_OnDisconnectedEvent e)
         {
             SimpleLogHelper.Debug("RDP Host: RdpOnDisconnected");
+            StopRemoteAccessMonitor();
+            if (_remoteAccessDenied != null) { ShowRemoteAccessDenied(); return; }
 
             lock (this)
             {

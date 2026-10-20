@@ -240,9 +240,9 @@ namespace _1RM.Service
             // Both windows share the same strip; light palettes need opaque selected tabs.
             var primary = ColorAndBrushHelper.HexColorToMediaColor(theme.PrimaryMidColor);
             bool lightTabs = primary.R * .299 + primary.G * .587 + primary.B * .114 >= 128;
-            SetKey(rd, "SessionTabStripBrush", ColorAndBrushHelper.ColorToMediaBrush(theme.PrimaryMidColor));
-            SetKey(rd, "SessionTabSelectedBrush", ColorAndBrushHelper.ColorToMediaBrush(lightTabs ? "#FFFFFF" : "#24FFFFFF"));
-            SetKey(rd, "SessionTabHoverBrush", ColorAndBrushHelper.ColorToMediaBrush(lightTabs ? (stockLight ? "#E8E8E8" : "#60FFFFFF") : "#12FFFFFF"));
+            SetKey(rd, "SessionTabStripBrush", ColorAndBrushHelper.ColorToMediaBrush(stockLight ? "#E0E0E0" : theme.PrimaryMidColor));
+            SetKey(rd, "SessionTabSelectedBrush", ColorAndBrushHelper.ColorToMediaBrush(lightTabs ? "#FFFFFF" : "#32FFFFFF"));
+            SetKey(rd, "SessionTabHoverBrush", ColorAndBrushHelper.ColorToMediaBrush(lightTabs ? (stockLight ? "#EEEEEE" : "#60FFFFFF") : "#12FFFFFF"));
             SetKey(rd, "SessionTabSeparatorBrush", ColorAndBrushHelper.ColorToMediaBrush(lightTabs ? (stockLight ? "#DADADA" : "#40000000") : (theme.ThemeName == "Dark" ? "#406F7378" : "#40FFFFFF")));
             SetKey(rd, "SessionTabActionHoverBrush", ColorAndBrushHelper.ColorToMediaBrush(lightTabs ? "#10000000" : "#20FFFFFF"));
             SetKey(rd, "SessionTabActionPressedBrush", ColorAndBrushHelper.ColorToMediaBrush(lightTabs ? "#20000000" : "#35FFFFFF"));

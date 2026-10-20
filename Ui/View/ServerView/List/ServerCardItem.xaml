@@ -151,7 +151,7 @@
         <Style x:Key="ListBoxSettingStyle" TargetType="{x:Type ListBox}">
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Background" Value="{DynamicResource PrimaryMidBrush}" />
+            <Setter Property="Background" Value="Transparent" />
             <Setter Property="ItemContainerStyle">
                 <Setter.Value>
                     <Style TargetType="ListBoxItem">
@@ -277,8 +277,9 @@
                         <Popup Name="PopupCardSettingMenu"
                                AllowsTransparency="True"
                                PlacementTarget="{Binding ElementName=BtnSettingMenu}" StaysOpen="False">
-                            <Border Padding="0 0 4 4">
-                                <Grid MinWidth="80" Background="{DynamicResource PrimaryDarkBrush}">
+                            <Border CornerRadius="8" Padding="4" BorderThickness="1"
+                                    BorderBrush="{DynamicResource MenuBorderBrush}" Background="{DynamicResource MenuSurfaceBrush}">
+                                <Grid MinWidth="80" Background="Transparent">
                                     <ListBox ItemsSource="{Binding Actions}" 
                                              Style="{StaticResource ListBoxSettingStyle}"
                                              BorderThickness="0">

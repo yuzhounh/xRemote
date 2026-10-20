@@ -105,7 +105,8 @@ public static class UpdateCore
     {
         var match = Regex.Match(m.Tag, @"^v(\d+)\.(\d+)\.(\d+)-r(\d+)$");
         if (m.Schema != 1 || !match.Success || !System.Version.TryParse(m.Version, out var version) ||
-            version.ToString() != string.Join(".", match.Groups.Cast<Group>().Skip(1).Select(g => g.Value)) ||
+            !System.Version.TryParse(string.Join(".", match.Groups.Cast<Group>().Skip(1).Select(g => g.Value)), out var tagVersion) ||
+            version != tagVersion ||
             m.Package != "xRemote-" + m.Tag + "-x64.zip" || m.Size <= 0 || m.Size > MaxPackageBytes ||
             !Regex.IsMatch(m.Sha256, "^[a-f0-9]{64}$") || m.Files == null || m.Files.Count == 0 || m.Files.Count > 10000)
             throw new InvalidDataException("Invalid update identity");
@@ -279,7 +280,16 @@ public static class UpdateCore
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(destination)!);
         var temporary = destination + ".xremote-update-new";
         File.Copy(source, temporary, true);
-        if (File.Exists(destination)) File.Replace(temporary, destination, null);
+        if (File.Exists(destination))
+        {
+            try { File.Replace(temporary, destination, null); }
+            catch (IOException e) when ((e.HResult & 0xffff) == 1175 && File.Exists(temporary))
+            {
+                // Some Windows files reject ReplaceFile's metadata merge. Keep the same-volume
+                // replacement inside the durable update/rollback transaction, using atomic rename.
+                File.Move(temporary, destination, true);
+            }
+        }
         else File.Move(temporary, destination);
     }
 }

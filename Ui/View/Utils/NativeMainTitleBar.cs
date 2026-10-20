@@ -142,14 +142,15 @@ internal sealed class NativeMainTitleBar
     private void UpdateColors(object? sender, EventArgs e)
     {
         if (!UsesTallNativeTitleBar || _appWindow == null) return;
-        var background = (_window.TryFindResource("PrimaryMidBrush") as SolidColorBrush)?.Color
+        bool sessionWindow = _window is _1RM.View.Host.TabWindowView;
+        var background = (_window.TryFindResource(sessionWindow ? "SessionTabStripBrush" : "PrimaryMidBrush") as SolidColorBrush)?.Color
             ?? Color.FromRgb(50, 50, 51);
         var foreground = (_window.TryFindResource("PrimaryTextBrush") as SolidColorBrush)?.Color
             ?? Color.FromRgb(204, 204, 204);
         bool dark = background.R * .299 + background.G * .587 + background.B * .114 < 128;
         var inactive = dark ? Color.FromRgb(145, 145, 150) : Colors.Gray;
-        var hover = dark ? Color.FromRgb(65, 65, 68) : Color.FromRgb(223, 227, 232);
-        var pressed = dark ? Color.FromRgb(78, 78, 82) : Color.FromRgb(200, 205, 211);
+        var hover = dark ? Color.FromRgb(65, 65, 68) : sessionWindow ? Color.FromRgb(238, 238, 238) : Color.FromRgb(223, 227, 232);
+        var pressed = dark ? Color.FromRgb(78, 78, 82) : sessionWindow ? Color.FromRgb(204, 204, 204) : Color.FromRgb(200, 205, 211);
         SetBrush("NativeCaptionForegroundBrush", _window.IsActive ? foreground : inactive);
         SetBrush("NativeCaptionActiveForegroundBrush", foreground);
         SetBrush("NativeCaptionInactiveForegroundBrush", inactive);

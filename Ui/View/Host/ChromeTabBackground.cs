@@ -28,8 +28,8 @@ namespace _1RM.View.Host
             var width = RenderSize.Width;
             var height = RenderSize.Height;
             if (width <= 0 || height <= 0 || Fill == null) return;
-            var top = Math.Min(10, Math.Min(width / 2, height / 2));
-            var bottom = Math.Min(8, height / 2);
+            var top = Math.Min(14, Math.Min(width / 2, height / 2));
+            var bottom = Math.Min(12, height / 2);
             var geometry = new StreamGeometry();
             using (var path = geometry.Open())
             {

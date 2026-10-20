@@ -17,6 +17,12 @@ namespace _1RM.View.Utils
         {
             Loaded += OnLoaded;
             Closed += OnClosed;
+            SizeChanged += (_, _) =>
+            {
+                if (!IsLoaded) return;
+                Top = TopFrom - ActualHeight;
+                Left = SystemParameters.WorkArea.Right - ActualWidth;
+            };
         }
 
         protected override void OnDialogClose()

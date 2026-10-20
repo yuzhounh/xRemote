@@ -7,7 +7,9 @@ $taskVersionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo((Join-Pa
 if ($taskVersionInfo.ProductName -ne 'xRemote' -or $taskVersionInfo.FileVersion -notmatch '^\d+\.\d+\.\d+\.\d+$') { throw 'Expected a clean xRemote package directory' }
 if (@(Get-ChildItem -LiteralPath $taskPackage -Recurse -Force | Where-Object { $_.Name -match '^1Remote\.(json|db|dataSources\.json)(-wal|-shm)?$|^\.locality$|^\.rdp-passwords\.json$' }).Count -gt 0) { throw 'Package contains user data' }
 $taskParts = $taskVersionInfo.FileVersion.Split('.')
-$taskReleaseVersion = ($taskParts[0..2] -join '.') + '-r' + $taskParts[3]
+$taskRevision = [int]$taskParts[3]
+if ($taskRevision -lt 1 -or $taskRevision -gt 99) { throw 'Release revision must be 1-99; reset it to 1 when integrating a new upstream baseline.' }
+$taskReleaseVersion = ($taskParts[0..2] -join '.') + '-r' + $taskRevision.ToString('D2')
 if (-not $InnoSetupCompiler) {
     $taskCandidates = @((Join-Path $env:LOCALAPPDATA 'Programs\Inno Setup 6\ISCC.exe'), (Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6\ISCC.exe'), (Join-Path $env:ProgramFiles 'Inno Setup 6\ISCC.exe'))
     $InnoSetupCompiler = $taskCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1

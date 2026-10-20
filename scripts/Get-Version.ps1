@@ -15,6 +15,7 @@ $patch = [int] ($fileContent | Select-String 'public const uint Patch = (\d+)').
 $build = [int] ($fileContent | Select-String 'public const uint Build = (\d+)').Matches[0].Groups[1].Value
 $preRelease = ($fileContent | Select-String 'public const string PreRelease = "(.*)";').Matches[0].Groups[1].Value
 $forkRevision = [int] ($fileContent | Select-String 'public const uint ForkRevision = (\d+)').Matches[0].Groups[1].Value
+if ($forkRevision -lt 1 -or $forkRevision -gt 99) { throw 'Release revision must be 1-99; reset it to 1 when integrating a new upstream baseline.' }
 
 # Construct the version string
 if ($preRelease -eq "" -and $build -eq 0) {
@@ -32,7 +33,7 @@ Set-Location $originalDirectory
 # Write-Output "::set-output name=Version::$versionString"
 "UpstreamVersion=$versionString" >> $env:GITHUB_ENV
 "ForkRevision=$forkRevision" >> $env:GITHUB_ENV
-"BuildVersion=$versionString-r$forkRevision" >> $env:GITHUB_ENV
+"BuildVersion=$versionString-r$($forkRevision.ToString('D2'))" >> $env:GITHUB_ENV
 "ProductName=xRemote" >> $env:GITHUB_ENV
 "PreRelease=$preRelease" >> $env:GITHUB_ENV
 

@@ -7,7 +7,7 @@ $taskRoot = Split-Path $PSScriptRoot -Parent
 $taskPackage = (Resolve-Path -LiteralPath $PackagePath).Path
 if ((Split-Path $taskPackage -Leaf) -notmatch '^xRemote-(v(\d+)\.(\d+)\.(\d+)-r(\d+))-x64\.zip$') { throw 'Not a versioned Windows x64 release package' }
 $taskTag = $Matches[1]
-$taskVersion = $Matches[2..5] -join '.'
+$taskVersion = ([version]($Matches[2..5] -join '.')).ToString()
 if (-not (Test-Path -LiteralPath $SigningKeyPath)) { throw 'Release signing key is required; preserve the existing private key outside version control' }
 $taskRsa = [System.Security.Cryptography.RSA]::Create()
 try {
