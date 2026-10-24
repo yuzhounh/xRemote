@@ -52,6 +52,15 @@ namespace _1RM.View.Utils
         private TaskCompletionSource<bool>? _retry;
         public AlternateAddressSwitchingViewModel(CancellationTokenSource cts) => _cts = cts;
         public bool IsCanceled { get; private set; }
+        public bool IsCloseRequested { get; private set; }
+
+        public override void RequestClose(bool? dialogResult = null)
+        {
+            // Native caption handling can defer the actual window close until after the probe ends.
+            IsCloseRequested = true;
+            base.RequestClose(dialogResult);
+        }
+
         private string _title = "";
         public string Title { get => _title; set => SetAndNotifyIfChanged(ref _title, value); }
         private string _message = "";
@@ -112,6 +121,7 @@ namespace _1RM.View.Utils
         private RelayCommand? _cmdCloseEnd;
         public RelayCommand CmdCloseEnd => _cmdCloseEnd ??= new RelayCommand(_ =>
         {
+            if (IsCloseRequested) return;
             IsCanceled = true;
             _retry?.TrySetResult(false);
             if (!_cts.IsCancellationRequested) _cts.Cancel();

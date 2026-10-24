@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using _1RM.Model;
 using _1RM.Model.Protocol.Base;
 using _1RM.Utils;
@@ -22,6 +22,8 @@ public sealed class ConnectionStatusService : IDisposable
     private Timer? _informationTimer;
     private int _refreshing;
     private int _refreshingInformation;
+    // Set when a periodic tick was skipped because the main window was hidden or minimized.
+    private volatile bool _stale;
     private readonly Dictionary<string, Task<XRemote.Control.ControlStatus?>> _remoteRequests = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, DateTimeOffset> _informationRetryAfter = new(StringComparer.OrdinalIgnoreCase);
 
@@ -32,8 +34,33 @@ public sealed class ConnectionStatusService : IDisposable
         if (_timer != null) return;
         _data.OnReloadAll += RequestRefresh;
         _data.OnReloadAll += RequestInformationRefresh;
-        _timer = new Timer(_ => RequestRefresh(), null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
-        _informationTimer = new Timer(_ => RequestInformationRefresh(), null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
+        Execute.OnUIThread(() => { if (Application.Current != null) Application.Current.Activated += OnApplicationActivated; });
+        _timer = new Timer(_ => _ = RunPeriodicAsync(RequestRefresh), null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
+        _informationTimer = new Timer(_ => _ = RunPeriodicAsync(RequestInformationRefresh), null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
+    }
+
+    // Status is only displayed in the main window; while it is hidden to the tray or minimized, skip the
+    // network probes and catch up as soon as the application is activated again.
+    private async Task RunPeriodicAsync(Action refresh)
+    {
+        if (_stop.IsCancellationRequested) return;
+        var shown = true;
+        try
+        {
+            await Execute.OnUIThreadAsync(() => shown = Application.Current?.Windows.OfType<MainWindowView>()
+                .Any(w => w.IsVisible && w.WindowState != WindowState.Minimized) ?? true);
+        }
+        catch { shown = true; }
+        if (shown) refresh();
+        else _stale = true;
+    }
+
+    private void OnApplicationActivated(object? sender, EventArgs e)
+    {
+        if (!_stale) return;
+        _stale = false;
+        RequestRefresh();
+        RequestInformationRefresh();
     }
 
     public void RequestRefresh()
@@ -135,6 +162,7 @@ public sealed class ConnectionStatusService : IDisposable
             var rows = Array.Empty<ProtocolBaseViewModel>();
             await Execute.OnUIThreadAsync(() => rows = _data.VmItemList.ToArray());
             using var slots = new SemaphoreSlim(4);
+            var probes = new EndpointProbeBatch(ProbeAsync, token);
             await Task.WhenAll(rows.Select(async row =>
             {
                 if (row.Server is not ProtocolBaseWithAddressPort endpoint) return;
@@ -147,11 +175,8 @@ public sealed class ConnectionStatusService : IDisposable
                 await slots.WaitAsync(token);
                 try
                 {
-                    var watch = Stopwatch.StartNew();
-                    var online = await ProbeAsync(address, port, token).ConfigureAwait(false);
-                    var latency = watch.ElapsedMilliseconds;
+                    var (online, latency, observedAt) = await probes.GetAsync(address, port).ConfigureAwait(false);
                     var hintKey = online ? "Shell.ReachableHint" : "Shell.UnreachableHint";
-                    var observedAt = DateTime.Now.ToString("HH:mm:ss");
                     XRemote.Control.ControlStatus? remote = null;
                     if (endpoint is _1RM.Model.Protocol.RDP)
                     {
@@ -180,6 +205,8 @@ public sealed class ConnectionStatusService : IDisposable
     {
         _data.OnReloadAll -= RequestRefresh;
         _data.OnReloadAll -= RequestInformationRefresh;
+        try { Execute.OnUIThread(() => { if (Application.Current != null) Application.Current.Activated -= OnApplicationActivated; }); }
+        catch { /* application already shutting down */ }
         _timer?.Dispose();
         _informationTimer?.Dispose();
         _informationTimer = null;

@@ -1,0 +1,39 @@
+diff --git a/Shawn.Utils.Wpf/Shawn.Utils.Wpf.csproj b/Shawn.Utils.Wpf/Shawn.Utils.Wpf.csproj
+index 1207b2a..e525ffb 100644
+--- a/Shawn.Utils.Wpf/Shawn.Utils.Wpf.csproj
++++ b/Shawn.Utils.Wpf/Shawn.Utils.Wpf.csproj
+@@ -1,7 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+ 
+ 	<PropertyGroup>
+-		<TargetFrameworks>net9.0-windows;net6.0-windows;net48;net452;</TargetFrameworks>
++		<TargetFrameworks>net10.0-windows;net9.0-windows;net6.0-windows;net48;net452;</TargetFrameworks>
+ 		<UseWPF>true</UseWPF>
+ 		<UseWindowsForms>true</UseWindowsForms>
+         <LangVersion>latest</LangVersion>
+diff --git a/Shawn.Utils.WpfResources/Shawn.Utils.WpfResources.csproj b/Shawn.Utils.WpfResources/Shawn.Utils.WpfResources.csproj
+index db1e182..e4aeee2 100644
+--- a/Shawn.Utils.WpfResources/Shawn.Utils.WpfResources.csproj
++++ b/Shawn.Utils.WpfResources/Shawn.Utils.WpfResources.csproj
+@@ -1,7 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+ 
+ 	<PropertyGroup>
+-		<TargetFrameworks>net9.0-windows;net6.0-windows;net48;net452;</TargetFrameworks>
++		<TargetFrameworks>net10.0-windows;net9.0-windows;net6.0-windows;net48;net452;</TargetFrameworks>
+ 		<ImplicitUsings>enable</ImplicitUsings>
+ 		<Nullable>enable</Nullable>
+ 		<UseWPF>true</UseWPF>
+diff --git a/Shawn.Utils/Shawn.Utils.csproj b/Shawn.Utils/Shawn.Utils.csproj
+index f412d62..778c6be 100644
+--- a/Shawn.Utils/Shawn.Utils.csproj
++++ b/Shawn.Utils/Shawn.Utils.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+ 
+   <PropertyGroup>
+-    <TargetFrameworks>net9.0;net6.0;net48;net452;</TargetFrameworks>
++    <TargetFrameworks>net10.0;net9.0;net6.0;net48;net452;</TargetFrameworks>
+ 	  <LangVersion>10.0</LangVersion>
+ 	  <ImplicitUsings>disable</ImplicitUsings>
+ 	  <Nullable>enable</Nullable>

@@ -9,7 +9,7 @@ namespace _1RM
         public const uint Patch = 0;
         public const uint Build = 0;
         // Release revisions run from 1 to 99; restart at 1 for a new upstream baseline.
-        public const uint ForkRevision = 15;
+        public const uint ForkRevision = 17;
         public const string BuildDate = "";
         public const string PreRelease = ""; // e.g. "alpha" "beta.2"
 

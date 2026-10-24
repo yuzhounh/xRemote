@@ -27,7 +27,8 @@ namespace _1RM.View.Utils
 
         protected override void OnDialogClose()
         {
-            if (DataContext is AlternateAddressSwitchingViewModel model) model.CmdCloseEnd.Execute(null);
+            if (DataContext is AlternateAddressSwitchingViewModel model && !model.IsCloseRequested)
+                model.CmdCloseEnd.Execute(null);
             else base.OnDialogClose();
         }
 
