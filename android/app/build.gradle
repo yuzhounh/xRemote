@@ -1,0 +1,44 @@
+plugins { id 'com.android.application' }
+
+def signingFile = new File(System.getProperty('user.home'), '.android/xremote/signing.properties')
+def signingValues = new Properties()
+if (signingFile.exists()) signingFile.withInputStream { signingValues.load(it) }
+def desktopVersion = new File(rootDir.parentFile, 'Ui/AppVersion.cs').getText('UTF-8')
+def part = { String name ->
+    def match = desktopVersion =~ /\b${name}\s*=\s*(\d+)\s*;/
+    if (!match.find()) throw new GradleException("Desktop version field missing: ${name}")
+    return match.group(1).toInteger()
+}
+def major=part('Major'), minor=part('Minor'), patch=part('Patch'), revision=part('ForkRevision')
+long appVersionCode = major*100000000L + minor*1000000L + patch*10000L + revision
+if (minor >= 100 || patch >= 100 || revision >= 10000 || appVersionCode > 2100000000L)
+    throw new GradleException('Desktop version cannot be represented as an Android versionCode')
+
+android {
+    namespace 'com.yuzhounh.xremote'
+    compileSdk 36
+    defaultConfig {
+        applicationId 'com.yuzhounh.xremote'
+        minSdk 33
+        targetSdk 36
+        versionCode appVersionCode.intValue()
+        versionName "${major}.${minor}.${patch} Rev.${revision}"
+        ndk { abiFilters 'arm64-v8a' }
+    }
+    signingConfigs {
+        release {
+            if (signingFile.exists()) {
+                storeFile file(signingValues['storeFile'])
+                storePassword signingValues['storePassword']
+                keyAlias signingValues['keyAlias']
+                keyPassword signingValues['keyPassword']
+            }
+        }
+    }
+    buildTypes {
+        release { minifyEnabled false; signingConfig signingConfigs.release }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    packaging { jniLibs { useLegacyPackaging = true } }
+}
+

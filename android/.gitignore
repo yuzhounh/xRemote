@@ -1,0 +1,9 @@
+.gradle/
+build/
+**/build/
+local.properties
+app/src/main/jniLibs/
+*.jks
+*.keystore
+signing.properties
+

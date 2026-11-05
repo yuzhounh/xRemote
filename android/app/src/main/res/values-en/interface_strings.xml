@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_1_minutes" formatted="false">"1 minute"</string>
+    <string name="ui_2_minutes" formatted="false">"2 minutes"</string>
+    <string name="ui_5_minutes" formatted="false">"5 minutes"</string>
+    <string name="ui_account_and_password" formatted="false">"Account and password"</string>
+    <string name="ui_account_not_reported" formatted="false">"Account not reported"</string>
+    <string name="ui_account_settings_saved" formatted="false">"Account settings saved"</string>
+    <string name="ui_active_remote_connections" formatted="false">" active remote connections"</string>
+    <string name="ui_after_connecting_the_phone_enters_landscape_desktop_tap" formatted="false">"After connecting, the phone enters landscape desktop. Tap to control, drag to move content, long-press for mouse right-click, two fingers to zoom or pan. The three floating buttons at the top control zoom/restore, session menu and keyboard. With the keyboard open, use two fingers to move and view occluded areas; the session menu can open Task Manager, the Windows Start menu, restore the full desktop, or disconnect and return."</string>
+    <string name="ui_after_switching_apps_or_locking_the_screen_the_connecti" formatted="false">"After switching apps or locking the screen, the connection is kept according to the “Background retention” setting for 1, 2 or 5 minutes and shows a notification; return in time to continue, otherwise the connection is released after the timeout. The system may also end background apps early. To release the phone connection immediately, tap “Disconnect and exit” in settings. After the remote desktop disconnects, programs on the computer keep running. The app does not register auto-start and does not use the Android VPN interface."</string>
+    <string name="ui_all_devices" formatted="false">"All devices"</string>
+    <string name="ui_automatically_save_the_desktop_preview_after_the_first" formatted="false">"Automatically save the desktop preview after the first successful connection"</string>
+    <string name="ui_back" formatted="false">"Back"</string>
+    <string name="ui_background_retention" formatted="false">"Background retention: "</string>
+    <string name="ui_background_retention_and_exit" formatted="false">"Background retention and exit"</string>
+    <string name="ui_briefly_keep_the_remote_connection" formatted="false">"Briefly keep the remote connection"</string>
+    <string name="ui_built_in_easytier_2_6_4_nbuilt_in_freerdp" formatted="false">"Built-in EasyTier 2.6.4\nBuilt-in FreeRDP "</string>
+    <string name="ui_cancel" formatted="false">"Cancel"</string>
+    <string name="ui_checking" formatted="false">"Checking…"</string>
+    <string name="ui_checking_2" formatted="false">"Checking "</string>
+    <string name="ui_clear_saved_credentials" formatted="false">"Clear saved credentials"</string>
+    <string name="ui_cleared_re_enter_on_the_next_connection" formatted="false">"Cleared; re-enter on the next connection"</string>
+    <string name="ui_close" formatted="false">"Close"</string>
+    <string name="ui_close_help" formatted="false">"Close help"</string>
+    <string name="ui_close_search" formatted="false">"Close search"</string>
+    <string name="ui_collapse" formatted="false">"Collapse"</string>
+    <string name="ui_collected_at" formatted="false">"Collected at "</string>
+    <string name="ui_command_a_select_all" formatted="false">"Command+A (Select All)"</string>
+    <string name="ui_command_c_copy" formatted="false">"Command+C (Copy)"</string>
+    <string name="ui_command_tab_switch_app" formatted="false">"Command+Tab (Switch App)"</string>
+    <string name="ui_command_v_paste" formatted="false">"Command+V (Paste)"</string>
+    <string name="ui_configuration_file_too_large" formatted="false">"Configuration file too large"</string>
+    <string name="ui_configuration_not_imported" formatted="false">"Configuration not imported"</string>
+    <string name="ui_confirm_remote_device" formatted="false">"Confirm remote device"</string>
+    <string name="ui_connect" formatted="false">"Connect"</string>
+    <string name="ui_connect_and_remember" formatted="false">"Connect and remember"</string>
+    <string name="ui_connect_device" formatted="false">"Connect device"</string>
+    <string name="ui_connected_receiving_mac_desktop" formatted="false">"Connected, receiving Mac desktop…"</string>
+    <string name="ui_connecting" formatted="false">" · Connecting…"</string>
+    <string name="ui_connecting_starts_after_importing_the_network_configura" formatted="false">"Connecting starts after importing the network configuration"</string>
+    <string name="ui_connecting_to_the_private_network" formatted="false">"Connecting to the private network…"</string>
+    <string name="ui_connection_address" formatted="false">"Connection address"</string>
+    <string name="ui_connection_closed" formatted="false">"Connection closed"</string>
+    <string name="ui_connection_closed_2" formatted="false">" · Connection closed"</string>
+    <string name="ui_connection_error" formatted="false">"Connection error"</string>
+    <string name="ui_connection_failed" formatted="false">"Connection failed"</string>
+    <string name="ui_connection_failed_check_mac_screen_sharing_and_password" formatted="false">"Connection failed; check Mac screen sharing and password."</string>
+    <string name="ui_connection_failed_confirm_the_device_is_online_and_retr" formatted="false">"Connection failed; confirm the device is online and retry."</string>
+    <string name="ui_connection_initialization_failed_return_to_the_device_l" formatted="false">"Connection initialization failed; return to the device list and retry"</string>
+    <string name="ui_connection_not_completed" formatted="false">"Connection not completed"</string>
+    <string name="ui_connection_protocol" formatted="false">"Connection protocol"</string>
+    <string name="ui_connection_status_unavailable" formatted="false">"Connection status unavailable"</string>
+    <string name="ui_cores" formatted="false">" cores / "</string>
+    <string name="ui_desktop_preview_update_result" formatted="false">"Desktop preview update result"</string>
+    <string name="ui_desktop_previews_updated" formatted="false">"Desktop previews updated "</string>
+    <string name="ui_details" formatted="false">"Details"</string>
+    <string name="ui_device_certificate_changed" formatted="false">"Device certificate changed"</string>
+    <string name="ui_device_details" formatted="false">", device details"</string>
+    <string name="ui_device_details_2" formatted="false">"Device details"</string>
+    <string name="ui_device_information" formatted="false">"Device information"</string>
+    <string name="ui_device_information_and_pairing" formatted="false">"Device information and pairing"</string>
+    <string name="ui_device_information_and_thumbnails_are_saved_on_this_dev" formatted="false">"Device information and thumbnails are saved on this device; details prefer the cache. After changing hardware or upgrading Windows, you can refresh device information in the device gear menu; the storage card has its own refresh. The management pairing is used to read device info and manage sessions; it is separate from the network configuration and Windows sign-in credentials. Import the management pairing file for the corresponding device when needed; a missing pairing does not affect connecting to the remote desktop with valid credentials."</string>
+    <string name="ui_device_information_is_updating_please_wait" formatted="false">"Device information is updating; please wait"</string>
+    <string name="ui_device_information_response_mismatch_please_retry_later" formatted="false">"Device information response mismatch; please retry later"</string>
+    <string name="ui_device_information_unavailable_please_retry_later" formatted="false">"Device information unavailable; please retry later"</string>
+    <string name="ui_device_name" formatted="false">"Device name"</string>
+    <string name="ui_device_temporarily_unavailable_to_connect_wait_for_the" formatted="false">"Device temporarily unavailable to connect; wait for the check to finish or refresh"</string>
+    <string name="ui_device_with_unrecorded_source" formatted="false">"device with unrecorded source"</string>
+    <string name="ui_devices" formatted="false">" devices"</string>
+    <string name="ui_devices_2" formatted="false">" devices…"</string>
+    <string name="ui_devices_and_settings" formatted="false">"Devices and settings"</string>
+    <string name="ui_devices_failed" formatted="false">" devices · failed "</string>
+    <string name="ui_devices_n_n" formatted="false">" devices\n\n"</string>
+    <string name="ui_devices_need_manual_connection_confirmation" formatted="false">"  devices need manual connection confirmation"</string>
+    <string name="ui_devices_partially_updated" formatted="false">" devices · Partially updated "</string>
+    <string name="ui_devices_reachable" formatted="false">"Devices reachable "</string>
+    <string name="ui_disconnect" formatted="false">"Disconnect"</string>
+    <string name="ui_disconnect_and_exit" formatted="false">"Disconnect and exit"</string>
+    <string name="ui_disconnect_and_return_to_device_list" formatted="false">"Disconnect and return to device list"</string>
+    <string name="ui_disconnect_remote_connection" formatted="false">"Disconnect remote connection"</string>
+    <string name="ui_disconnected" formatted="false">"Disconnected"</string>
+    <string name="ui_disconnection_not_yet_confirmed_please_refresh" formatted="false">"Disconnection not yet confirmed; please refresh"</string>
+    <string name="ui_disk" formatted="false">"Disk "</string>
+    <string name="ui_disk_space" formatted="false">"Disk space"</string>
+    <string name="ui_disk_space_unavailable" formatted="false">"Disk space unavailable"</string>
+    <string name="ui_edit" formatted="false">"Edit"</string>
+    <string name="ui_edit_sign_in_account_and_password" formatted="false">"Edit sign-in account and password"</string>
+    <string name="ui_enter_the_screen_sharing_vnc_password" formatted="false">"Enter the screen-sharing VNC password"</string>
+    <string name="ui_enter_this_computer_s_account_and_sign_in_password" formatted="false">"Enter this computer's account and sign-in password"</string>
+    <string name="ui_failed" formatted="false">"failed ("</string>
+    <string name="ui_failed_to_save_thumbnail" formatted="false">"Failed to save thumbnail"</string>
+    <string name="ui_find_and_manage_devices" formatted="false">"Find and manage devices"</string>
+    <string name="ui_first_connection" formatted="false">"First connection"</string>
+    <string name="ui_for_account" formatted="false">"for account "</string>
+    <string name="ui_generating_desktop_preview" formatted="false">"Generating desktop preview…"</string>
+    <string name="ui_generating_preview" formatted="false">"Generating preview: "</string>
+    <string name="ui_got_it" formatted="false">"Got it"</string>
+    <string name="ui_gpu_gpu" formatted="false">"GPU / GPU"</string>
+    <string name="ui_hardware_information_unavailable" formatted="false">"Hardware information unavailable"</string>
+    <string name="ui_hardware_information_unavailable_check_the_network_serv" formatted="false">"Hardware information unavailable; check the network, service and pairing"</string>
+    <string name="ui_hardware_information_unavailable_check_the_service_and" formatted="false">"Hardware information unavailable; check the service and pairing, then refresh"</string>
+    <string name="ui_help" formatted="false">"Help"</string>
+    <string name="ui_if_the_device_is_offline_first_confirm_the_target_compu" formatted="false">"If the device is offline, first confirm the target computer is on and the private connection is available, then pull down the device list to refresh. If account verification fails, check Windows credentials. If device info cannot be read, check the corresponding management pairing; existing cache is kept. The thumbnail is the last successful connection and updates after connecting."</string>
+    <string name="ui_import_management_pairing" formatted="false">"Import management pairing"</string>
+    <string name="ui_import_network_configuration" formatted="false">"Import network configuration"</string>
+    <string name="ui_import_the_existing_network_configuration_first" formatted="false">"Import the existing network configuration first"</string>
+    <string name="ui_in_device_details_tap_view_sign_in_and_connections_or_i" formatted="false">"In device details tap “View sign-in and connections”, or in the device gear menu tap “Sign-in and connections”, to view remote connections and account sessions. Details can expand to show the full account and source; refresh only updates records. An available “Disconnect” asks for confirmation first; after disconnecting, the account and remote programs are preserved and it does not sign out of Windows. "</string>
+    <string name="ui_in_local_use" formatted="false">"In local use"</string>
+    <string name="ui_in_remote_use" formatted="false">"In remote use ("</string>
+    <string name="ui_in_the_menu_search_devices_finds_by_name_or_address_and" formatted="false">"In the menu, “Search devices” finds by name or address and can filter all, online or offline devices. Tap the arrow on the right of a card to open device details and view the preview, device information and storage. The gear to the right of each device in the menu provides account and password, rename, refresh device information, update desktop thumbnail, and import management pairing."</string>
+    <string name="ui_invalid_network_node_address" formatted="false">"Invalid network node address"</string>
+    <string name="ui_invalid_network_node_count" formatted="false">"Invalid network node count"</string>
+    <string name="ui_keep_connection_after_leaving_the_app" formatted="false">"Keep connection after leaving the app"</string>
+    <string name="ui_language" formatted="false">"Language"</string>
+    <string name="ui_last_boot" formatted="false">"Last boot"</string>
+    <string name="ui_last_connected_desktop_updates_automatically_after_each" formatted="false">"Last connected desktop · updates automatically after each sign-in"</string>
+    <string name="ui_load_failed" formatted="false">"Load failed"</string>
+    <string name="ui_loading_kernel" formatted="false">"Loading kernel"</string>
+    <string name="ui_local_disk" formatted="false">"Local Disk"</string>
+    <string name="ui_local_sign_in" formatted="false">"Local sign-in"</string>
+    <string name="ui_mac_screen_sharing_vnc_password" formatted="false">"Mac screen-sharing VNC password"</string>
+    <string name="ui_mac_session_menu" formatted="false">"Mac Session menu"</string>
+    <string name="ui_manage" formatted="false">", manage"</string>
+    <string name="ui_management_pairing_saved" formatted="false">"Management pairing saved"</string>
+    <string name="ui_management_service_is_in_read_only_verification_mode" formatted="false">"Management service is in read-only verification mode"</string>
+    <string name="ui_management_service_unavailable_or_pairing_failed" formatted="false">"Management service unavailable or pairing failed"</string>
+    <string name="ui_manual_device_certificate_confirmation_required" formatted="false">"Manual device certificate confirmation required"</string>
+    <string name="ui_memory_capacity" formatted="false">"Memory capacity"</string>
+    <string name="ui_menu" formatted="false">"Menu"</string>
+    <string name="ui_minutes" formatted="false">" minutes"</string>
+    <string name="ui_minutes_to_return_and_continue_otherwise_it_disconnects" formatted="false">" minutes to return and continue, otherwise it disconnects automatically; tap this notification to disconnect now"</string>
+    <string name="ui_model" formatted="false">"Model"</string>
+    <string name="ui_n_nfingerprint_n" formatted="false">"\n\nFingerprint: \n"</string>
+    <string name="ui_n_nopen_source_licenses_and_component_sources_are_in_th" formatted="false">"\n\nOpen-source licenses and component sources are in the accompanying source third_party directory."</string>
+    <string name="ui_n_nre_read_windows_cpu_memory_and_gpu_they_still_comple" formatted="false">"\n\nRe-read Windows, CPU, memory and GPU. They still complete and are saved sequentially after the window closes."</string>
+    <string name="ui_n_nverify_and_then_connect" formatted="false">"\n\nverify and then connect."</string>
+    <string name="ui_ncertificate_name" formatted="false">"\nCertificate name: "</string>
+    <string name="ui_network_configuration_imported" formatted="false">"Network configuration imported"</string>
+    <string name="ui_nexisting_storage_data_is_unchanged_and_still_refreshed" formatted="false">"\nExisting storage data is unchanged and still refreshed separately in device details."</string>
+    <string name="ui_nfull_account" formatted="false">"\nFull account: "</string>
+    <string name="ui_no_active_remote_connections" formatted="false">"No active remote connections"</string>
+    <string name="ui_no_active_remote_connections_currently" formatted="false">"No active remote connections currently"</string>
+    <string name="ui_no_desktop_image_received_yet_please_ensure_mac_is_awak" formatted="false">"No desktop image received yet; please ensure Mac is awake, and check the screen-sharing password."</string>
+    <string name="ui_no_desktop_preview_yet" formatted="false">", no desktop preview yet"</string>
+    <string name="ui_no_matching_devices" formatted="false">"No matching devices"</string>
+    <string name="ui_no_readable_partitions" formatted="false">" · no readable partitions"</string>
+    <string name="ui_no_saved_sign_in_credentials_n" formatted="false">": no saved sign-in credentials\n"</string>
+    <string name="ui_no_signed_in_accounts_currently" formatted="false">"No signed-in accounts currently"</string>
+    <string name="ui_not_recorded" formatted="false">"Not recorded"</string>
+    <string name="ui_not_reported" formatted="false">"Not reported"</string>
+    <string name="ui_nsave_credentials_under_account_and_password_or_connect" formatted="false">"\nSave credentials under account and password, or connect manually first to confirm the device certificate, then update the preview."</string>
+    <string name="ui_nsource_name" formatted="false">"\nSource name: "</string>
+    <string name="ui_offline_devices" formatted="false">"Offline devices"</string>
+    <string name="ui_online_devices" formatted="false">"Online devices"</string>
+    <string name="ui_open_devices_and_settings_import_network_configuration" formatted="false">"Open “Devices and settings → Import network configuration”, choose the xRemote configuration file prepared for this phone. Wait until the device shows online, then tap the device card to connect to the remote desktop. On first connection, enter Windows account and password; you can choose to remember them encrypted; connect directly if credentials exist. When a certificate confirmation appears, verify the target device first."</string>
+    <string name="ui_other_partitions" formatted="false">"Other partitions"</string>
+    <string name="ui_other_sign_in_state" formatted="false">"Other sign-in state"</string>
+    <string name="ui_owning_disk_not_confirmed" formatted="false">"Owning disk not confirmed"</string>
+    <string name="ui_pairing_file_does_not_match_the_device" formatted="false">"Pairing file does not match the device"</string>
+    <string name="ui_pairing_incomplete_select_the_pairing_file_that_matches" formatted="false">"Pairing incomplete; select the pairing file that matches the target device"</string>
+    <string name="ui_parsing_configuration" formatted="false">"Parsing configuration"</string>
+    <string name="ui_partially_updated_items_that_failed_to_read_keep_the_pr" formatted="false">"Partially updated; items that failed to read keep the previous cache"</string>
+    <string name="ui_physical_disk_information_unavailable" formatted="false">"Physical disk information unavailable"</string>
+    <string name="ui_physical_disks" formatted="false">"  physical disks"</string>
+    <string name="ui_please_refresh_later" formatted="false">"Please refresh later"</string>
+    <string name="ui_preparing" formatted="false">"Preparing…"</string>
+    <string name="ui_preview_update_stopped" formatted="false">"Preview update stopped"</string>
+    <string name="ui_rdp_remote_desktop" formatted="false">"RDP · Remote Desktop"</string>
+    <string name="ui_reachable_n" formatted="false">" reachable\n"</string>
+    <string name="ui_reading_configuration" formatted="false">"Reading configuration"</string>
+    <string name="ui_reading_sign_in_and_connections" formatted="false">"Reading sign-in and connections…"</string>
+    <string name="ui_refresh" formatted="false">"Refresh"</string>
+    <string name="ui_refresh_device_information" formatted="false">"Refresh device information"</string>
+    <string name="ui_related_disks" formatted="false">"Related disks "</string>
+    <string name="ui_remember_password_saved_on_this_phone_only" formatted="false">"Remember password (saved on this phone only)"</string>
+    <string name="ui_remote_connected" formatted="false">"Remote connected"</string>
+    <string name="ui_remote_desktop_controls" formatted="false">"Remote desktop controls"</string>
+    <string name="ui_rename" formatted="false">"Rename"</string>
+    <string name="ui_restore_full_desktop" formatted="false">"Restore full desktop"</string>
+    <string name="ui_return_to_devices" formatted="false">"Return to devices"</string>
+    <string name="ui_returning_stops_it" formatted="false">" (returning stops it)"</string>
+    <string name="ui_s_connection_n_nthe_account_stays_signed_in_programs_an" formatted="false">" 's connection?\n\nThe account stays signed in; programs and tasks are preserved."</string>
+    <string name="ui_save" formatted="false">"Save"</string>
+    <string name="ui_saved_credentials_are_unavailable_please_re_enter" formatted="false">"Saved credentials are unavailable; please re-enter"</string>
+    <string name="ui_search_devices" formatted="false">"Search devices"</string>
+    <string name="ui_see_spanning_partitions_below" formatted="false">"See spanning partitions below"</string>
+    <string name="ui_select_the_one_prepared_for_this_phone_xremote_configur" formatted="false">"Select the one prepared for this phone: xRemote configuration file."</string>
+    <string name="ui_select_xremote_network_configuration_file" formatted="false">"Select an xRemote network configuration file"</string>
+    <string name="ui_session_menu" formatted="false">"Session menu"</string>
+    <string name="ui_session_state_changed_please_refresh" formatted="false">"Session state changed; please refresh"</string>
+    <string name="ui_show_hide_keyboard" formatted="false">"Show / Hide keyboard"</string>
+    <string name="ui_sign_in_account" formatted="false">"Sign-in account"</string>
+    <string name="ui_sign_in_and_connection_information_unavailable_please_r" formatted="false">"Sign-in and connection information unavailable; please refresh"</string>
+    <string name="ui_sign_in_and_connections" formatted="false">"Sign-in and connections"</string>
+    <string name="ui_sign_in_method_this_device" formatted="false">"Sign-in method: this device"</string>
+    <string name="ui_sign_in_password" formatted="false">"Sign-in password"</string>
+    <string name="ui_sign_in_username" formatted="false">"Sign-in username"</string>
+    <string name="ui_sockets" formatted="false">"  sockets · "</string>
+    <string name="ui_some_device_information_could_not_be_read" formatted="false">"Some device information could not be read."</string>
+    <string name="ui_source_device" formatted="false">"Source device: "</string>
+    <string name="ui_spanning_partitions" formatted="false">"Spanning partitions"</string>
+    <string name="ui_starting_network" formatted="false">"Starting network"</string>
+    <string name="ui_storage" formatted="false">"Storage"</string>
+    <string name="ui_storage_information_unavailable" formatted="false">"Storage information unavailable"</string>
+    <string name="ui_storage_information_unavailable_check_the_network_servi" formatted="false">"Storage information unavailable; check the network, service and pairing"</string>
+    <string name="ui_storage_information_unavailable_check_the_service_and_p" formatted="false">"Storage information unavailable; check the service and pairing, then refresh"</string>
+    <string name="ui_storage_information_unavailable_please_refresh_later" formatted="false">"Storage information unavailable; please refresh later"</string>
+    <string name="ui_storage_update_incomplete_showing_the_previous_result" formatted="false">"Storage update incomplete; showing the previous result."</string>
+    <string name="ui_succeeded" formatted="false">"succeeded "</string>
+    <string name="ui_system" formatted="false">"System"</string>
+    <string name="ui_system_and_hardware" formatted="false">"System and hardware"</string>
+    <string name="ui_system_and_hardware_unavailable" formatted="false">"System and hardware unavailable"</string>
+    <string name="ui_system_build" formatted="false">"System build "</string>
+    <string name="ui_tap_refresh_to_retry" formatted="false">"), tap refresh to retry"</string>
+    <string name="ui_tap_the_button_at_the_bottom_right_and_import_the_netwo" formatted="false">"Tap the button at the bottom right and import the network configuration prepared for this phone to connect to devices."</string>
+    <string name="ui_tap_to_connect" formatted="false">", tap to connect"</string>
+    <string name="ui_task_manager" formatted="false">"Task Manager"</string>
+    <string name="ui_temporarily_unavailable" formatted="false">"temporarily unavailable"</string>
+    <string name="ui_temporarily_unavailable_to_connect" formatted="false">", temporarily unavailable to connect"</string>
+    <string name="ui_temporarily_unreachable_n" formatted="false">" temporarily unreachable\n"</string>
+    <string name="ui_the_account_stays_signed_in_open_programs_are_preserved" formatted="false">"The account stays signed in; open programs are preserved."</string>
+    <string name="ui_the_device_management_service_must_be_updated_to_read_h" formatted="false">"The device management service must be updated to read hardware information"</string>
+    <string name="ui_the_device_management_service_must_be_updated_to_refres" formatted="false">"The device management service must be updated to refresh storage separately"</string>
+    <string name="ui_the_management_pairing_file_for_this_device_has_not_bee" formatted="false">"The management pairing file for this device has not been imported"</string>
+    <string name="ui_the_password_could_not_be_saved_but_this_connection_can" formatted="false">"The password could not be saved, but this connection can continue"</string>
+    <string name="ui_the_password_could_not_be_saved_please_retry" formatted="false">"The password could not be saved; please retry"</string>
+    <string name="ui_the_session_changed_please_refresh_and_retry" formatted="false">"The session changed; please refresh and retry"</string>
+    <string name="ui_the_username_or_password_was_not_verified_check_this_co" formatted="false">"The username or password was not verified; check this computer's Windows sign-in credentials."</string>
+    <string name="ui_there_are_currently" formatted="false">"There are currently "</string>
+    <string name="ui_this_connection_only" formatted="false">"This connection only"</string>
+    <string name="ui_this_device_uses_vnc" formatted="false">"This device uses VNC"</string>
+    <string name="ui_this_machine_is_locked" formatted="false">"This machine is locked"</string>
+    <string name="ui_threads" formatted="false">" threads"</string>
+    <string name="ui_thumbnail_of_the_last_connected_desktop" formatted="false">", thumbnail of the last connected desktop"</string>
+    <string name="ui_timed_out_waiting_for_the_desktop_image_please_connect" formatted="false">"Timed out waiting for the desktop image; please connect manually to confirm"</string>
+    <string name="ui_total_capacity" formatted="false">" / Total capacity "</string>
+    <string name="ui_total_capacity_2" formatted="false">"Total capacity "</string>
+    <string name="ui_unknown" formatted="false">"Unknown"</string>
+    <string name="ui_update_desktop_thumbnail" formatted="false">"Update desktop thumbnail"</string>
+    <string name="ui_update_failed_the_previous_cache_is_kept" formatted="false">"Update failed; the previous cache is kept"</string>
+    <string name="ui_update_incomplete_showing_the_previous_result" formatted="false">"Update incomplete; showing the previous result."</string>
+    <string name="ui_update_the_device_management_service_and_refresh" formatted="false">"Update the device management service and refresh"</string>
+    <string name="ui_updated" formatted="false">"Updated "</string>
+    <string name="ui_updated_and_saved" formatted="false">"Updated and saved"</string>
+    <string name="ui_updating" formatted="false">"Updating  "</string>
+    <string name="ui_updating_showing_the_previous_read_result" formatted="false">"Updating; showing the previous read result."</string>
+    <string name="ui_updating_storage_keeping_the_previous_result" formatted="false">"Updating storage; keeping the previous result."</string>
+    <string name="ui_usage_state_unknown" formatted="false">"Usage state unknown"</string>
+    <string name="ui_usage_state_unknown_check_the_network_service_and_pairi" formatted="false">"Usage state unknown; check the network, service and pairing"</string>
+    <string name="ui_used" formatted="false">"Used  "</string>
+    <string name="ui_used_space_unknown" formatted="false">" · used space unknown"</string>
+    <string name="ui_view_sign_in_and_connections" formatted="false">"View sign-in and connections"</string>
+    <string name="ui_vnc_connecting" formatted="false">" · VNC Connecting…"</string>
+    <string name="ui_vnc_initialization_failed_please_go_back_and_retry" formatted="false">"VNC Initialization failed; please go back and retry"</string>
+    <string name="ui_vnc_preview_could_not_complete_connect_manually_and_ret" formatted="false">"VNC Preview could not complete; connect manually and retry"</string>
+    <string name="ui_vnc_screen_sharing" formatted="false">"VNC · screen sharing"</string>
+    <string name="ui_waiting_for_network_connection" formatted="false">"Waiting for network connection"</string>
+    <string name="ui_welcome_to_xremote" formatted="false">"Welcome to xRemote"</string>
+    <string name="ui_windows_session_number" formatted="false">"Windows session number: "</string>
+    <string name="ui_windows_start_menu" formatted="false">"Windows Start menu"</string>
+    <string name="ui_xremote_is_keeping_the_connection" formatted="false">"xRemote is keeping the connection"</string>
+    <string name="ui_zoom_restore" formatted="false">"Zoom / Restore"</string>
+    <string name="ui_theme" formatted="false">"Theme"</string>
+    <string name="ui_theme_light" formatted="false">"Light"</string>
+    <string name="ui_theme_dark" formatted="false">"Dark"</string>
+    <string name="ui_theme_system" formatted="false">"Follow system"</string>
+</resources>

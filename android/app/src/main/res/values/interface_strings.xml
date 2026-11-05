@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_1_minutes" formatted="false">"1 分钟"</string>
+    <string name="ui_2_minutes" formatted="false">"2 分钟"</string>
+    <string name="ui_5_minutes" formatted="false">"5 分钟"</string>
+    <string name="ui_account_and_password" formatted="false">"账户与密码"</string>
+    <string name="ui_account_not_reported" formatted="false">"未上报账户"</string>
+    <string name="ui_account_settings_saved" formatted="false">"已保存账户设置"</string>
+    <string name="ui_active_remote_connections" formatted="false">" 条活跃远程连接"</string>
+    <string name="ui_after_connecting_the_phone_enters_landscape_desktop_tap" formatted="false">"连接后进入横屏桌面。轻点操作、拖动移动、长按右击、双指缩放或平移。顶部三个悬浮按钮用于缩放或还原、打开会话菜单和键盘。键盘打开时可用双指移动画面。会话菜单可打开任务管理器、Windows 开始菜单、还原完整桌面或断开返回。"</string>
+    <string name="ui_after_switching_apps_or_locking_the_screen_the_connecti" formatted="false">"切换应用或锁屏后，连接会按「后台保留」设定保留 1、2 或 5 分钟，并显示通知。在时限内返回可继续操作，超时后会释放连接。系统也可能提前终止后台应用。如需立即释放，点设置中的「断开并退出」。断开后电脑上的程序会继续运行。"</string>
+    <string name="ui_all_devices" formatted="false">"全部设备"</string>
+    <string name="ui_automatically_save_the_desktop_preview_after_the_first" formatted="false">"首次成功连接后自动保存桌面缩略图"</string>
+    <string name="ui_back" formatted="false">"返回"</string>
+    <string name="ui_background_retention" formatted="false">"后台保留："</string>
+    <string name="ui_background_retention_and_exit" formatted="false">"后台保留与退出"</string>
+    <string name="ui_briefly_keep_the_remote_connection" formatted="false">"短时保留远程连接"</string>
+    <string name="ui_built_in_easytier_2_6_4_nbuilt_in_freerdp" formatted="false">"内置 EasyTier 2.6.4\n内置 FreeRDP "</string>
+    <string name="ui_cancel" formatted="false">"取消"</string>
+    <string name="ui_checking" formatted="false">"正在检测…"</string>
+    <string name="ui_checking_2" formatted="false">"正在检测 "</string>
+    <string name="ui_clear_saved_credentials" formatted="false">"清除已保存凭据"</string>
+    <string name="ui_cleared_re_enter_on_the_next_connection" formatted="false">"已清除，下次连接时请重新填写"</string>
+    <string name="ui_close" formatted="false">"关闭"</string>
+    <string name="ui_close_help" formatted="false">"关闭使用说明"</string>
+    <string name="ui_close_search" formatted="false">"关闭搜索"</string>
+    <string name="ui_collapse" formatted="false">"收起"</string>
+    <string name="ui_collected_at" formatted="false">"采集于 "</string>
+    <string name="ui_command_a_select_all" formatted="false">"Command+A（全选）"</string>
+    <string name="ui_command_c_copy" formatted="false">"Command+C（复制）"</string>
+    <string name="ui_command_tab_switch_app" formatted="false">"Command+Tab（切换应用）"</string>
+    <string name="ui_command_v_paste" formatted="false">"Command+V（粘贴）"</string>
+    <string name="ui_configuration_file_too_large" formatted="false">"配置文件过大"</string>
+    <string name="ui_configuration_not_imported" formatted="false">"配置未导入"</string>
+    <string name="ui_confirm_remote_device" formatted="false">"确认远程设备"</string>
+    <string name="ui_connect" formatted="false">"连接"</string>
+    <string name="ui_connect_and_remember" formatted="false">"连接并记住"</string>
+    <string name="ui_connect_device" formatted="false">"连接设备"</string>
+    <string name="ui_connected_receiving_mac_desktop" formatted="false">"已连接，正在接收 Mac 桌面…"</string>
+    <string name="ui_connecting" formatted="false">" · 正在连接…"</string>
+    <string name="ui_connecting_starts_after_importing_the_network_configura" formatted="false">"导入组网配置后开始连接"</string>
+    <string name="ui_connecting_to_the_private_network" formatted="false">"正在连接私网…"</string>
+    <string name="ui_connection_address" formatted="false">"连接地址"</string>
+    <string name="ui_connection_closed" formatted="false">"连接已断开"</string>
+    <string name="ui_connection_closed_2" formatted="false">" · 连接已断开"</string>
+    <string name="ui_connection_error" formatted="false">"连接异常"</string>
+    <string name="ui_connection_failed" formatted="false">"连接失败"</string>
+    <string name="ui_connection_failed_check_mac_screen_sharing_and_password" formatted="false">"连接失败，请检查 Mac 屏幕共享及密码。"</string>
+    <string name="ui_connection_failed_confirm_the_device_is_online_and_retr" formatted="false">"连接失败，请确认设备在线后重试。"</string>
+    <string name="ui_connection_initialization_failed_return_to_the_device_l" formatted="false">"连接初始化失败，请返回设备列表后重试"</string>
+    <string name="ui_connection_not_completed" formatted="false">"连接未完成"</string>
+    <string name="ui_connection_protocol" formatted="false">"连接协议"</string>
+    <string name="ui_connection_status_unavailable" formatted="false">"连接状态不可用"</string>
+    <string name="ui_cores" formatted="false">" 核 /"</string>
+    <string name="ui_desktop_preview_update_result" formatted="false">"桌面缩略图更新结果"</string>
+    <string name="ui_desktop_previews_updated" formatted="false">"已更新 "</string>
+    <string name="ui_details" formatted="false">"详细信息"</string>
+    <string name="ui_device_certificate_changed" formatted="false">"设备证书已变更"</string>
+    <string name="ui_device_details" formatted="false">"，设备详情"</string>
+    <string name="ui_device_details_2" formatted="false">"设备详情"</string>
+    <string name="ui_device_information" formatted="false">"设备信息"</string>
+    <string name="ui_device_information_and_pairing" formatted="false">"设备信息与配对"</string>
+    <string name="ui_device_information_and_thumbnails_are_saved_on_this_dev" formatted="false">"设备信息和缩略图保存在本机，详情优先显示缓存。更换硬件或升级 Windows 后可从设备齿轮菜单刷新设备信息，存储卡片可单独刷新。管理配对用于读取设备信息和管理会话，与组网配置及 Windows 凭据分别管理。需要时导入相应设备的配对文件；有有效凭据时仍可连接远程桌面。"</string>
+    <string name="ui_device_information_is_updating_please_wait" formatted="false">"正在更新设备信息，请稍候"</string>
+    <string name="ui_device_information_response_mismatch_please_retry_later" formatted="false">"设备信息与目标不符，请稍后重试"</string>
+    <string name="ui_device_information_unavailable_please_retry_later" formatted="false">"设备信息不可用，请稍后重试"</string>
+    <string name="ui_device_name" formatted="false">"设备名称"</string>
+    <string name="ui_device_temporarily_unavailable_to_connect_wait_for_the" formatted="false">"设备暂不可连接，请等待检测完成或刷新"</string>
+    <string name="ui_device_with_unrecorded_source" formatted="false">"来源未记录的设备"</string>
+    <string name="ui_devices" formatted="false">" 台设备"</string>
+    <string name="ui_devices_2" formatted="false">" 台设备…"</string>
+    <string name="ui_devices_and_settings" formatted="false">"设备与设置"</string>
+    <string name="ui_devices_failed" formatted="false">" 台 · 失败 "</string>
+    <string name="ui_devices_n_n" formatted="false">" 台设备\n\n"</string>
+    <string name="ui_devices_need_manual_connection_confirmation" formatted="false">" 台设备需要手动连接确认"</string>
+    <string name="ui_devices_partially_updated" formatted="false">" 台 · 部分更新 "</string>
+    <string name="ui_devices_reachable" formatted="false">"可达设备 "</string>
+    <string name="ui_disconnect" formatted="false">"断开连接"</string>
+    <string name="ui_disconnect_and_exit" formatted="false">"断开并退出"</string>
+    <string name="ui_disconnect_and_return_to_device_list" formatted="false">"断开并返回设备列表"</string>
+    <string name="ui_disconnect_remote_connection" formatted="false">"断开远程连接"</string>
+    <string name="ui_disconnected" formatted="false">"已断开"</string>
+    <string name="ui_disconnection_not_yet_confirmed_please_refresh" formatted="false">"尚未确认断开，请刷新"</string>
+    <string name="ui_disk" formatted="false">"磁盘 "</string>
+    <string name="ui_disk_space" formatted="false">"磁盘空间"</string>
+    <string name="ui_disk_space_unavailable" formatted="false">"暂无法读取磁盘空间"</string>
+    <string name="ui_edit" formatted="false">"修改"</string>
+    <string name="ui_edit_sign_in_account_and_password" formatted="false">"修改登录账户与密码"</string>
+    <string name="ui_enter_the_screen_sharing_vnc_password" formatted="false">"请输入屏幕共享 VNC 密码"</string>
+    <string name="ui_enter_this_computer_s_account_and_sign_in_password" formatted="false">"请输入这台电脑的账户与登录密码"</string>
+    <string name="ui_failed" formatted="false">"失败（"</string>
+    <string name="ui_failed_to_save_thumbnail" formatted="false">"缩略图保存失败"</string>
+    <string name="ui_find_and_manage_devices" formatted="false">"查找和管理设备"</string>
+    <string name="ui_first_connection" formatted="false">"首次连接"</string>
+    <string name="ui_for_account" formatted="false">"账户 "</string>
+    <string name="ui_generating_desktop_preview" formatted="false">"正在生成桌面缩略图…"</string>
+    <string name="ui_generating_preview" formatted="false">"正在生成缩略图："</string>
+    <string name="ui_got_it" formatted="false">"知道了"</string>
+    <string name="ui_gpu_gpu" formatted="false">"显卡"</string>
+    <string name="ui_hardware_information_unavailable" formatted="false">"暂无法读取硬件信息"</string>
+    <string name="ui_hardware_information_unavailable_check_the_network_serv" formatted="false">"硬件信息不可用，请检查网络、服务和配对"</string>
+    <string name="ui_hardware_information_unavailable_check_the_service_and" formatted="false">"无法读取硬件信息，请检查服务和配对后刷新"</string>
+    <string name="ui_help" formatted="false">"使用说明"</string>
+    <string name="ui_if_the_device_is_offline_first_confirm_the_target_compu" formatted="false">"设备离线时，先确认电脑已开机且私网可用，然后下拉设备列表刷新。账户验证失败时请核实 Windows 凭据。无法读取设备信息时检查管理配对，原缓存会保留。缩略图来自上次成功连接，连接后会更新。"</string>
+    <string name="ui_import_management_pairing" formatted="false">"导入管理配对"</string>
+    <string name="ui_import_network_configuration" formatted="false">"导入组网配置"</string>
+    <string name="ui_import_the_existing_network_configuration_first" formatted="false">"请先导入现有组网配置"</string>
+    <string name="ui_in_device_details_tap_view_sign_in_and_connections_or_i" formatted="false">"在设备详情点「查看登录与连接」，也可以从设备齿轮菜单打开。展开详情可查看完整账户和来源；刷新只更新记录。断开前会要求确认。断开后 Windows 账户保持登录，远端程序继续运行。"</string>
+    <string name="ui_in_local_use" formatted="false">"本机使用中"</string>
+    <string name="ui_in_remote_use" formatted="false">"远程使用中（"</string>
+    <string name="ui_in_the_menu_search_devices_finds_by_name_or_address_and" formatted="false">"菜单中可按设备名或地址搜索，并筛选全部、在线或离线设备。点击卡片右侧箭头可查看缩略图、设备信息和存储。菜单中设备旁的齿轮提供账户与密码、重命名、刷新设备信息、更新缩略图及导入管理配对。"</string>
+    <string name="ui_invalid_network_node_address" formatted="false">"网络节点地址无效"</string>
+    <string name="ui_invalid_network_node_count" formatted="false">"网络节点数量无效"</string>
+    <string name="ui_keep_connection_after_leaving_the_app" formatted="false">"离开应用后保留连接"</string>
+    <string name="ui_language" formatted="false">"界面语言"</string>
+    <string name="ui_last_boot" formatted="false">"上次开机"</string>
+    <string name="ui_last_connected_desktop_updates_automatically_after_each" formatted="false">"上次连接的桌面 · 每次登录后自动更新"</string>
+    <string name="ui_load_failed" formatted="false">"加载失败"</string>
+    <string name="ui_loading_kernel" formatted="false">"加载内核"</string>
+    <string name="ui_local_disk" formatted="false">"本地磁盘"</string>
+    <string name="ui_local_sign_in" formatted="false">"本机登录"</string>
+    <string name="ui_mac_screen_sharing_vnc_password" formatted="false">"Mac 屏幕共享 VNC 密码"</string>
+    <string name="ui_mac_session_menu" formatted="false">"Mac 会话菜单"</string>
+    <string name="ui_manage" formatted="false">"，管理"</string>
+    <string name="ui_management_pairing_saved" formatted="false">"已保存管理配对"</string>
+    <string name="ui_management_service_is_in_read_only_verification_mode" formatted="false">"管理服务处于只读验证模式"</string>
+    <string name="ui_management_service_unavailable_or_pairing_failed" formatted="false">"管理服务不可用或配对失败"</string>
+    <string name="ui_manual_device_certificate_confirmation_required" formatted="false">"需要手动确认设备证书"</string>
+    <string name="ui_memory_capacity" formatted="false">"内存容量"</string>
+    <string name="ui_menu" formatted="false">"菜单"</string>
+    <string name="ui_minutes" formatted="false">" 分钟"</string>
+    <string name="ui_minutes_to_return_and_continue_otherwise_it_disconnects" formatted="false">" 分钟内返回可继续，超时将自动断开；点此通知立即断开"</string>
+    <string name="ui_model" formatted="false">"型号"</string>
+    <string name="ui_n_nfingerprint_n" formatted="false">"\n\n指纹：\n"</string>
+    <string name="ui_n_nopen_source_licenses_and_component_sources_are_in_th" formatted="false">"\n\n开源许可证与组件源码见随附源码中的 third_party 目录。"</string>
+    <string name="ui_n_nre_read_windows_cpu_memory_and_gpu_they_still_comple" formatted="false">"\n\n重新读取 Windows、CPU、内存和显卡。关闭窗口后仍会依次完成并保存。"</string>
+    <string name="ui_n_nverify_and_then_connect" formatted="false">"\n\n请核实后再连接。"</string>
+    <string name="ui_ncertificate_name" formatted="false">"\n证书名称："</string>
+    <string name="ui_network_configuration_imported" formatted="false">"已导入组网配置"</string>
+    <string name="ui_nexisting_storage_data_is_unchanged_and_still_refreshed" formatted="false">"\n存储数据会保留，可在设备详情单独刷新。"</string>
+    <string name="ui_nfull_account" formatted="false">"\n完整账户："</string>
+    <string name="ui_no_active_remote_connections" formatted="false">"无活跃远程连接"</string>
+    <string name="ui_no_active_remote_connections_currently" formatted="false">"当前无活跃远程连接"</string>
+    <string name="ui_no_desktop_image_received_yet_please_ensure_mac_is_awak" formatted="false">"尚未收到桌面画面，请确认 Mac 已唤醒并核实屏幕共享密码。"</string>
+    <string name="ui_no_desktop_preview_yet" formatted="false">"，暂无桌面缩略图"</string>
+    <string name="ui_no_matching_devices" formatted="false">"没有匹配的设备"</string>
+    <string name="ui_no_readable_partitions" formatted="false">" · 无可读分区"</string>
+    <string name="ui_no_saved_sign_in_credentials_n" formatted="false">"：未保存登录凭据\n"</string>
+    <string name="ui_no_signed_in_accounts_currently" formatted="false">"当前无登录账户"</string>
+    <string name="ui_not_recorded" formatted="false">"未记录"</string>
+    <string name="ui_not_reported" formatted="false">"未上报"</string>
+    <string name="ui_nsave_credentials_under_account_and_password_or_connect" formatted="false">"\n请在账户与密码中保存凭据，或先手动连接以确认设备证书，然后再更新缩略图。"</string>
+    <string name="ui_nsource_name" formatted="false">"\n来源名称："</string>
+    <string name="ui_offline_devices" formatted="false">"离线设备"</string>
+    <string name="ui_online_devices" formatted="false">"在线设备"</string>
+    <string name="ui_open_devices_and_settings_import_network_configuration" formatted="false">"打开「设备与设置 → 导入组网配置」，选择为这部手机准备的 xRemote 配置文件。设备在线后，点卡片连接远程桌面。首次连接时输入 Windows 账户和密码，可选择加密保存。已有凭据时可直接连接。出现证书确认时，请先核实目标设备。"</string>
+    <string name="ui_other_partitions" formatted="false">"其他分区"</string>
+    <string name="ui_other_sign_in_state" formatted="false">"其他登录状态"</string>
+    <string name="ui_owning_disk_not_confirmed" formatted="false">"所属磁盘未确认"</string>
+    <string name="ui_pairing_file_does_not_match_the_device" formatted="false">"配对文件与设备不匹配"</string>
+    <string name="ui_pairing_incomplete_select_the_pairing_file_that_matches" formatted="false">"配对未完成，请选择与目标设备匹配的配对文件"</string>
+    <string name="ui_parsing_configuration" formatted="false">"解析配置"</string>
+    <string name="ui_partially_updated_items_that_failed_to_read_keep_the_pr" formatted="false">"部分更新，读取失败的项目保留原缓存"</string>
+    <string name="ui_physical_disk_information_unavailable" formatted="false">"暂无法读取物理磁盘信息"</string>
+    <string name="ui_physical_disks" formatted="false">" 块物理磁盘"</string>
+    <string name="ui_please_refresh_later" formatted="false">"请稍后刷新"</string>
+    <string name="ui_preparing" formatted="false">"正在准备…"</string>
+    <string name="ui_preview_update_stopped" formatted="false">"已停止更新缩略图"</string>
+    <string name="ui_rdp_remote_desktop" formatted="false">"RDP · 远程桌面"</string>
+    <string name="ui_reachable_n" formatted="false">" 可达\n"</string>
+    <string name="ui_reading_configuration" formatted="false">"读取配置"</string>
+    <string name="ui_reading_sign_in_and_connections" formatted="false">"正在读取登录与连接…"</string>
+    <string name="ui_refresh" formatted="false">"刷新"</string>
+    <string name="ui_refresh_device_information" formatted="false">"刷新设备信息"</string>
+    <string name="ui_related_disks" formatted="false">"关联磁盘 "</string>
+    <string name="ui_remember_password_saved_on_this_phone_only" formatted="false">"记住密码（仅保存在本机）"</string>
+    <string name="ui_remote_connected" formatted="false">"远程已连接"</string>
+    <string name="ui_remote_desktop_controls" formatted="false">"远程桌面操作"</string>
+    <string name="ui_rename" formatted="false">"重命名"</string>
+    <string name="ui_restore_full_desktop" formatted="false">"还原完整桌面"</string>
+    <string name="ui_return_to_devices" formatted="false">"返回设备列表"</string>
+    <string name="ui_returning_stops_it" formatted="false">"（返回可停止）"</string>
+    <string name="ui_s_connection_n_nthe_account_stays_signed_in_programs_an" formatted="false">" 的连接？\n\n账户保持登录，程序和任务会继续运行。"</string>
+    <string name="ui_save" formatted="false">"保存"</string>
+    <string name="ui_saved_credentials_are_unavailable_please_re_enter" formatted="false">"已保存的凭据不可用，请重新填写"</string>
+    <string name="ui_search_devices" formatted="false">"搜索设备"</string>
+    <string name="ui_see_spanning_partitions_below" formatted="false">"跨磁盘分区见下方"</string>
+    <string name="ui_select_the_one_prepared_for_this_phone_xremote_configur" formatted="false">"请选择为这部手机准备的 xRemote 配置文件。"</string>
+    <string name="ui_select_xremote_network_configuration_file" formatted="false">"请选择 xRemote 组网配置文件"</string>
+    <string name="ui_session_menu" formatted="false">"会话菜单"</string>
+    <string name="ui_session_state_changed_please_refresh" formatted="false">"会话状态已变化，请刷新"</string>
+    <string name="ui_show_hide_keyboard" formatted="false">"显示 / 隐藏键盘"</string>
+    <string name="ui_sign_in_account" formatted="false">"登录账户"</string>
+    <string name="ui_sign_in_and_connection_information_unavailable_please_r" formatted="false">"登录与连接信息不可用，请刷新"</string>
+    <string name="ui_sign_in_and_connections" formatted="false">"登录与连接"</string>
+    <string name="ui_sign_in_method_this_device" formatted="false">"登录方式：本机"</string>
+    <string name="ui_sign_in_password" formatted="false">"登录密码"</string>
+    <string name="ui_sign_in_username" formatted="false">"登录用户名"</string>
+    <string name="ui_sockets" formatted="false">" 路处理器 · "</string>
+    <string name="ui_some_device_information_could_not_be_read" formatted="false">"部分设备信息读取失败。"</string>
+    <string name="ui_source_device" formatted="false">"来源设备："</string>
+    <string name="ui_spanning_partitions" formatted="false">"跨磁盘分区"</string>
+    <string name="ui_starting_network" formatted="false">"启动组网"</string>
+    <string name="ui_storage" formatted="false">"存储空间"</string>
+    <string name="ui_storage_information_unavailable" formatted="false">"存储信息不可用"</string>
+    <string name="ui_storage_information_unavailable_check_the_network_servi" formatted="false">"存储信息不可用，请检查网络、服务和配对"</string>
+    <string name="ui_storage_information_unavailable_check_the_service_and_p" formatted="false">"无法读取存储，请检查服务和配对后刷新"</string>
+    <string name="ui_storage_information_unavailable_please_refresh_later" formatted="false">"存储信息不可用，请稍后刷新"</string>
+    <string name="ui_storage_update_incomplete_showing_the_previous_result" formatted="false">"存储更新未完成，显示上次结果。"</string>
+    <string name="ui_succeeded" formatted="false">"成功 "</string>
+    <string name="ui_system" formatted="false">"系统"</string>
+    <string name="ui_system_and_hardware" formatted="false">"系统与硬件"</string>
+    <string name="ui_system_and_hardware_unavailable" formatted="false">"暂无法读取系统与硬件信息"</string>
+    <string name="ui_system_build" formatted="false">"系统构建号 "</string>
+    <string name="ui_tap_refresh_to_retry" formatted="false">"），请刷新重试"</string>
+    <string name="ui_tap_the_button_at_the_bottom_right_and_import_the_netwo" formatted="false">"点右下角按钮，导入为这部手机准备的组网配置，即可连接设备。"</string>
+    <string name="ui_tap_to_connect" formatted="false">"，轻点连接"</string>
+    <string name="ui_task_manager" formatted="false">"任务管理器"</string>
+    <string name="ui_temporarily_unavailable" formatted="false">"暂不可用"</string>
+    <string name="ui_temporarily_unavailable_to_connect" formatted="false">"，暂不可连接"</string>
+    <string name="ui_temporarily_unreachable_n" formatted="false">" 暂不可达\n"</string>
+    <string name="ui_the_account_stays_signed_in_open_programs_are_preserved" formatted="false">"账户保持登录，打开的程序将继续运行。"</string>
+    <string name="ui_the_device_management_service_must_be_updated_to_read_h" formatted="false">"需更新设备管理服务才能读取硬件信息"</string>
+    <string name="ui_the_device_management_service_must_be_updated_to_refres" formatted="false">"需更新设备管理服务才能单独刷新存储"</string>
+    <string name="ui_the_management_pairing_file_for_this_device_has_not_bee" formatted="false">"尚未导入这台设备的管理配对文件"</string>
+    <string name="ui_the_password_could_not_be_saved_but_this_connection_can" formatted="false">"密码保存失败，本次可继续连接"</string>
+    <string name="ui_the_password_could_not_be_saved_please_retry" formatted="false">"密码保存失败，请重试"</string>
+    <string name="ui_the_session_changed_please_refresh_and_retry" formatted="false">"会话已变化，请刷新后重试"</string>
+    <string name="ui_the_username_or_password_was_not_verified_check_this_co" formatted="false">"用户名或密码验证失败，请检查这台电脑的 Windows 登录凭据。"</string>
+    <string name="ui_there_are_currently" formatted="false">"当前有 "</string>
+    <string name="ui_this_connection_only" formatted="false">"仅本次连接"</string>
+    <string name="ui_this_device_uses_vnc" formatted="false">"此设备使用 VNC"</string>
+    <string name="ui_this_machine_is_locked" formatted="false">"本机已锁定"</string>
+    <string name="ui_threads" formatted="false">" 线程"</string>
+    <string name="ui_thumbnail_of_the_last_connected_desktop" formatted="false">"，上次连接的桌面缩略图"</string>
+    <string name="ui_timed_out_waiting_for_the_desktop_image_please_connect" formatted="false">"等待桌面画面超时，请手动连接确认"</string>
+    <string name="ui_total_capacity" formatted="false">" / 总容量 "</string>
+    <string name="ui_total_capacity_2" formatted="false">"总容量 "</string>
+    <string name="ui_unknown" formatted="false">"未知"</string>
+    <string name="ui_update_desktop_thumbnail" formatted="false">"更新桌面缩略图"</string>
+    <string name="ui_update_failed_the_previous_cache_is_kept" formatted="false">"更新失败，原缓存已保留"</string>
+    <string name="ui_update_incomplete_showing_the_previous_result" formatted="false">"更新未完成，显示上次结果。"</string>
+    <string name="ui_update_the_device_management_service_and_refresh" formatted="false">"请更新设备管理服务后刷新"</string>
+    <string name="ui_updated" formatted="false">"已更新 "</string>
+    <string name="ui_updated_and_saved" formatted="false">"已更新并保存"</string>
+    <string name="ui_updating" formatted="false">"正在更新 "</string>
+    <string name="ui_updating_showing_the_previous_read_result" formatted="false">"正在更新，显示上次读取结果。"</string>
+    <string name="ui_updating_storage_keeping_the_previous_result" formatted="false">"正在更新存储空间，保留上次结果。"</string>
+    <string name="ui_usage_state_unknown" formatted="false">"使用状态未知"</string>
+    <string name="ui_usage_state_unknown_check_the_network_service_and_pairi" formatted="false">"使用状态未知，请检查网络、服务和配对"</string>
+    <string name="ui_used" formatted="false">"已用 "</string>
+    <string name="ui_used_space_unknown" formatted="false">" · 已用空间未知"</string>
+    <string name="ui_view_sign_in_and_connections" formatted="false">"查看登录与连接"</string>
+    <string name="ui_vnc_connecting" formatted="false">" · 正在连接 VNC…"</string>
+    <string name="ui_vnc_initialization_failed_please_go_back_and_retry" formatted="false">"VNC 初始化失败，请返回后重试"</string>
+    <string name="ui_vnc_preview_could_not_complete_connect_manually_and_ret" formatted="false">"VNC 缩略图未生成，请手动连接后重试"</string>
+    <string name="ui_vnc_screen_sharing" formatted="false">"VNC · 屏幕共享"</string>
+    <string name="ui_waiting_for_network_connection" formatted="false">"等待组网连接"</string>
+    <string name="ui_welcome_to_xremote" formatted="false">"欢迎使用 xRemote"</string>
+    <string name="ui_windows_session_number" formatted="false">"Windows 会话编号："</string>
+    <string name="ui_windows_start_menu" formatted="false">"Windows 开始菜单"</string>
+    <string name="ui_xremote_is_keeping_the_connection" formatted="false">"xRemote 正在保留连接"</string>
+    <string name="ui_zoom_restore" formatted="false">"缩放 / 还原"</string>
+    <string name="ui_theme" formatted="false">"外观主题"</string>
+    <string name="ui_theme_light" formatted="false">"浅色"</string>
+    <string name="ui_theme_dark" formatted="false">"深色"</string>
+    <string name="ui_theme_system" formatted="false">"跟随系统"</string>
+</resources>

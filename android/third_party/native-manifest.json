@@ -1,0 +1,142 @@
+[
+  {
+    "name": "legacy.so",
+    "sha256": "b0c1ec249651b5535f8fa9b44a415ad6abe173f0d6a512787d077b6cc0a97c87",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libavcodec.so",
+    "sha256": "886a3db5bc924dc47d08e2cc06437cd62c433e110dc9dac169c9b26ed4c60e3c",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libavdevice.so",
+    "sha256": "689a349c5339f079957a84a541a34c8518f6972674517e58c2b6313a7ad5a01b",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libavfilter.so",
+    "sha256": "62fe36a177da2006209a197d9619cac3679b3960f7c0686dc4b69c853684d531",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libavformat.so",
+    "sha256": "2283376517c9639561b4234376603a27cec2a2e0783aa919d9240b96cd42073b",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libavutil.so",
+    "sha256": "9feac03f4e327485d9e9688374902da3d38aaae510c4a8b26ef6020355a57583",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libcjson.so",
+    "sha256": "cbe7f29b09364c47ab3f84ea024e03ca8e25285af4475e6cde069788255ccbbf",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libcrypto.so",
+    "sha256": "1a0f891bf639b219def3912f95e131bc4efc0448d703b8f3928775e3cbdedf0f",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libfreerdp-android.so",
+    "sha256": "3ae3adfe985db858fc9610f726141600d9633c63df14b8160a4b7da8ea90998c",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libfreerdp-client3.so",
+    "sha256": "1457a444f791b05d228a3a4b9010b98b90de98af842877fd198addbedd2fcb88",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libfreerdp3.so",
+    "sha256": "3854c8e183c0638d47e25d3d04d247c1f9683fd28fd6abf852bacdc65f4a9f60",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libjpeg.so",
+    "sha256": "78bcac8c13201c104a833ab543ea6c69b05883ecb88c11b1d665806512fed34d",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libopenh264.so",
+    "sha256": "cd6acdee4f1103c7e6dc0ea2af6a2595ab22fcbb32905d60a3d14dbf62fe1f65",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libopus.so",
+    "sha256": "07ac451e2cf05bba34e6c6ec84113ae6967843e4c5ed6219f26c5eaa03e5f8d5",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libpng.so",
+    "sha256": "14e61e44f52c1b5747f2460443a65844c765957bc7a05f24a4c1e9d60102678c",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libpng16.so",
+    "sha256": "14e61e44f52c1b5747f2460443a65844c765957bc7a05f24a4c1e9d60102678c",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libsharpyuv.so",
+    "sha256": "8a8166286561895c25b977855e3ddc41edf6c047c8925354a145e8c452f33574",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libsqlcipher.so",
+    "sha256": "bc018e5d323751c91aec7fca6189d9760060ac0b3f1044dca4c3cf4894310ed0",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libssl.so",
+    "sha256": "398e27c9adb197f383119fed5b25cb7f2c672400ad3ad5999b92d45c6c9fa8b2",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libswresample.so",
+    "sha256": "38c2e32925e5d9768391bb5f86d94f692618bd5f16529d55a403b3de32788590",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libswscale.so",
+    "sha256": "e20e989d6f51af56f9f4fb6e795d6e4400bdc9b1a4d4b1676ecc6e75854a47a5",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "liburiparser.so",
+    "sha256": "d9509c52db90105e5a2fe12d86a6d34c82a33ada8addd1476922e0ac526927bd",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libwebp.so",
+    "sha256": "343599f9b71536c39754c7e1b23df300af9c6f7016e89a9a38b70b5d92f031a9",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libwebpdecoder.so",
+    "sha256": "d901cdabe305ca190ed4330c8d977c21a86236ee91e4601d82c5b22686984f1f",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libwebpdemux.so",
+    "sha256": "3c99d61243510fd6f620fe7efe1171c84a44fd4462f0a0e2e0aaac9edaebc3dc",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libwebpmux.so",
+    "sha256": "90324dbbe155aa0af5835b2e6fedb38c6533e6d06740995501135700b8b8c1f0",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libwinpr3.so",
+    "sha256": "8a4530f810546f13ba37f04677c991c44d35eb0ef4829772b55cfc3e23430496",
+    "source": "afreerdp-3.32.1-arm64.apk"
+  },
+  {
+    "name": "libeasytier_android_jni.so",
+    "sha256": "2d6a8a11f20a6c9beabc339f12e971aaa6c57a7aeb9731502b6ac5c51d5ae3b3",
+    "source": "EasyTierCompose-1.0.9-arm64.apk"
+  }
+]
