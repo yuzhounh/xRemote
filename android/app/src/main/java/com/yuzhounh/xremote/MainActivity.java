@@ -74,9 +74,9 @@ public final class MainActivity extends Activity implements TunnelController.Lis
     private final Runnable pollControl=new Runnable(){public void run(){refreshUsage();controlTimer.postDelayed(this,10000);}};
     @Override public void onCreate(Bundle state){
         super.onCreate(state);app=(XRemoteApp)getApplication();loadAliases();
-        Theme.applySystemBars(this);
         control=new ControlClient(app.store);if(state!=null){pendingControlDevice=state.getString("pendingControlDevice");view=state.getInt("view");}
         buildOverview();
+        Theme.applySystemBars(this);
         if(state!=null){previewNext=state.getInt("previewNext",-1);previewEnd=state.getInt("previewEnd",Device.ALL.length);previewCompleted=state.getInt("previewCompleted");previewSkipped=state.getInt("previewSkipped");previewFailures=state.getString("previewFailures","");int selected=state.getInt("selectedDevice",-1);if(selected>=0&&selected<Device.ALL.length)showDeviceDetails(selected);else if(state.getBoolean("menuVisible")){showMenu(state.getInt("menuScrollY"));if(state.getBoolean("helpVisible"))showHelp();}}
     }
     private void buildOverview(){
